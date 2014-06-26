@@ -16,7 +16,12 @@
 package com.sefford.kor.repositories.interfaces;
 
 /**
- * Repo Element interface to work with the repos
+ * Repo Element interface to work with the {@link com.sefford.kor.repositories.interfaces.Repository Repositories}.
+ * <p/>
+ * It is an interface that all elements intended to work with repositories have to implement, as it is
+ * a simple way of providing a key - value interface to the model objects.
+ * <p/>
+ * The underlying implementation can rely on a unique ID of the element or the hashCode itself.
  *
  * @author Saul Diaz<sefford@gmail.com>
  */
@@ -25,7 +30,7 @@ public interface RepoElement<K> {
     /**
      * Gets the ID key of the element
      *
-     * @return ID Key of the element
+     * @return ID Key of the element.
      */
     K getId();
 }

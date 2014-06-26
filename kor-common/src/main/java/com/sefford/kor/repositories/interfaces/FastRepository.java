@@ -19,12 +19,22 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by sefford on 30/04/14.
+ * Fast Repository interface is intended for some Repositories to optionally provide an API to
+ * save and retrieve elements from themselves in a secondary way.
+ * <p/>
+ * The objective of this API is to provide a different way of saving and retrieving the elements
+ * without accessing the normal get and set methods in which the standard implementation of {@link com.sefford.kor.repositories.BaseRepository BaseRepository}
+ * saves and retrieves on several levels sequentially.
+ * <p/>
+ * This gives the developer the chance to perform a simple save or retrieval in a single level of the
+ * repository hierarchy. This is intended to be used with fast-access repositories as memory ones.
+ *
+ * @author <sefford@gmail.com>
  */
 public interface FastRepository<K, V extends RepoElement<K>> {
 
     /**
-     * Checks if there is an element in the repository
+     * Checks if there is an element in the repository.
      *
      * @param id Id of the element to check
      * @return TRUE if exists, FALSE otherwise
@@ -40,21 +50,32 @@ public interface FastRepository<K, V extends RepoElement<K>> {
     V getFromMemory(K id);
 
     /**
-     * Returns all elements in repository
+     * Returns a list of elements from the repository.
+     *
+     * @param ids List of IDs to get from Memory.
+     * @return A collection of objects related to the inputted IDs. Depending on the implementations,
+     * might not be able to fetch all the requested elements from the repository and might not
+     * throw any error condition regarding so. This might have to be checked manually.
      */
     Collection<V> getAllFromMemory(List<K> ids);
 
     /**
-     * Saves an element to the repository
+     * Saves an element to the repository.
+     * <p/>
+     * Depending on the implementation, the save method might return an updated version of the element,
+     * if it is already in the repository.
      *
-     * @param element Element to save
+     * @param element Element to save.
      */
     V saveInMemory(V element);
 
     /**
-     * Saves a list of elements to the repository
+     * Saves a list of elements to the repository.
+     * <p/>
+     * Depending on the implementation, the saveAllInMemory method might return updated versions of the element,
+     * if it is already in the repository.
      *
-     * @param elements List of Elements to save
+     * @param elements List of Elements to save.
      */
     Collection<V> saveAllInMemory(Collection<V> elements);
 }

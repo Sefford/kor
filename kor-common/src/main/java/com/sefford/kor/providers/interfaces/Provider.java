@@ -18,7 +18,11 @@ package com.sefford.kor.providers.interfaces;
 import java.util.List;
 
 /**
- * Basic provider interface to unify the interfaces.
+ * Basic provider interface to unify the Provider APIs.
+ * <p/>
+ * In general terms a Provider intends to be an API to execute and managing a request queue. It has
+ * access to very basic API as not all the ways of providing a request queue allow for an extensive
+ * manipulation.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -41,7 +45,7 @@ public interface Provider<T> {
     void executeOperations(List<T> requests);
 
     /**
-     * Clears the queue
+     * Clears the queue.
      */
     void clear();
 }

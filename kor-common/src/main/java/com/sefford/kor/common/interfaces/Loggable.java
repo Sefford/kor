@@ -23,10 +23,32 @@ package com.sefford.kor.common.interfaces;
  */
 public interface Loggable {
 
-
+    /**
+     * Logs a debug log to the Logger.
+     *
+     * @param tag     Logger identification.
+     * @param message Message to log.
+     */
     void d(String tag, String message);
 
+    /**
+     * Prints a performance log in case the user wants to check how their requests are performing.
+     * <p/>
+     * Sometimes a developer needs to know how much time their requests are taking. This is a
+     * utility API to encapsulate a method to know how long a code snippet is taking.
+     *
+     * @param tag         Logger identification.
+     * @param requestName Name of the request to measure performance.
+     * @param start       Start referencing time to measure.
+     */
     void printPerformanceLog(String tag, String requestName, long start);
 
+    /**
+     * Logs a error log to the Logger
+     *
+     * @param tag         Logger identification.
+     * @param requestName Name of the request to measure performance.
+     * @param tr          Throwable object to send through the Logger.
+     */
     void e(String tag, String requestName, Throwable tr);
 }

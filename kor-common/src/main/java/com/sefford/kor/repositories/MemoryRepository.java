@@ -26,7 +26,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simple abstraction of a repository it only supports volatile memory caching
+ * Simple abstraction of a repository that only supports volatile memory caching.
+ * <p/>
+ * The fastest and simplest way to implement a memory repository is through a Map. This implementation
+ * of a memory repository can be kind of tailored through the use of different map subclasses as
+ * HashMap (a typical implementation) or TreeMap for sorted access.
+ * <p/>
+ * A limitation of the MemoryRepository is that it does not constraint itself to a memory size. The
+ * developer is intended to manually clear unused entries or implements its own with LRU Cache.
+ * <p/>
+ * Declaring additional memory repositories is as easy as extending this repository with particular
+ * classes for Keys and Values.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -34,7 +44,7 @@ public abstract class MemoryRepository<K, V extends RepoElement<K> & Updateable<
         extends BaseRepository<K, V> implements FastRepository<K, V> {
 
     /**
-     * Hashmap to store the references
+     * Map to store the Key, Value references on the repository
      */
     protected final Map<K, V> cache;
 

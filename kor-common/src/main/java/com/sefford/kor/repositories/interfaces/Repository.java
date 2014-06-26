@@ -19,7 +19,19 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Interface for Repositories. They work on a simple CRUD schema.
+ * Interface for Repositories.
+ * <p/>
+ * They work on a simple CRUD API.
+ * <p/>
+ * Aditionally each repository can flag in advance if the repository itself is "ready" through {@link Repository#isAvailable() isAvailable interface}.
+ * Might be cases, as Network Repositories or Disk Repositories where the availability might not be guaranteed
+ * because of hardware or connectivity problems.
+ * <p/>
+ * Checking in advance for the availability of the repository might save the developer unnecessary errors
+ * because the repository is in an incorrect state.
+ * <p/>
+ * The availability of a repo may vary over time and everytime an operation is performed over the repository
+ * the availability will be checked.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -81,7 +93,11 @@ public interface Repository<K, V extends RepoElement<K>> {
     Collection<V> saveAll(Collection<V> elements);
 
     /**
-     * Is available will return if the Repository is available (i.e. it is initialized)
+     * Is available will return if the Repository is available (i.e. it is initialized)-
+     * <p/>
+     * As this method is called every time an operation is performed on the repository if extending from
+     * {@link com.sefford.kor.repositories.BaseRepository BaseRepository} to discern if the next level
+     * of the repository is available, it is recommended this to be a easy and fast operation.
      *
      * @return TRUE if the Repository is operative, FALSE otherwise
      */

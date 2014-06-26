@@ -19,8 +19,14 @@ import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 
 /**
- * BaseRepository implements a Chain of responsibility
- * basic services
+ * BaseRepository implements a Chain of Responsibility pattern for the Repositories.
+ * <p/>
+ * In order to achieve true interchangeable cache levels, the default repositories are built upon
+ * a chain of responibility pattern, so the updates can happen sequentially on the repository hierarchy.
+ * <p/>
+ * While the default implementation is based around this hierarchial organization of repositories,
+ * both requests and repositories does not enforce this requirement, and unrelated - standalone
+ * repos can be created through {@link com.sefford.kor.repositories.interfaces.Repository Repository Interface}
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -28,12 +34,14 @@ public abstract class BaseRepository<K, V extends RepoElement<K>>
         implements Repository<K, V> {
 
     /**
-     * Next Level services
+     * Next level of the repository if any.
      */
     protected final Repository<K, V> nextLevel;
 
     /**
-     * Creates a new instance of a BaseRepository with next Level
+     * Creates a new instance of a BaseRepository with next level.
+     *
+     * This next level can be optionally initialized to null.
      *
      * @param nextLevel Next Level of the Repository
      */
@@ -42,7 +50,7 @@ public abstract class BaseRepository<K, V extends RepoElement<K>>
     }
 
     /**
-     * Checks if the current repository has next level
+     * Checks if the current repository has next level.
      *
      * @return TRUE if affirmative, FALSE otherwise
      */
