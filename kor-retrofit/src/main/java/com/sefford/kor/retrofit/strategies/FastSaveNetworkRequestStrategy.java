@@ -18,20 +18,26 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.FastSaving;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 import retrofit.RetrofitError;
 
 /**
- * Executor that first performs a fast memory save to the memory cache, and then notifies and
- * keeps on saving on Disk
+ * Specialization of a Network Request Strategy to support fast cache saving.
+ * <p/>
+ * This strategy adds a first fast save on the repository to have the information already on the repository,
+ * then notifies the UI. After the notification a standard full-save is performed on the repository
+ * in the background.
+ * <p/>
+ * An error condition will only be thrown if there is any issue before the notification. After it, it
+ * will only be logged to avoid error duplication.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class FastSaveNetworkRequestStrategy<R extends BaseResponse, E extends BaseError> extends NetworkRequestStrategy<R, E> {
+public class FastSaveNetworkRequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends NetworkRequestStrategy<R, E> {
 
     /**
      * Creates a new instance of Saving Callback
@@ -49,7 +55,7 @@ public class FastSaveNetworkRequestStrategy<R extends BaseResponse, E extends Ba
         try {
             final R content = ((NetworkRequest<R, E>) request).retrieveNetworkResponse();
             final R processedContent = ((NetworkRequest<R, E>) request).postProcess(content);
-            final R savedMemoryContent = ((FastSaving<R>) request).saveToMemoryCache(processedContent);
+            final R savedMemoryContent = ((FastSaving<R>) request).fastSave(processedContent);
             notifySuccess(savedMemoryContent);
             try {
                 long start = System.currentTimeMillis();

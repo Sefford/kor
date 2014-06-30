@@ -19,17 +19,24 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.RequestIdentification;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 import com.sefford.kor.strategies.interfaces.RequestNotification;
 
 /**
- * Abstract Saving Callback. Will only provide notification services to the bus
+ * Abstract Request Strategy.
+ * <p/>
+ * It does only provide configuration and success notification logic. It is the base for all Request
+ * Strategies.
+ * <p/>
+ * It delegates to a Request object. In this level, a RequestIdentification implementation for logging purposes,
+ * but more specialized versions of this class will require the Request object to implement further
+ * interfaces.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class RequestStrategy<R extends BaseResponse, E extends BaseError> extends Job implements RequestNotification<R, E> {
+public abstract class RequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends Job implements RequestNotification<R, E> {
     /**
      * Network Tag for Logging
      */
@@ -51,7 +58,7 @@ public abstract class RequestStrategy<R extends BaseResponse, E extends BaseErro
     protected final Loggable log;
 
     /**
-     * Creates a new instance of Saving Callback
+     * Creates a new instance of Request Strategy.
      *
      * @param bus     Notification Facility
      * @param log     Logging facilities

@@ -2,10 +2,10 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
 import com.sefford.kor.requests.interfaces.RequestIdentification;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 import com.sefford.kor.retrofit.interfaces.RetrofitRequest;
 
 import org.junit.Before;
@@ -29,7 +29,7 @@ public class NetworkRequestStrategyTest {
     @Mock
     TestRequest request;
     @Mock
-    BaseError error;
+    ErrorInterface error;
     @Mock
     RetrofitError retrofitError;
 
@@ -77,27 +77,27 @@ public class NetworkRequestStrategyTest {
     class TestRequest implements RequestIdentification, RetrofitRequest {
 
         @Override
-        public BaseResponse retrieveNetworkResponse() {
+        public ResponseInterface retrieveNetworkResponse() {
             return null;
         }
 
         @Override
-        public BaseResponse postProcess(BaseResponse content) {
+        public ResponseInterface postProcess(ResponseInterface content) {
             return null;
         }
 
         @Override
-        public void saveToCache(BaseResponse object) {
+        public void saveToCache(ResponseInterface object) {
 
         }
 
         @Override
-        public BaseError composeErrorResponse(RetrofitError error) {
+        public ErrorInterface composeErrorResponse(RetrofitError error) {
             return null;
         }
 
         @Override
-        public BaseError composeErrorResponse(Exception error) {
+        public ErrorInterface composeErrorResponse(Exception error) {
             return null;
         }
 

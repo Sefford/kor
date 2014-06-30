@@ -17,16 +17,24 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.CacheRequest;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Cache Request marks the base for a series of uncoupled requests to the Cache
+ * CacheExecutionStrategy is the default implementation of a Strategy for Cache Requests.
+ * <p/>
+ * This strategy retrieves the Request's information from the Repository then notifies if the information
+ * was successfully retrieved from it.
+ * <p/>
+ * To do not disturb the process of fetching from network, as the cache requests work faster this
+ * implementation of CacheExecutionStrategy does not notifies of errors to the UI.
+ * <p/>
+ * It delegates the work to a CacheRequest object.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class CacheExecutionStrategy<R extends BaseResponse, E extends BaseError> extends RequestStrategy<R, E> {
+public class CacheExecutionStrategy<R extends ResponseInterface, E extends ErrorInterface> extends RequestStrategy<R, E> {
     /**
      * Bus instance to notify the UI the process finished.
      * <p/>
@@ -35,16 +43,16 @@ public class CacheExecutionStrategy<R extends BaseResponse, E extends BaseError>
      */
     protected final Postable bus;
     /**
-     * Logging facilities
+     * Logging facilities.
      */
     protected final Loggable log;
     /**
-     * LogTag
+     * Cache Request Strategy Logging tag
      */
     protected static final String TAG = "CacheRequest";
 
     /**
-     * Creates a new Cache Request
+     * Creates a new Cache Request.
      *
      * @param bus Bus to notify the results
      * @param log Logging facilities

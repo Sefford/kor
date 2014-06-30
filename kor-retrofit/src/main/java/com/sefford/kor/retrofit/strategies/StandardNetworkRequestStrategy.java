@@ -18,20 +18,29 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 import retrofit.RetrofitError;
 
 /**
- * Standard saving callback that will execute the request then save to cache before notifying the bus
+ * Standard Request Strategy that performs the Request Process in this order:
+ * * <ul>
+ * <li>Network Retrieval phase.</li>
+ * <li>Post processing.</li>
+ * <li>Saving to cache.</li>
+ * <li>Notifying to the UI for success</li>
+ * <p/>
+ * </ul>
+ * <p/>
+ * In any moment the Strategy can notify of an error through {@link com.sefford.kor.strategies.interfaces.RequestNotification#notifyError(com.sefford.kor.errors.ErrorInterface) NotifyError} interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class StandardNetworkRequestStrategy<R extends BaseResponse, E extends BaseError> extends NetworkRequestStrategy<R, E> {
+public class StandardNetworkRequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends NetworkRequestStrategy<R, E> {
     /**
-     * Creates a new instance of Saving Callback
+     * Creates a new instance of Standard Request Strategy
      *
      * @param bus     Notification Facility
      * @param log     Logging facilities

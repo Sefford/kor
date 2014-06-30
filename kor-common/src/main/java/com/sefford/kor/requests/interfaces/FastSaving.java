@@ -15,22 +15,28 @@
  */
 package com.sefford.kor.requests.interfaces;
 
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Interface for Requests that is intended to be used with requests that require a fast memory save method. It will
- * be accompanied by a Repository that {@link com.sefford.kor.repositories.interfaces.FastRepository FastRepository}
+ * Interface for Requests that is intended to be used with requests that require a fast memory save method.
+ * <p/>
+ * It should be used by a Repository that implements {@link com.sefford.kor.repositories.interfaces.FastRepository FastRepository}
  * interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface FastSaving<R extends BaseResponse> {
+public interface FastSaving<R extends ResponseInterface> {
 
     /**
-     * Saves to memory cache.
+     * Performs a Fast save.
+     * <p/>
+     * A fast save is a facility to provide a secondary, quick method of storing information on a
+     * Repository without affecting the rest.
+     * <p/>
+     * For more info refer to {@link com.sefford.kor.repositories.interfaces.FastRepository FastRepository} documentation
      *
      * @param response Response element to save to memory cache.
      * @return Saved response.
      */
-    R saveToMemoryCache(R response);
+    R fastSave(R response);
 }

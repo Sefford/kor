@@ -2,10 +2,10 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.FastSaving;
 import com.sefford.kor.requests.interfaces.RequestIdentification;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 import com.sefford.kor.retrofit.interfaces.RetrofitRequest;
 
 import org.junit.Before;
@@ -18,6 +18,7 @@ import retrofit.RetrofitError;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -26,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class FastSaveNetworkRequestStrategyTest {
 
     @Mock
-    BaseResponse response;
+    ResponseInterface response;
     @Mock
     TestRequest request;
     @Mock
@@ -34,7 +35,7 @@ public class FastSaveNetworkRequestStrategyTest {
     @Mock
     Loggable log;
     @Mock
-    BaseError error;
+    ErrorInterface error;
 
     FastSaveNetworkRequestStrategy executor;
 
@@ -43,8 +44,8 @@ public class FastSaveNetworkRequestStrategyTest {
         initMocks(this);
 
         when(request.retrieveNetworkResponse()).thenReturn(response);
-        when(request.postProcess((BaseResponse) any())).thenReturn(response);
-        when(request.saveToMemoryCache((BaseResponse) any())).thenReturn(response);
+        when(request.postProcess((ResponseInterface) any())).thenReturn(response);
+        when(request.fastSave((ResponseInterface) any())).thenReturn(response);
         when(request.composeErrorResponse((Exception) any())).thenReturn(error);
         executor = spy(new FastSaveNetworkRequestStrategy(bus, log, request));
     }
@@ -56,7 +57,7 @@ public class FastSaveNetworkRequestStrategyTest {
         InOrder inOrder = Mockito.inOrder(request, executor);
         inOrder.verify(request, times(1)).retrieveNetworkResponse();
         inOrder.verify(request, times(1)).postProcess(response);
-        inOrder.verify(request, times(1)).saveToMemoryCache(response);
+        inOrder.verify(request, times(1)).fastSave(response);
         inOrder.verify(executor, times(1)).notifySuccess(response);
         inOrder.verify(request, times(1)).saveToCache(response);
 
@@ -64,13 +65,13 @@ public class FastSaveNetworkRequestStrategyTest {
 
     @Test
     public void testSuccessWithExceptionBeforeSaveToCache() throws Throwable {
-        doThrow(new RuntimeException()).when(request).saveToMemoryCache(response);
+        doThrow(new RuntimeException()).when(request).fastSave(response);
         executor.onRun();
 
         InOrder inOrder = Mockito.inOrder(request, executor);
         inOrder.verify(request, times(1)).retrieveNetworkResponse();
         inOrder.verify(request, times(1)).postProcess(response);
-        inOrder.verify(request, times(1)).saveToMemoryCache(response);
+        inOrder.verify(request, times(1)).fastSave(response);
         inOrder.verify(executor, times(0)).notifySuccess(response);
         inOrder.verify(request, times(0)).saveToCache(response);
         inOrder.verify(executor, times(1)).notifyError(error);
@@ -85,37 +86,48 @@ public class FastSaveNetworkRequestStrategyTest {
         InOrder inOrder = Mockito.inOrder(request, executor);
         inOrder.verify(request, times(1)).retrieveNetworkResponse();
         inOrder.verify(request, times(1)).postProcess(response);
-        inOrder.verify(request, times(1)).saveToMemoryCache(response);
+        inOrder.verify(request, times(1)).fastSave(response);
         inOrder.verify(executor, times(1)).notifySuccess(response);
         inOrder.verify(request, times(1)).saveToCache(response);
         inOrder.verify(executor, times(0)).notifyError(error);
 
     }
 
+    @Test
+    public void testSuccessWithRetrofitException() throws Throwable {
+        doThrow(mock(RetrofitError.class)).when(request).retrieveNetworkResponse();
+        executor.onRun();
+
+        InOrder inOrder = Mockito.inOrder(request, executor);
+        inOrder.verify(request, times(1)).retrieveNetworkResponse();
+        inOrder.verify(request, times(0)).postProcess(response);
+        inOrder.verify(request, times(0)).saveToCache(response);
+        inOrder.verify(executor, times(1)).notifyError(error);
+    }
+
     class TestRequest implements RequestIdentification, RetrofitRequest, FastSaving {
 
         @Override
-        public BaseResponse retrieveNetworkResponse() {
+        public ResponseInterface retrieveNetworkResponse() {
             return null;
         }
 
         @Override
-        public BaseResponse postProcess(BaseResponse content) {
+        public ResponseInterface postProcess(ResponseInterface content) {
             return null;
         }
 
         @Override
-        public void saveToCache(BaseResponse object) {
-
+        public void saveToCache(ResponseInterface object) {
         }
 
         @Override
-        public BaseError composeErrorResponse(RetrofitError error) {
+        public ErrorInterface composeErrorResponse(RetrofitError error) {
             return null;
         }
 
         @Override
-        public BaseError composeErrorResponse(Exception error) {
+        public ErrorInterface composeErrorResponse(Exception error) {
             return null;
         }
 
@@ -125,7 +137,7 @@ public class FastSaveNetworkRequestStrategyTest {
         }
 
         @Override
-        public BaseResponse saveToMemoryCache(BaseResponse response) {
+        public ResponseInterface fastSave(ResponseInterface response) {
             return null;
         }
     }

@@ -2,9 +2,9 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.RequestIdentification;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequestStrategyTest {
     @Mock
-    BaseResponse response;
+    ResponseInterface response;
     @Mock
     RequestIdentification request;
     @Mock
@@ -28,7 +28,7 @@ public class RequestStrategyTest {
     @Mock
     Loggable log;
     @Mock
-    BaseError error;
+    ErrorInterface error;
     private RequestStrategy executor;
 
     @Before
@@ -42,7 +42,7 @@ public class RequestStrategyTest {
             }
 
             @Override
-            public void notifyError(BaseError error) {
+            public void notifyError(ErrorInterface error) {
                 // This one too
             }
         });

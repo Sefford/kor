@@ -15,28 +15,29 @@
  */
 package com.sefford.kor.requests.interfaces;
 
-import com.sefford.kor.errors.BaseError;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Particular implementation of CacheRequest Interface
+ * Interface for managing Cache Requests.
+ * <p/>
+ * A cache request is intended to be able to check if the cache is valid then retrieve it if it is.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface CacheRequest<R extends BaseResponse, E extends BaseError> extends RequestIdentification {
+public interface CacheRequest<R extends ResponseInterface, E extends ErrorInterface> extends RequestIdentification {
 
     /**
-     * Processes a JSon response coming from the Network. It is a Template Method to take into
-     * account if the information has to be cached or not.
+     * Retrieves the necessary information from the Cache and packs it.
      *
      * @return A Response from the request Type
      */
     R retrieveFromCache();
 
     /**
-     * Identifies if a CacheRequest is valid or not
+     * Identifies if a CacheRequest is valid or not.
      *
-     * @return TRUE if the Cache is up-to-date and usable
+     * @return TRUE if the Cache is up-to-date and usable.
      */
     boolean isCacheValid();
 }

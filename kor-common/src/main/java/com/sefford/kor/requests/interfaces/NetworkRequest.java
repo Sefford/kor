@@ -15,26 +15,47 @@
  */
 package com.sefford.kor.requests.interfaces;
 
-import com.sefford.kor.errors.BaseError;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Interface for network requesting
+ * Interface for performing requests to the network.
+ * <p/>
+ * A request is intended to go through at least four phases
+ * <p/>
+ * <ul>
+ * <li>Network Retrieval phase.</li>
+ * <li>Post processing.</li>
+ * <li>Saving to cache.</li>
+ * <li></li>
+ * <p/>
+ * </ul>
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface NetworkRequest<R extends BaseResponse, E extends BaseError> extends RequestIdentification {
+public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInterface> extends RequestIdentification {
 
     /**
-     * Processes a JSon response coming from the Network. It is a Template Method to take into
-     * account if the information has to be cached or not.
+     * Produces a {@link com.sefford.kor.responses.ResponseInterface ResponseInterface} type.
+     * <p/>
+     * In this phase the intended behavior will be to fetch data from the network and parse it into
+     * a manageable object by the developer method of choice.
+     * <p/>
+     * The completion of this method should indicate that the network response was correctly fetched
+     * and parsed. If there is any error, an exception of the appropiate type should be thrown and
+     * catched.
      *
      * @return A Response from the request Type
      */
     R retrieveNetworkResponse();
 
     /**
-     * Do a Postprocess of the Network Response.
+     * Does a processing of the Response.
+     * <p/>
+     * In the default implementation this is a chance for the developer to execute code regarding the response.
+     * This might range from crossing information from the cache to the fetched data to validate it.
+     * <p/>
+     * While it is not an expected behavior, the developer can still have a chance to throw an exception.
      *
      * @param content Response content to Process
      * @return A modified Response content
@@ -42,17 +63,27 @@ public interface NetworkRequest<R extends BaseResponse, E extends BaseError> ext
     R postProcess(R content);
 
     /**
-     * Saves the response to Cache
+     * Saves the response to Cache.
+     * <p/>
+     * This phase will save the data into the repositories according to the structure and architecture of
+     * them. Depending on the implementation of the repositories this operation might take long times
+     * and provide a bad UX to the user unless the notification actually happens before this method.
+     * <p/>
+     * For those requests, {@link com.sefford.kor.requests.interfaces.FastSaving FastSaving} interface is
+     * available for saving to the repository on a fast way, notifying and finally performing a full save.
      *
-     * @param object Content to save to Cache
+     * @param object Response content to save to Cache
      */
     void saveToCache(R object);
 
     /**
-     * Generates a BaseError from an exception
+     * Generates a BaseError from an exception.
+     * <p/>
+     * Gives the developer to extend some information to the error before notifying the UI that the
+     * request failed.
      *
-     * @param error Exception error
-     * @return Composed Error
+     * @param error Exception that generated the error.
+     * @return Composed Error extending {@link com.sefford.kor.errors.ErrorInterface ErrorInterface}
      */
     E composeErrorResponse(Exception error);
 }

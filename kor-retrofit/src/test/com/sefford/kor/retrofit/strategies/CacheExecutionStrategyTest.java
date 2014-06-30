@@ -2,10 +2,10 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.CacheRequest;
 import com.sefford.kor.requests.interfaces.RequestIdentification;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class CacheExecutionStrategyTest {
     @Mock
     TestRequest request;
     @Mock
-    BaseResponse response;
+    ResponseInterface response;
 
 
     CacheExecutionStrategy executor;
@@ -62,7 +62,7 @@ public class CacheExecutionStrategyTest {
         inOrder.verify(request, times(1)).retrieveFromCache();
         inOrder.verify(response, times(1)).isSuccess();
         inOrder.verify(executor, times(0)).notifySuccess(response);
-        inOrder.verify(executor, times(0)).notifyError(Matchers.<BaseError>any());
+        inOrder.verify(executor, times(0)).notifyError(Matchers.<ErrorInterface>any());
     }
 
 
@@ -73,7 +73,7 @@ public class CacheExecutionStrategyTest {
 
     class TestRequest implements RequestIdentification, CacheRequest {
         @Override
-        public BaseResponse retrieveFromCache() {
+        public ResponseInterface retrieveFromCache() {
             return null;
         }
 

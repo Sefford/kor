@@ -15,15 +15,15 @@
  */
 package com.sefford.kor.strategies.interfaces;
 
-import com.sefford.kor.errors.BaseError;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
  * Strategy notification interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface RequestNotification<R extends BaseResponse, E extends BaseError> {
+public interface RequestNotification<R extends ResponseInterface, E extends ErrorInterface> {
 
     /**
      * Notifies of the finishing of the request

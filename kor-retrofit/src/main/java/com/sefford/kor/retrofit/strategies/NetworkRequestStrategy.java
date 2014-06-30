@@ -17,18 +17,22 @@ package com.sefford.kor.retrofit.strategies;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Base Network Request Strategy
+ * Base Network Request Strategy.
+ * <p/>
+ * This abstract class starts notifying the errors to the UI in preparation for Network Requests.
+ * <p/>
+ * This hierarchy of classes will delegate the work to NetworkRequests implementations.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class NetworkRequestStrategy<R extends BaseResponse, E extends BaseError> extends RequestStrategy<R, E> {
+public abstract class NetworkRequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends RequestStrategy<R, E> {
     /**
-     * Creates a new instance of Saving Callback
+     * Creates a new instance of Base Network Strategy.
      *
      * @param bus     Notification Facility
      * @param log     Logging facilities

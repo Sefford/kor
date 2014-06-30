@@ -45,7 +45,7 @@ public abstract class BaseRepository<K, V extends RepoElement<K>>
      *
      * @param nextLevel Next Level of the Repository
      */
-    BaseRepository(Repository<K, V> nextLevel) {
+    protected BaseRepository(Repository<K, V> nextLevel) {
         this.nextLevel = nextLevel;
     }
 

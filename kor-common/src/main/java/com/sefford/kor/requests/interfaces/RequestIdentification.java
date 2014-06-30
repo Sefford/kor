@@ -17,14 +17,20 @@ package com.sefford.kor.requests.interfaces;
 
 /**
  * Request Identification Interface.
+ * <p/>
+ * The lowest common facility of the Requests. This is a convenience interface to let the Requests
+ * have an unified way of identifying themselves.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
 public interface RequestIdentification {
     /**
-     * Returns request name
+     * Returns request name.
+     * <p/>
+     * Depending on the information held by the Request object. This method can return a customized
+     * name with custom parameters to improve logging information.
      *
-     * @return Request name
+     * @return String with request name.
      */
     String getRequestName();
 }

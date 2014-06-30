@@ -15,17 +15,18 @@
  */
 package com.sefford.kor.retrofit.interfaces;
 
-import com.sefford.kor.errors.BaseError;
+import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
-import com.sefford.kor.responses.BaseResponse;
+import com.sefford.kor.responses.ResponseInterface;
+
 import retrofit.RetrofitError;
 
 /**
- * Extension of Kor's Network Request to support Retrofit
+ * Extension of Kor's Network Request to support Retrofit.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface RetrofitRequest<R extends BaseResponse, E extends BaseError> extends NetworkRequest<R, E> {
+public interface RetrofitRequest<R extends ResponseInterface, E extends ErrorInterface> extends NetworkRequest<R, E> {
 
     /**
      * Generates a BaseError from a Retrofit error
