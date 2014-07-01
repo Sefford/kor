@@ -9,7 +9,7 @@
 
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>aar</packaging>
 
     <name>kor-common</name>
