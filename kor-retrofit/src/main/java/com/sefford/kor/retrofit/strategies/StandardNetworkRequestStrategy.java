@@ -61,7 +61,7 @@ public class StandardNetworkRequestStrategy<R extends ResponseInterface, E exten
             notifySuccess(processedContent);
         } catch (RetrofitError e) {
             log.e(TAG, request.getRequestName(), e);
-            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(e));
+            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse((RetrofitError) e));
         } catch (Exception x) {
             log.e(TAG, request.getRequestName(), x);
             notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(x));

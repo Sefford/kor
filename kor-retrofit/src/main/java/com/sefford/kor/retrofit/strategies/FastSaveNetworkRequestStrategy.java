@@ -67,7 +67,7 @@ public class FastSaveNetworkRequestStrategy<R extends ResponseInterface, E exten
             }
         } catch (RetrofitError e) {
             log.e(TAG, request.getRequestName(), e);
-            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(e));
+            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse((RetrofitError)e));
         } catch (Exception x) {
             log.e(TAG, request.getRequestName(), x);
             notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(x));
