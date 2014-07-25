@@ -22,6 +22,7 @@ import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.requests.interfaces.FastSaving;
 import com.sefford.kor.requests.interfaces.NetworkRequest;
 import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.retrofit.interfaces.RetrofitRequest;
 
 import retrofit.RetrofitError;
 
@@ -67,7 +68,7 @@ public class FastSaveNetworkRequestStrategy<R extends ResponseInterface, E exten
             }
         } catch (RetrofitError e) {
             log.e(TAG, request.getRequestName(), e);
-            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse((RetrofitError)e));
+            notifyError(((RetrofitRequest<R, E>) request).composeErrorResponse(e));
         } catch (Exception x) {
             log.e(TAG, request.getRequestName(), x);
             notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(x));

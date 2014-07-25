@@ -45,6 +45,7 @@ public class StandardNetworkRequestStrategyTest {
         when(request.retrieveNetworkResponse()).thenReturn(response);
         when(request.postProcess((ResponseInterface) any())).thenReturn(response);
         when(request.composeErrorResponse((Exception) any())).thenReturn(error);
+        when(request.composeErrorResponse((RetrofitError) any())).thenReturn(error);
         executor = spy(new StandardNetworkRequestStrategy(bus, log, request));
     }
 
@@ -75,13 +76,15 @@ public class StandardNetworkRequestStrategyTest {
 
     @Test
     public void testSuccessWithRetrofitException() throws Throwable {
-        doThrow(mock(RetrofitError.class)).when(request).retrieveNetworkResponse();
+        RetrofitError retrofitError = mock(RetrofitError.class);
+        doThrow(retrofitError).when(request).retrieveNetworkResponse();
         executor.onRun();
 
         InOrder inOrder = Mockito.inOrder(request, executor);
         inOrder.verify(request, times(1)).retrieveNetworkResponse();
         inOrder.verify(request, times(0)).postProcess(response);
         inOrder.verify(request, times(0)).saveToCache(response);
+        inOrder.verify(request, times(1)).composeErrorResponse(retrofitError);
         inOrder.verify(executor, times(1)).notifyError(error);
     }
 
