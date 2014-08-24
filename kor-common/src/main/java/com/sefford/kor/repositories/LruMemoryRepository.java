@@ -15,6 +15,8 @@
  */
 package com.sefford.kor.repositories;
 
+import android.support.v4.util.LruCache;
+
 import com.sefford.kor.repositories.interfaces.FastRepository;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
@@ -23,37 +25,25 @@ import com.sefford.kor.repositories.interfaces.Updateable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Simple abstraction of a repository that only supports volatile memory caching.
+ * Simple abstraction of a repository which provides a Memory interface using {@link android.support.v4.util.LruCache LRUCache}
+ * instead of a {@link java.util.Map Map} backend.
  * <p/>
- * The fastest and simplest way to implement a memory repository is through a Map. This implementation
- * of a memory repository can be kind of tailored through the use of different map subclasses as
- * HashMap (a typical implementation) or TreeMap for sorted access.
- * <p/>
- * A limitation of the MemoryRepository is that it does not constraint itself to a memory size. The
- * developer is intended to manually clear unused entries.
+ * This allows the repository to be able to keep a steady footprint in memory instead of grabbing
+ * all available space.
  * <p/>
  * Declaring additional memory repositories is as easy as extending this repository with particular
  * classes for Keys and Values.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
+public class LruMemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
         implements Repository<K, V>, FastRepository<K, V> {
 
-    /**
-     * Map to store the Key, Value references on the repository
-     */
-    protected final Map<K, V> cache;
+    protected final LruCache<K, V> cache;
 
-    /**
-     * Creates a new instance of Memory repository
-     *
-     * @param cache Storage map of the repository
-     */
-    protected MemoryRepository(Map<K, V> cache) {
+    public LruMemoryRepository(LruCache<K, V> cache) {
         this.cache = cache;
     }
 
@@ -79,7 +69,7 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
 
     @Override
     public boolean contains(K id) {
-        return cache.containsKey(id);
+        return cache.get(id) != null;
     }
 
     @Override
@@ -113,12 +103,12 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
 
     @Override
     public void clear() {
-        cache.clear();
+        cache.evictAll();
     }
 
     @Override
     public Collection<V> getAll() {
-        return cache.values();
+        return cache.snapshot().values();
     }
 
     @Override
@@ -133,7 +123,7 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
 
     @Override
     public Collection<V> getAllFromMemory(List<K> ids) {
-        return getAll();
+        return getAll(ids);
     }
 
     @Override

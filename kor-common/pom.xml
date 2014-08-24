@@ -9,7 +9,7 @@
 
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>aar</packaging>
 
     <name>kor-common</name>
@@ -72,10 +72,14 @@
             <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.android.support</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>19.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <testSourceDirectory>src/test</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>

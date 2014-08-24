@@ -74,7 +74,12 @@ public interface Repository<K, V extends RepoElement<K>> {
     V get(K id);
 
     /**
-     * Returns all elements in repository
+     * Returns all requested elements
+     */
+    Collection<V> getAll(Collection<K> ids);
+
+    /**
+     * Returns all elements from the repository
      */
     Collection<V> getAll();
 
