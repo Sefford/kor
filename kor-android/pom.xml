@@ -9,7 +9,7 @@
 
     <groupId>com.sefford</groupId>
     <artifactId>kor-android</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>aar</packaging>
 
     <name>kor-android</name>
@@ -46,7 +46,7 @@
         <android.plugin.version>3.9.0-rc.2</android.plugin.version>
 
         <!-- Libraries -->
-        <kor.common.version>1.3-SNAPSHOT</kor.common.version>
+        <kor.common.version>1.3</kor.common.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jacoco.version>0.7.1.201405082137</jacoco.version>
         <junit.version>4.11</junit.version>
