@@ -11,6 +11,7 @@
 
     <modules>
         <module>kor-common</module>
+        <module>kor-android</module>
         <module>kor-retrofit</module>
     </modules>
 
