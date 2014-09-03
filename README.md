@@ -1,4 +1,6 @@
 kor
 ===
 
-A clean architecture implementation
+A Clean Architecture Implementation core library.
+
+
