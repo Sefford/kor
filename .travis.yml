@@ -1,5 +1,5 @@
 language: java
-before_install: sh kor/external-repo/upload.sh
+before_install: mvn install:install-file -Dfile=./support-v4-19.1.0.jar -DgroupId=com.android.support -DartifactId=support-v4 -Dversion=19.1.0
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk7
