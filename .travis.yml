@@ -1,5 +1,5 @@
 language: java
-before_script: sh external_repo/upload.sh
+before_install: sh external_repo/upload.sh
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk7
