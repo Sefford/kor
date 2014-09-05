@@ -8,6 +8,8 @@ before_install:
   - tar xzf android-sdk_r23.0.2-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  #  addon-google_apis-google-16
+  - android update sdk --filter platform-tools,android-8,extra-android-support,66,$ANDROID_SDKS --no-ui --force > /d
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk7
