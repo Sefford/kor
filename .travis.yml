@@ -9,7 +9,7 @@ before_install:
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   #  addon-google_apis-google-16
-  - android update sdk --filter platform-tools,android-8,extra-android-support,66,$ANDROID_SDKS --no-ui --force >  /dev/null
+  - android update sdk --filter platform-tools,android-8 --no-ui --force >  /dev/null
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk7
