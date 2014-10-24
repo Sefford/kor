@@ -1,6 +1,21 @@
 Changelog
 =========
 
+## Kor Common 1.31
+_2014-10-24_
+
+ * `retrieveNetworkResponse` now throws an exception in order to properly catch erroneous responses
+ through `composeErrorResponse(Exception`.
+
+##Kor Retrofit 1.0.9
+
+ * Updated dependencency to kor-common 1.31
+
+##Kor Android 1.0.1
+
+ * Updated dependencency to kor-common 1.31
+
+
 ##Kor Retrofit 1.0.8
 _2014-08-21_
 

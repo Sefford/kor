@@ -47,7 +47,7 @@ public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInte
      *
      * @return A Response from the request Type
      */
-    R retrieveNetworkResponse();
+    R retrieveNetworkResponse() throws Exception;
 
     /**
      * Does a processing of the Response.
