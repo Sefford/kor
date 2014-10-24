@@ -9,7 +9,7 @@
 
     <groupId>com.sefford</groupId>
     <artifactId>kor-android</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>aar</packaging>
 
     <name>kor-android</name>
