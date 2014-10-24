@@ -9,7 +9,7 @@
 
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>1.31-SNAPSHOT</version>
+    <version>1.31</version>
 
     <name>kor-common</name>
     <description>Kor common platform to implement a clean architecture over your Android
