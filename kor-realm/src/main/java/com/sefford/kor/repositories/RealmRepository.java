@@ -18,7 +18,6 @@ package com.sefford.kor.repositories;
 import com.sefford.kor.repositories.interfaces.FastRepository;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
-import com.sefford.kor.repositories.interfaces.Updateable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +34,7 @@ import io.realm.RealmQuery;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class RealmRepository<K, V extends RealmObject & RepoElement<K> & Updateable<V>>
+public abstract class RealmRepository<K, V extends RealmObject & RepoElement<K>>
         implements Repository<K, V>, FastRepository<K, V> {
 
     protected final Realm realm;
@@ -152,12 +151,21 @@ public class RealmRepository<K, V extends RealmObject & RepoElement<K> & Updatea
         if (existingElement == null) {
             existingElement = realm.createObject(clazz);
         }
-        existingElement.update(element);
-        return existingElement;
+        return update(existingElement, element);
     }
 
     @Override
     public boolean isAvailable() {
         return realm != null;
     }
+
+    /**
+     * Instructions on updating the Element. Differently to other methods, Realm enforces RealmObjects
+     * to not implement any other method on their implementations.
+     *
+     * @param oldElement Existing element to update
+     * @param newElement New information to update
+     * @return element with the updated information
+     */
+    protected abstract V update(V oldElement, V newElement);
 }

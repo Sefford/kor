@@ -312,5 +312,10 @@ public class RealmRepositoryTest {
         public TestRepository(Realm realm, Class<TestElement> clazz) {
             super(realm, clazz);
         }
+
+        @Override
+        protected TestElement update(TestElement oldElement, TestElement newElement) {
+            return oldElement;
+        }
     }
 }
