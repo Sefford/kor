@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -8,12 +10,11 @@
     </parent>
 
     <groupId>com.sefford</groupId>
-    <artifactId>kor-android</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
-    <packaging>aar</packaging>
+    <artifactId>kor-realm</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
-    <name>kor-android</name>
-    <description>Kor architecture extensions for Android</description>
+    <name>kor-realm</name>
+    <description>Kor extension for using it with Realm DB</description>
 
     <licenses>
         <license>
@@ -37,28 +38,32 @@
         </developer>
     </developers>
 
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1
-        </platform.version>
         <android.plugin.version>3.9.0-rc.2</android.plugin.version>
 
         <!-- Libraries -->
-        <kor.common.version>1.31</kor.common.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jacoco.version>0.7.1.201405082137</jacoco.version>
         <junit.version>4.11</junit.version>
+        <kor.commons.version>1.31</kor.commons.version>
         <mockito.version>1.9.5</mockito.version>
-        <robolectric.version>2.2</robolectric.version>
-        <support.version>19.1.0</support.version>
+        <realm.version>0.71.0</realm.version>
+        <robolectric.version>2.3</robolectric.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.sefford</groupId>
-            <artifactId>kor-common</artifactId>
-            <version>${kor.common.version}</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -78,9 +83,20 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.android.support</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>${support.version}</version>
+            <groupId>com.sefford</groupId>
+            <artifactId>kor-common</artifactId>
+            <version>${kor.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.realm</groupId>
+            <artifactId>realm-android</artifactId>
+            <version>${realm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>${robolectric.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

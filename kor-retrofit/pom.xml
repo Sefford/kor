@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -13,8 +15,7 @@
     <packaging>aar</packaging>
 
     <name>kor-retrofit</name>
-    <description>Kor implementation for Retrofit
-    </description>
+    <description>Kor extensions for Retrofit library</description>
 
     <licenses>
         <license>
@@ -40,7 +41,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1
+        <platform.version>2.3.3
         </platform.version>
         <android.plugin.version>3.9.0-rc.2</android.plugin.version>
 
