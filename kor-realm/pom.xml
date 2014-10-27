@@ -12,6 +12,7 @@
     <groupId>com.sefford</groupId>
     <artifactId>kor-realm</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>aar</packaging>
 
     <name>kor-realm</name>
     <description>Kor extension for using it with Realm DB</description>
