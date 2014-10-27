@@ -32,6 +32,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * Tests for RealmRepository
+ *
+ * @author Saul Diaz <sefford@gmail.com>
+ */
 @RunWith(RobolectricTestRunner.class)
 public class RealmRepositoryTest {
 
@@ -229,7 +234,7 @@ public class RealmRepositoryTest {
     public void testSave() throws Exception {
         when(repository.prepareElementForSaving(element1)).thenReturn(element1);
         when(realm.createObject(clazz)).thenReturn(element1);
-        
+
         assertEquals(element1, repository.save(element1));
 
         InOrder order = inOrder(realm, repository);
