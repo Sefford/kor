@@ -8,7 +8,7 @@ Download
 
 ### Bundle
 
-Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](hhttp://search.maven.org/remotecontent?filepath=com/sefford/kor-common/1.31/kor-common-1.31.jar)
+Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/1.31/kor-common-1.31.jar)
 
 Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-android/1.0.1/kor-android-1.0.1.aar)
 
@@ -180,7 +180,9 @@ Interesting literature
 ======================
 
 Martin, Robert Cecil: [The Clean Architecture](http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
 Cockburn, Alistair: [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture)
+
 [VIPER Architecture](http://mutualmobile.github.io/blog/2013/12/04/viper-introduction/)
 
 License
