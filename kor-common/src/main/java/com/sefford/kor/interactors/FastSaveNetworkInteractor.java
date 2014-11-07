@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.retrofit.strategies;
+package com.sefford.kor.interactors;
 
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.requests.interfaces.FastSaving;
-import com.sefford.kor.requests.interfaces.NetworkRequest;
+import com.sefford.kor.interactors.interfaces.FastDelegate;
+import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.ResponseInterface;
-import com.sefford.kor.retrofit.interfaces.RetrofitRequest;
-
-import retrofit.RetrofitError;
 
 /**
- * Specialization of a Network Request Strategy to support fast cache saving.
+ * Specialization of a Network Interactor to support fast cache saving.
  * <p/>
  * This strategy adds a first fast save on the repository to have the information already on the repository,
  * then notifies the UI. After the notification a standard full-save is performed on the repository
@@ -38,40 +35,37 @@ import retrofit.RetrofitError;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class FastSaveNetworkRequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends NetworkRequestStrategy<R, E> {
+public class FastSaveNetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends NetworkInteractor<R, E> {
 
     /**
-     * Creates a new instance of Saving Callback
+     * Creates a new instance of Fast Saving Interactor
      *
      * @param bus     Notification Facility
      * @param log     Logging facilities
-     * @param request Request to execute
+     * @param delegate Request to execute
      */
-    public FastSaveNetworkRequestStrategy(Postable bus, Loggable log, NetworkRequest<R, E> request) {
-        super(bus, log, request);
+    public FastSaveNetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {
+        super(bus, log, delegate);
     }
 
     @Override
-    public void onRun() throws Throwable {
+    public void run() {
         try {
-            final R content = ((NetworkRequest<R, E>) request).retrieveNetworkResponse();
-            final R processedContent = ((NetworkRequest<R, E>) request).postProcess(content);
-            final R savedMemoryContent = ((FastSaving<R>) request).fastSave(processedContent);
+            final R content = ((NetworkDelegate<R, E>) delegate).retrieveNetworkResponse();
+            final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
+            final R savedMemoryContent = ((FastDelegate<R>) delegate).fastSave(processedContent);
             notifySuccess(savedMemoryContent);
             try {
                 long start = System.currentTimeMillis();
-                ((NetworkRequest<R, E>) request).saveToCache(savedMemoryContent);
-                log.printPerformanceLog(TAG, request.getRequestName(), start);
+                ((NetworkDelegate<R, E>) delegate).saveToCache(savedMemoryContent);
+                log.printPerformanceLog(TAG, delegate.getInteractorName(), start);
             } catch (Exception x) {
                 // On the inner exception we just do not notify the error
-                log.e(TAG, request.getRequestName(), x);
+                log.e(TAG, delegate.getInteractorName(), x);
             }
-        } catch (RetrofitError e) {
-            log.e(TAG, request.getRequestName(), e);
-            notifyError(((RetrofitRequest<R, E>) request).composeErrorResponse(e));
         } catch (Exception x) {
-            log.e(TAG, request.getRequestName(), x);
-            notifyError(((NetworkRequest<R, E>) request).composeErrorResponse(x));
+            log.e(TAG, delegate.getInteractorName(), x);
+            notifyError(((NetworkDelegate<R, E>) delegate).composeErrorResponse(x));
         }
     }
 }

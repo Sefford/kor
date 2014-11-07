@@ -58,9 +58,9 @@
         <hamcrest.version>1.3</hamcrest.version>
         <jacoco.version>0.7.1.201405082137</jacoco.version>
         <junit.version>4.11</junit.version>
-        <kor.commons.version>1.31</kor.commons.version>
+        <kor.commons.version>1.4-SNAPSHOT</kor.commons.version>
         <mockito.version>1.9.5</mockito.version>
-        <realm.version>0.71.0</realm.version>
+        <realm.version>0.72.0</realm.version>
         <robolectric.version>2.3</robolectric.version>
     </properties>
 

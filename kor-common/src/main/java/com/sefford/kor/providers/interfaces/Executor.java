@@ -20,29 +20,29 @@ import java.util.List;
 /**
  * Basic provider interface to unify the Provider APIs.
  * <p/>
- * In general terms a Provider intends to be an API to execute and managing a request queue. It has
- * access to very basic API as not all the ways of providing a request queue allow for an extensive
+ * In general terms a Executor intends to be an API to execute and managing an interactor queue. It has
+ * access to very basic API as not all the ways of providing a delegate queue allow for an extensive
  * manipulation.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface Provider<T> {
+public interface Executor<T> {
 
 
     /**
-     * Executes a Single operation, determining if the Request requires to bring the content from the Network or the
+     * Executes a Single operation, determining if the Interactor requires to bring the content from the Network or the
      * Cache
      *
-     * @param request Request to process
+     * @param interactor Request to process
      */
-    void executeOperation(T request);
+    void executeOperation(T interactor);
 
     /**
      * Executes multiple operations.
      *
-     * @param requests List of requests to process
+     * @param interactors List of Interactors to process
      */
-    void executeOperations(List<T> requests);
+    void executeOperations(List<T> interactors);
 
     /**
      * Clears the queue.

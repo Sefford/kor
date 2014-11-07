@@ -1,49 +1,42 @@
-package com.sefford.kor.retrofit.strategies;
+package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.requests.interfaces.NetworkRequest;
-import com.sefford.kor.requests.interfaces.RequestIdentification;
+import com.sefford.kor.interactors.interfaces.InteractorIdentification;
+import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.ResponseInterface;
-import com.sefford.kor.retrofit.interfaces.RetrofitRequest;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import retrofit.RetrofitError;
-
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class NetworkRequestStrategyTest {
+public class NetworkInteractorTest {
 
     @Mock
     Postable bus;
     @Mock
     Loggable log;
     @Mock
-    TestRequest request;
+    TestDelegate delegate;
     @Mock
     ErrorInterface error;
-    @Mock
-    RetrofitError retrofitError;
 
-    NetworkRequestStrategy executor;
+    NetworkInteractor interactor;
 
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
-        when(request.composeErrorResponse(retrofitError)).thenReturn(error);
-        executor = spy(new NetworkRequestStrategy(bus, log, request) {
+        interactor = spy(new NetworkInteractor(bus, log, delegate) {
             @Override
-            public void onRun() throws Throwable {
+            public void run() {
                 // Do nathin
             }
         });
@@ -51,30 +44,30 @@ public class NetworkRequestStrategyTest {
 
     @Test
     public void testNotifyError() throws Exception {
-        executor.notifyError(error);
+        interactor.notifyError(error);
         verify(bus, times(1)).post(error);
     }
 
-    class NetworkRequestStrategyImpl extends NetworkRequestStrategy {
+    class NetworkInteractorImpl extends NetworkInteractor {
 
         /**
          * Creates a new instance of Saving Callback
          *
-         * @param bus     Notification Facility
-         * @param log     Logging facilities
-         * @param request Request to execute
+         * @param bus      Notification Facility
+         * @param log      Logging facilities
+         * @param delegate Delegate to execute
          */
-        protected NetworkRequestStrategyImpl(Postable bus, Loggable log, NetworkRequest request) {
-            super(bus, log, request);
+        protected NetworkInteractorImpl(Postable bus, Loggable log, NetworkDelegate delegate) {
+            super(bus, log, delegate);
         }
 
         @Override
-        public void onRun() throws Throwable {
+        public void run() {
 
         }
     }
 
-    class TestRequest implements RequestIdentification, RetrofitRequest {
+    class TestDelegate implements InteractorIdentification, NetworkDelegate {
 
         @Override
         public ResponseInterface retrieveNetworkResponse() {
@@ -92,18 +85,13 @@ public class NetworkRequestStrategyTest {
         }
 
         @Override
-        public ErrorInterface composeErrorResponse(RetrofitError error) {
-            return null;
-        }
-
-        @Override
         public ErrorInterface composeErrorResponse(Exception error) {
             return null;
         }
 
         @Override
-        public String getRequestName() {
-            return null;
+        public String getInteractorName() {
+            return "";
         }
     }
 }

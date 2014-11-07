@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.strategies.interfaces;
+package com.sefford.kor.interactors.interfaces;
 
 import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Strategy notification interface.
+ * Interface for managing Cache Interactors.
+ * <p/>
+ * A cache delegate is intended to be able to check if the cache is valid then retrieve it if it is.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface RequestNotification<R extends ResponseInterface, E extends ErrorInterface> {
+public interface CacheDelegate<R extends ResponseInterface, E extends ErrorInterface> extends InteractorIdentification {
 
     /**
-     * Notifies of the finishing of the request
+     * Retrieves the necessary information from the Cache and packs it.
      *
-     * @param content Processed response
+     * @return A Response from the delegate Type
      */
-    void notifySuccess(R content);
+    R retrieveFromCache();
 
     /**
-     * Notifies of an error on the request
+     * Identifies if a CacheRequest is valid or not.
      *
-     * @param error Error
+     * @return TRUE if the Cache is up-to-date and usable.
      */
-    void notifyError(E error);
+    boolean isCacheValid();
 }
-

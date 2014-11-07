@@ -317,5 +317,10 @@ public class RealmRepositoryTest {
         protected TestElement update(TestElement oldElement, TestElement newElement) {
             return oldElement;
         }
+
+        @Override
+        protected String getId(TestElement element) {
+            return element.getId();
+        }
     }
 }

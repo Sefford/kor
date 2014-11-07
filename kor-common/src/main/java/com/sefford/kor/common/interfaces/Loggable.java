@@ -32,23 +32,23 @@ public interface Loggable {
     void d(String tag, String message);
 
     /**
-     * Prints a performance log in case the user wants to check how their requests are performing.
+     * Prints a performance log in case the user wants to check how their delegates are performing.
      * <p/>
-     * Sometimes a developer needs to know how much time their requests are taking. This is a
+     * Sometimes a developer needs to know how much time their delegates are taking. This is a
      * utility API to encapsulate a method to know how long a code snippet is taking.
      *
-     * @param tag         Logger identification.
-     * @param requestName Name of the request to measure performance.
-     * @param start       Start referencing time to measure.
+     * @param tag          Logger identification.
+     * @param delegateName Name of the delegate to measure performance.
+     * @param start        Start referencing time to measure.
      */
-    void printPerformanceLog(String tag, String requestName, long start);
+    void printPerformanceLog(String tag, String delegateName, long start);
 
     /**
      * Logs a error log to the Logger
      *
-     * @param tag         Logger identification.
-     * @param requestName Name of the request to measure performance.
-     * @param tr          Throwable object to send through the Logger.
+     * @param tag          Logger identification.
+     * @param delegateName Name of the delegate to measure performance.
+     * @param tr           Throwable object to send through the Logger.
      */
-    void e(String tag, String requestName, Throwable tr);
+    void e(String tag, String delegateName, Throwable tr);
 }

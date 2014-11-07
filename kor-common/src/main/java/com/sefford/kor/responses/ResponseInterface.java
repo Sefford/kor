@@ -7,18 +7,18 @@ package com.sefford.kor.responses;
  */
 public interface ResponseInterface {
     /**
-     * Returns if the Request was successful.
+     * Returns if the Interactor was successful.
      * <p/>
-     * This flag indicates if the request was or not successful independently of the result of the
-     * network operation. While typically a successful request completes, there could be cases
-     * where the request actually is not successful because of the data.
+     * This flag indicates if the delegate was or not successful independently of the result of the
+     * network operation. While typically a successful delegate completes, there could be cases
+     * where the delegate actually is not successful because of the data.
      *
      * @return TRUE if it was, FALSE otherwise
      */
     boolean isSuccess();
 
     /**
-     * Returns if the request comes from the network or not.
+     * Returns if the delegate comes from the network or not.
      * <p/>
      * The basic implementation only discerns between network and non-network (cache), but extensions of
      * ResponseInterface may allow for a more fine-grained information about their sources.

@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.retrofit.strategies;
+package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.requests.interfaces.CacheRequest;
+import com.sefford.kor.interactors.interfaces.CacheDelegate;
 import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * CacheExecutionStrategy is the default implementation of a Strategy for Cache Requests.
+ * CacheInteractor is the default implementation of a strategy for Cache-related Interactors.
  * <p/>
- * This strategy retrieves the Request's information from the Repository then notifies if the information
+ * This strategy retrieves the delegate's information from the Repository then notifies if the information
  * was successfully retrieved from it.
  * <p/>
- * To do not disturb the process of fetching from network, as the cache requests work faster this
- * implementation of CacheExecutionStrategy does not notifies of errors to the UI.
+ * To do not disturb the process of fetching from network, as the cache delegate work faster this
+ * implementation of CacheInteractor does not notifies of errors to the UI.
  * <p/>
- * It delegates the work to a CacheRequest object.
+ * It delegates the work to a {@link com.sefford.kor.interactors.interfaces.CacheDelegate CacheDelegate} object.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class CacheExecutionStrategy<R extends ResponseInterface, E extends ErrorInterface> extends RequestStrategy<R, E> {
+public class CacheInteractor<R extends ResponseInterface, E extends ErrorInterface> extends Interactor<R, E> {
     /**
      * Bus instance to notify the UI the process finished.
      * <p/>
@@ -47,34 +47,34 @@ public class CacheExecutionStrategy<R extends ResponseInterface, E extends Error
      */
     protected final Loggable log;
     /**
-     * Cache Request Strategy Logging tag
+     * Cache Interactor Logging tag
      */
-    protected static final String TAG = "CacheRequest";
+    protected static final String TAG = "CacheInteractor";
 
     /**
-     * Creates a new Cache Request.
+     * Creates a new Cache Interactor.
      *
      * @param bus Bus to notify the results
      * @param log Logging facilities
      */
-    public CacheExecutionStrategy(Postable bus, Loggable log, CacheRequest<R, E> request) {
-        super(bus, log, request);
+    public CacheInteractor(Postable bus, Loggable log, CacheDelegate<R, E> delegate) {
+        super(bus, log, delegate);
         this.log = log;
         this.bus = bus;
     }
 
     @Override
-    public void onRun() throws Throwable {
-        long start = System.currentTimeMillis();
-        final R processedContent = ((CacheRequest<R, E>) request).retrieveFromCache();
-        log.d(TAG, request.getRequestName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
-        if (processedContent.isSuccess()) {
-            notifySuccess(processedContent);
-        }
+    public void notifyError(E error) {
+        // Do nothing
     }
 
     @Override
-    public void notifyError(E error) {
-        // Do nothing
+    public void run() {
+        long start = System.currentTimeMillis();
+        final R processedContent = ((CacheDelegate<R, E>) delegate).retrieveFromCache();
+        log.d(TAG, delegate.getInteractorName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
+        if (processedContent.isSuccess()) {
+            notifySuccess(processedContent);
+        }
     }
 }

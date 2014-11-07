@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.requests.interfaces;
+package com.sefford.kor.interactors.interfaces;
 
 import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Interface for Requests that is intended to be used with requests that require a fast memory save method.
+ * Interface for Interactors that is intended to be used with delegates that require a fast memory save method.
  * <p/>
  * It should be used by a Repository that implements {@link com.sefford.kor.repositories.interfaces.FastRepository FastRepository}
  * interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface FastSaving<R extends ResponseInterface> {
+public interface FastDelegate<R extends ResponseInterface> {
 
     /**
      * Performs a Fast save.

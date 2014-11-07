@@ -1,7 +1,7 @@
 package com.sefford.kor.errors;
 
 /**
- * Generic Error interface for requests
+ * Generic Error interface for delegates
  * <p/>
  * The Base Error encapsulates the bare information to identify an error, this is, an Error Code which
  * can be used for Error identification, a human-readable string error for information purposes and

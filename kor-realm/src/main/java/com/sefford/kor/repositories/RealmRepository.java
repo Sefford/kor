@@ -16,7 +16,6 @@
 package com.sefford.kor.repositories;
 
 import com.sefford.kor.repositories.interfaces.FastRepository;
-import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import io.realm.RealmQuery;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class RealmRepository<K, V extends RealmObject & RepoElement<K>>
+public abstract class RealmRepository<K, V extends RealmObject>
         implements Repository<K, V>, FastRepository<K, V> {
 
     protected final Realm realm;
@@ -91,7 +90,7 @@ public abstract class RealmRepository<K, V extends RealmObject & RepoElement<K>>
     public void deleteAll(List<V> elements) {
         List<K> ids = new ArrayList<K>();
         for (V element : elements) {
-            ids.add(element.getId());
+            ids.add(getId(element));
         }
         realm.beginTransaction();
         prepareQuery(ids).findAll().clear();
@@ -147,7 +146,7 @@ public abstract class RealmRepository<K, V extends RealmObject & RepoElement<K>>
     }
 
     V prepareElementForSaving(V element) {
-        V existingElement = get(element.getId());
+        V existingElement = get(getId(element));
         if (existingElement == null) {
             existingElement = realm.createObject(clazz);
         }
@@ -168,4 +167,12 @@ public abstract class RealmRepository<K, V extends RealmObject & RepoElement<K>>
      * @return element with the updated information
      */
     protected abstract V update(V oldElement, V newElement);
+
+    /**
+     * Helper method used to discern the main key of a V class element
+     *
+     * @param element Element to know the ID from
+     * @return K id
+     */
+    protected abstract K getId(V element);
 }

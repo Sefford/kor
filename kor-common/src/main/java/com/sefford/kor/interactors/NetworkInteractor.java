@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.retrofit.strategies;
+package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.requests.interfaces.NetworkRequest;
+import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Base Network Request Strategy.
+ * Base Network Interactor hierarchy line.
  * <p/>
- * This abstract class starts notifying the errors to the UI in preparation for Network Requests.
+ * This abstract class starts notifying the errors to the UI in preparation for Network Interaction.
  * <p/>
- * This hierarchy of classes will delegate the work to NetworkRequests implementations.
+ * This hierarchy of classes will delegate the work to {@link com.sefford.kor.interactors.interfaces.NetworkDelegate NetworkDelegate} implementations.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class NetworkRequestStrategy<R extends ResponseInterface, E extends ErrorInterface> extends RequestStrategy<R, E> {
+public abstract class NetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends Interactor<R, E> {
     /**
-     * Creates a new instance of Base Network Strategy.
+     * Creates a new instance of Base Network Interactor
      *
      * @param bus     Notification Facility
      * @param log     Logging facilities
-     * @param request Request to execute
+     * @param delegate Request to execute
      */
-    protected NetworkRequestStrategy(Postable bus, Loggable log, NetworkRequest<R, E> request) {
-        super(bus, log, request);
+    protected NetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {
+        super(bus, log, delegate);
     }
 
     @Override

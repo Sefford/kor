@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.requests.interfaces;
+package com.sefford.kor.interactors.interfaces;
 
 /**
- * Request Identification Interface.
+ * Delegate Identification Interface.
  * <p/>
- * The lowest common facility of the Requests. This is a convenience interface to let the Requests
+ * The lowest common facility of the delegates. This is a convenience interface to let the delegates
  * have an unified way of identifying themselves.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface RequestIdentification {
+public interface InteractorIdentification {
     /**
-     * Returns request name.
+     * Returns delegate name.
      * <p/>
      * Depending on the information held by the Request object. This method can return a customized
      * name with custom parameters to improve logging information.
      *
-     * @return String with request name.
+     * @return String with delegate name.
      */
-    String getRequestName();
+    String getInteractorName();
 }

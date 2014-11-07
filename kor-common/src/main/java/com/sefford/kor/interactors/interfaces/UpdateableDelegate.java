@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.retrofit.interfaces;
+
+package com.sefford.kor.interactors.interfaces;
 
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.ResponseInterface;
 
-import retrofit.RetrofitError;
-
 /**
- * Extension of Kor's Network Request to support Retrofit.
+ * Updateable Delegate is a delegate which adds a looping facility to a delegate
  *
- * @author Saul Diaz <sefford@gmail.com>
+ * @author Saúl Díaz <sefford@gmail.com>
  */
-public interface RetrofitRequest<R extends ResponseInterface, E extends ErrorInterface> extends NetworkDelegate<R, E> {
+public interface UpdateableDelegate<R extends ResponseInterface, E extends ErrorInterface> extends NetworkDelegate<R, E> {
 
     /**
-     * Generates a BaseError from a Retrofit error
+     * Signals the Updateable Interactor if he requires looping no longer.
      *
-     * @param error Networking error
-     * @return Composed error
+     * @return TRUE if the execution has to continue, FALSE otherwise
      */
-    E composeErrorResponse(RetrofitError error);
-
+    boolean keepLooping();
 }

@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface Repository<K, V extends RepoElement<K>> {
+public interface Repository<K, V> {
 
     /**
      * Clears the repository

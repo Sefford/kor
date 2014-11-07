@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author <sefford@gmail.com>
  */
-public interface FastRepository<K, V extends RepoElement<K>> {
+public interface FastRepository<K, V> {
 
     /**
      * Checks if there is an element in the repository.

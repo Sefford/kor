@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.requests.interfaces;
+package com.sefford.kor.interactors.interfaces;
 
 import com.sefford.kor.errors.ErrorInterface;
 import com.sefford.kor.responses.ResponseInterface;
 
 /**
- * Interface for performing requests to the network.
+ * Interface for performing interactions to the network.
  * <p/>
- * A request is intended to go through at least four phases
+ * A delegate is intended to go through at least four phases
  * <p/>
  * <ul>
  * <li>Network Retrieval phase.</li>
@@ -33,7 +33,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInterface> extends RequestIdentification {
+public interface NetworkDelegate<R extends ResponseInterface, E extends ErrorInterface> extends InteractorIdentification {
 
     /**
      * Produces a {@link com.sefford.kor.responses.ResponseInterface ResponseInterface} type.
@@ -45,7 +45,7 @@ public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInte
      * and parsed. If there is any error, an exception of the appropiate type should be thrown and
      * catched.
      *
-     * @return A Response from the request Type
+     * @return A Response from the delegate Type
      */
     R retrieveNetworkResponse() throws Exception;
 
@@ -69,7 +69,7 @@ public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInte
      * them. Depending on the implementation of the repositories this operation might take long times
      * and provide a bad UX to the user unless the notification actually happens before this method.
      * <p/>
-     * For those requests, {@link com.sefford.kor.requests.interfaces.FastSaving FastSaving} interface is
+     * For those requests, {@link FastDelegate FastSaving} interface is
      * available for saving to the repository on a fast way, notifying and finally performing a full save.
      *
      * @param object Response content to save to Cache
@@ -80,7 +80,7 @@ public interface NetworkRequest<R extends ResponseInterface, E extends ErrorInte
      * Generates a BaseError from an exception.
      * <p/>
      * Gives the developer to extend some information to the error before notifying the UI that the
-     * request failed.
+     * delegate failed.
      *
      * @param error Exception that generated the error.
      * @return Composed Error extending {@link com.sefford.kor.errors.ErrorInterface ErrorInterface}

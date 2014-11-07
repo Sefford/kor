@@ -1,9 +1,9 @@
-package com.sefford.kor.retrofit.strategies;
+package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
 import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.requests.interfaces.RequestIdentification;
+import com.sefford.kor.interactors.interfaces.InteractorIdentification;
 import com.sefford.kor.responses.ResponseInterface;
 
 import org.junit.Before;
@@ -12,32 +12,32 @@ import org.mockito.Mock;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class RequestStrategyTest {
+public class InteractorTest {
     @Mock
     ResponseInterface response;
     @Mock
-    RequestIdentification request;
+    InteractorIdentification delegate;
     @Mock
     Postable bus;
     @Mock
     Loggable log;
     @Mock
     ErrorInterface error;
-    private RequestStrategy executor;
+
+    Interactor interactor;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
-        executor = spy(new RequestStrategy(bus, log, request) {
+        interactor = spy(new Interactor(bus, log, delegate) {
             @Override
-            public void onRun() throws Throwable {
+            public void run() {
                 // This space for rent
             }
 
@@ -50,31 +50,12 @@ public class RequestStrategyTest {
 
     @Test
     public void testNotifySuccess() throws Exception {
-        executor.notifySuccess(response);
+        interactor.notifySuccess(response);
         verify(bus, times(1)).post(response);
     }
 
     @Test
-    public void testOnAdded() throws Exception {
-        executor.onAdded();
-        verify(request, times(1)).getRequestName();
-    }
-
-    @Test
-    public void testOnCancel() throws Exception {
-        executor.onCancel();
-        verify(request, times(1)).getRequestName();
-    }
-
-    @Test
-    public void testShouldReRunOnThrowable() throws Exception {
-        final Throwable mock = mock(Throwable.class);
-        assertThat(executor.shouldReRunOnThrowable(mock), equalTo(Boolean.FALSE));
-        verify(log, times(1)).e(RequestStrategy.TAG, mock.getMessage(), mock);
-    }
-
-    @Test
-    public void testGetRequest() throws Exception {
-        assertThat(executor.getRequest(), equalTo(request));
+    public void testGetDelegate() throws Exception {
+        assertThat(interactor.getDelegate(), equalTo(delegate));
     }
 }
