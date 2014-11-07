@@ -34,7 +34,7 @@ public class FastSaveInteractorTest {
     @Mock
     ErrorInterface error;
 
-    FastSaveNetworkInteractor interactor;
+    FastNetworkInteractor interactor;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +44,7 @@ public class FastSaveInteractorTest {
         when(delegate.postProcess((ResponseInterface) any())).thenReturn(response);
         when(delegate.fastSave((ResponseInterface) any())).thenReturn(response);
         when(delegate.composeErrorResponse((Exception) any())).thenReturn(error);
-        interactor = spy(new FastSaveNetworkInteractor(bus, log, delegate));
+        interactor = spy(new FastNetworkInteractor(bus, log, delegate));
     }
 
     @Test

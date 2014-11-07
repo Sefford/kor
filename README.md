@@ -8,11 +8,12 @@ Download
 
 ### Bundle
 
-Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/1.31/kor-common-1.31.jar)
+Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/2.0/kor-common-2.0.jar)
+
+Kor-Retrofit comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-retrofit/1.1/kor-retrofit-1.1.jar)
 
 Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-android/1.0.1/kor-android-1.0.1.aar)
 
-Kor-Retrofit comes bundled in `aar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-retrofit/1.0.10/kor-retrofit-1.0.10.aar)
 
 ### Maven
 #### Kor-Common
@@ -20,41 +21,46 @@ Kor-Retrofit comes bundled in `aar` format. Grab the latest bundle from [here](h
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>1.31</version>
+    <version>2.0</version>
 </dependency>
 ```
-#### Kor-Android
-```XML
-<dependency>
-    <groupId>com.sefford</groupId>
-    <artifactId>kor-android</artifactId>
-    <version>1.0.1</version>
-    <type>aar</type>
-</dependency>
-```
+
 #### Kor-Retrofit
 ```XML
 <dependency>
    <groupId>com.sefford</groupId>
    <artifactId>kor-retrofit</artifactId>
-   <version>1.0.10</version>
+   <version>1.1</version>
    <type>aar</type>
+</dependency>
+```
+
+#### Kor-Android
+```XML
+<dependency>
+    <groupId>com.sefford</groupId>
+    <artifactId>kor-android</artifactId>
+    <version>1.0.2</version>
+    <type>aar</type>
 </dependency>
 ```
 
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:1.31'
+compile 'com.sefford:kor-common:2.0'
 ```
-#### Kor-Android
-```groovy
-compile 'com.sefford:kor-android:1.0.1@aar'
-```
+
 #### Kor-Retrofit
 ```groovy
-compile 'com.sefford:kor-retrofit:1.0.10@aar'
+compile 'com.sefford:kor-retrofit:1.1'
 ```
+
+#### Kor-Android
+```groovy
+compile 'com.sefford:kor-android:1.0.2@aar'
+```
+
 
 What is Kor?
 ============
@@ -80,33 +86,32 @@ Kor relies on the classic concept of "Use Cases". Each "Use Case" comprises a fu
 can be to Cache, Network or other types of aynchronous running operations. By this, the UI layer is completely decoupled
 of the rest of the Model logic.
 
-A key feature of Kor is that any element of the model is fetched from a `Request` and by using the `Repositories`, the
+A key feature of Kor is that any element of the model is fetched from an `Interactor` and by using the `Repositories`, the
 Model elements are single-instanced (the same object is returned always for the same unique ID) and updating the model
 is done automatically thanks to Java pointer to object features.
 
-### Providers
+### Executors
 
-The communication is done via executing those Requests which are Command patterns into a Provider element. This is an
+The communication is done via executing those Interactors which are Command patterns into a Executor element. This is an
 execution queue abstracted, whose responsibility is to take the business decision on when to actually execute the command.
 
 The `Provider` interface provides ways to execute single or multiple requests. Again it is up to the concrete implementation
 of the `Provider` to encapsulate such decisions.
 
-### Requests
+### Delegates
 
-A `Request` is the equivalent of an `Interactor` in terms of functionality. The `Request` is characterized for definining
-two types of responses in the default implementation, a `Response` and an `Error`. Those are nothing more than messages
-that define the success or a failure of such `Request`.
+The `Delegate` is characterized for definining two types of responses in the default implementation,
+a `Response` and an `Error`. Those are nothing more than messages that define the success or a failure of such `Delegate`.
 
 A failure can happen by many reasons, being unexpectedly from an Exception of the program or by a controlled situation
-during the flow of the `Request`itself. However, a response gives the chance to provide a successful, but not satisfiable
+during the flow of the `Delegate` itself. However, a response gives the chance to provide a successful, but not satisfiable
 termination by means of `isSucess()` method.
 
 An external element of the architecture will be listening somehow for those responses, it is part of the contract. However
 it is not strongly bound, and depending on the requirements a Request sent by a component can be listened by a completely
 unrelated one.
 
-A typical Request should (but it is not enforced to) implement all these stages. In the case of a `NetworkRequest`:
+A typical Request should (but it is not enforced to) implement all these stages. In the case of a `NetworkDelegate`:
 
 * **retrieveNetworkResponse:** In this stage the code belonging to fetch the information from the server, API or webservice.
 A successful completion of this stage should already generate a Response-type result with the results converted into POJO
@@ -117,12 +122,12 @@ crossing from the data.
 * **composeErrorResponse:** This stage will only happen in exceptional situations which will lead to a failed execution. The
 idea is to analyze the exception and output an ErrorResponse which the UI layer can use to give the user detailed information.
 
-For heavy-duty operations, `FastSaving` interface is available to provide a chance to make a preliminary persistence to
+For heavy-duty operations, `FastDelegate` interface is available to provide a chance to make a preliminary persistence to
 memory and notifiy the user to give out the response while offloading to a slower cache in the background of the `Request`.
 
-The case of the `CacheRequest` the behavior is slightly different. A `CacheRequest`is supposed to fetch the information
+The case of the `CacheDelegate` the behavior is slightly different. A `CacheDelegate`is supposed to fetch the information
 from the persistence system. As such, it lacks `postProcess` and `saveToCache` stages. In the earlier step, because the
-information is supposed to have been saved on the system via an early `NetworkRequest`, and as such, having passed through the
+information is supposed to have been saved on the system via an early `NetworkDelegate`, and as such, having passed through the
 necessary steps. In the latter, for obvious reasons.
 
 * **isCacheValid:** This stage is meant to be executed _before_ the actual retrieveFromCache, and it is meant to peek at
@@ -130,19 +135,25 @@ the cache data to know in advance if the information is valid (e.g. has not expi
 retrieve the data
 * **retrieveFromCache:** As stated this is the stage for actually getting the information from the cache.
 
-### Strategies
+Finally, the `UpdateableDelegate` adds a **keepLooping()** method to check the execution of a `NetworkDelegate` flow.
+Remember that while a `UpdateableDelegate` can keep periodically running, this is battery and network-costly and
+many of these kind of delegates might end up starving the `Executor`.
 
-A `Strategy` backbone responsibility is to notify when the `Request` has completed sucessfully or not. An implementation
-of a Strategy will delegate on a `Request` to do all the work, and will simply execute the request steps in a certain order.
+### Interactors
 
-The module kor-retrofit implements several default strategies for most general cases:
+An `Interactor` backbone responsibility is to notify when the `Delegate` has completed sucessfully or not. An implementation
+of an `Interactor` will delegate to a `Delegate` _(d'oh)_ to do all the work, and will simply execute the request steps in a certain order.
 
-* **CacheExecutionStrategy:** Retrieves the information form the persistence system. If the content is no longer valid it
+Each of the `Interactors` work typically with a specified kind of `Delegate`.
+
+* **CacheInteractor:** Retrieves the information form the persistence system. If the content is no longer valid it
 does not notify of anything to reduce the noise during the execution.
-* **StandardNetworkStrategy:** Retrieves the information from network, postprocesses it, saves it into the persistence and
+* **StandardNetworkInteractor:** Retrieves the information from network, postprocesses it, saves it into the persistence and
 notifies it.
-* **FastSaveNetworkStrategy:** Retrieves the information from the network, postprocesses it, saves into a fast cache (typically
+* **FastNetworkInteractor:** Retrieves the information from the network, postprocesses it, saves into a fast cache (typically
 memory), notifies to the result and then resumes the saving to the persistence.
+* **UpdateableInteractor:** Performs a loop over the `StandardNetworkInteractor` until the condition is fullfilled. On each
+of the loops notifies the result to the system.
 
 ### Notification System
 
@@ -169,12 +180,12 @@ element itself.
 Kor Flavors
 ===========
 
-* **Kor-Common:** The backbone of the Kor Architecture. It is useable, as long as you are willing to implement most of
-the things. It is also a good point to extend the architecture to suit your needs.
+* **Kor-Common:** The backbone of the Kor Architecture. It is useable, but will not work out-of-the box,
+requiring the developer to implement their own `Executors` and `Interactor` factory. It is a good point
+to extend the architecture to suit your needs.
 * **Kor-Android:** Adds Android extensions for the Kor architecture, providing a LRUCache-based Repository in addition of
 the basic Map one.
-* **Kor-Retrofit:** Adds extensions for using the [Retrofit Library](https://github.com/square/retrofit). Includes the
-default Strategies oriented to Retrofit, although they can be backported 99% to basic Kor.
+* **Kor-Retrofit:** Adds extensions for using the [Retrofit Library](https://github.com/square/retrofit).
 
 Interesting literature
 ======================

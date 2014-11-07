@@ -35,7 +35,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class FastSaveNetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends NetworkInteractor<R, E> {
+public class FastNetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends NetworkInteractor<R, E> {
 
     /**
      * Creates a new instance of Fast Saving Interactor
@@ -44,7 +44,7 @@ public class FastSaveNetworkInteractor<R extends ResponseInterface, E extends Er
      * @param log     Logging facilities
      * @param delegate Request to execute
      */
-    public FastSaveNetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {
+    public FastNetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {
         super(bus, log, delegate);
     }
 
