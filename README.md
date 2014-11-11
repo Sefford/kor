@@ -95,8 +95,8 @@ is done automatically thanks to Java pointer to object features.
 The communication is done via executing those Interactors which are Command patterns into a Executor element. This is an
 execution queue abstracted, whose responsibility is to take the business decision on when to actually execute the command.
 
-The `Provider` interface provides ways to execute single or multiple requests. Again it is up to the concrete implementation
-of the `Provider` to encapsulate such decisions.
+The `Executor` interface provides ways to execute single or multiple requests. Again it is up to the concrete implementation
+of the `Executor` to encapsulate such decisions.
 
 ### Delegates
 
