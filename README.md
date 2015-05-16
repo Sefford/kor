@@ -8,7 +8,7 @@ Download
 
 ### Bundle
 
-Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/2.0/kor-common-2.0.jar)
+Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/2.1/kor-common-2.1.jar)
 
 Kor-Retrofit comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-retrofit/1.1/kor-retrofit-1.1.jar)
 
@@ -21,7 +21,7 @@ Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](ht
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
 </dependency>
 ```
 
@@ -48,7 +48,7 @@ Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](ht
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:2.0'
+compile 'com.sefford:kor-common:2.1'
 ```
 
 #### Kor-Retrofit
@@ -113,7 +113,7 @@ unrelated one.
 
 A typical Request should (but it is not enforced to) implement all these stages. In the case of a `NetworkDelegate`:
 
-* **retrieveNetworkResponse:** In this stage the code belonging to fetch the information from the server, API or webservice.
+* **execute:** In this stage the code belonging to fetch the information from the server, API or webservice.
 A successful completion of this stage should already generate a Response-type result with the results converted into POJO
 via JSon deserialization or any other means necessary.
 * **postProcess:** This stage is meant to analyze the data and give the chance to set the success flag to false or other
@@ -133,7 +133,7 @@ necessary steps. In the latter, for obvious reasons.
 * **isCacheValid:** This stage is meant to be executed _before_ the actual retrieveFromCache, and it is meant to peek at
 the cache data to know in advance if the information is valid (e.g. has not expired or it is present) before trying to
 retrieve the data
-* **retrieveFromCache:** As stated this is the stage for actually getting the information from the cache.
+* **execute:** As stated this is the stage for actually getting the information from the cache.
 
 Finally, the `UpdateableDelegate` adds a **keepLooping()** method to check the execution of a `NetworkDelegate` flow.
 Remember that while a `UpdateableDelegate` can keep periodically running, this is battery and network-costly and
@@ -154,6 +154,7 @@ notifies it.
 memory), notifies to the result and then resumes the saving to the persistence.
 * **UpdateableInteractor:** Performs a loop over the `StandardNetworkInteractor` until the condition is fullfilled. On each
 of the loops notifies the result to the system.
+* **StandaloneInteractor:** Builds and executes any kind of the previous types of interactors ad-hoc.
 
 ### Notification System
 

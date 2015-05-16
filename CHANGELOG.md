@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## Kor Common 2.1
+_2015-05-16_
+
+* Additional classes renaming. Now `ResponseInterface` and `Error Interface` becomes `Response` and `Error`, respectively.
+* `retrieveNetworkResponse` and `retrieveCacheResponse` unifies on `execute` method.
+* Now all delegates extend from `Delegate` class. This class has the basic functionality of executing, composing an error message
+and returning its name.
+* Due to the previous change, now CacheDelegate can produce error responses. However the functionality of not returning a
+response if the `Response.isSuccess()` remains.
+* Added a `StandaloneInteractor` to reduce constructor signature on dependency injection by avoiding to provide a 
+`Provider`, something alike an Interactor factory and a Builder.
+ 
 ## Kor Common 2.0
 _2014-11-7_
 
