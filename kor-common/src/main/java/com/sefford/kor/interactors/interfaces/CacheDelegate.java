@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.responses.Response;
 
 /**
  * Interface for managing Cache Interactors.
@@ -25,14 +25,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface CacheDelegate<R extends ResponseInterface, E extends ErrorInterface> extends InteractorIdentification {
-
-    /**
-     * Retrieves the necessary information from the Cache and packs it.
-     *
-     * @return A Response from the delegate Type
-     */
-    R retrieveFromCache();
+public interface CacheDelegate<R extends Response, E extends Error> extends Delegate<R, E> {
 
     /**
      * Identifies if a CacheRequest is valid or not.

@@ -2,18 +2,14 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.interactors.interfaces.InteractorIdentification;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
-
+import com.sefford.kor.responses.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class NetworkInteractorTest {
@@ -25,7 +21,7 @@ public class NetworkInteractorTest {
     @Mock
     TestDelegate delegate;
     @Mock
-    ErrorInterface error;
+    Error error;
 
     NetworkInteractor interactor;
 
@@ -67,25 +63,25 @@ public class NetworkInteractorTest {
         }
     }
 
-    class TestDelegate implements InteractorIdentification, NetworkDelegate {
+    class TestDelegate implements NetworkDelegate {
 
         @Override
-        public ResponseInterface retrieveNetworkResponse() {
+        public Response execute() {
             return null;
         }
 
         @Override
-        public ResponseInterface postProcess(ResponseInterface content) {
+        public Response postProcess(Response content) {
             return null;
         }
 
         @Override
-        public void saveToCache(ResponseInterface object) {
+        public void saveToCache(Response object) {
 
         }
 
         @Override
-        public ErrorInterface composeErrorResponse(Exception error) {
+        public Error composeErrorResponse(Exception error) {
             return null;
         }
 

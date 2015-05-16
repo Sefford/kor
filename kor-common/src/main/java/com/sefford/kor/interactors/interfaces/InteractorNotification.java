@@ -15,15 +15,15 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.responses.Response;
 
 /**
  * Strategy notification interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface InteractorNotification<R extends ResponseInterface, E extends ErrorInterface> {
+public interface InteractorNotification<R extends Response, E extends Error> {
 
     /**
      * Notifies of the finishing of the delegate

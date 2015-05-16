@@ -16,15 +16,15 @@
 
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.responses.Response;
 
 /**
  * Updateable Delegate is a delegate which adds a looping facility to a delegate
  *
  * @author Saúl Díaz <sefford@gmail.com>
  */
-public interface UpdateableDelegate<R extends ResponseInterface, E extends ErrorInterface> extends NetworkDelegate<R, E> {
+public interface UpdateableDelegate<R extends Response, E extends Error> extends NetworkDelegate<R, E> {
 
     /**
      * Signals the Updateable Interactor if he requires looping no longer.

@@ -17,9 +17,9 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * Base Network Interactor hierarchy line.
@@ -30,12 +30,12 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class NetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends Interactor<R, E> {
+public abstract class NetworkInteractor<R extends Response, E extends Error> extends Interactor<R, E> {
     /**
      * Creates a new instance of Base Network Interactor
      *
-     * @param bus     Notification Facility
-     * @param log     Logging facilities
+     * @param bus      Notification Facility
+     * @param log      Logging facilities
      * @param delegate Request to execute
      */
     protected NetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {

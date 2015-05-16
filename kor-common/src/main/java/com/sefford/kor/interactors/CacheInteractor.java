@@ -17,9 +17,9 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.CacheDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * CacheInteractor is the default implementation of a strategy for Cache-related Interactors.
@@ -34,7 +34,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class CacheInteractor<R extends ResponseInterface, E extends ErrorInterface> extends Interactor<R, E> {
+public class CacheInteractor<R extends Response, E extends Error> extends Interactor<R, E> {
     /**
      * Bus instance to notify the UI the process finished.
      * <p/>
@@ -71,10 +71,16 @@ public class CacheInteractor<R extends ResponseInterface, E extends ErrorInterfa
     @Override
     public void run() {
         long start = System.currentTimeMillis();
-        final R processedContent = ((CacheDelegate<R, E>) delegate).retrieveFromCache();
-        log.d(TAG, delegate.getInteractorName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
-        if (processedContent.isSuccess()) {
-            notifySuccess(processedContent);
+        final R processedContent;
+        try {
+            processedContent = ((CacheDelegate<R, E>) delegate).execute();
+            log.d(TAG, delegate.getInteractorName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
+            if (processedContent.isSuccess()) {
+                notifySuccess(processedContent);
+            }
+        } catch (Exception x) {
+            log.e(TAG, delegate.getInteractorName(), x);
+            notifyError(((CacheDelegate<R, E>) delegate).composeErrorResponse(x));
         }
     }
 }

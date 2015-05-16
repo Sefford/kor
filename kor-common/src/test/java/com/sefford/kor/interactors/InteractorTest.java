@@ -2,9 +2,9 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.interactors.interfaces.InteractorIdentification;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.interactors.interfaces.Delegate;
+import com.sefford.kor.responses.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,15 +19,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class InteractorTest {
     @Mock
-    ResponseInterface response;
+    Response response;
     @Mock
-    InteractorIdentification delegate;
+    Delegate delegate;
     @Mock
     Postable bus;
     @Mock
     Loggable log;
     @Mock
-    ErrorInterface error;
+    Error error;
 
     Interactor interactor;
 
@@ -42,7 +42,7 @@ public class InteractorTest {
             }
 
             @Override
-            public void notifyError(ErrorInterface error) {
+            public void notifyError(Error error) {
                 // This one too
             }
         });

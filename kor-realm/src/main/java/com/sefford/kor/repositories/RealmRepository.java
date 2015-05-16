@@ -17,15 +17,14 @@ package com.sefford.kor.repositories;
 
 import com.sefford.kor.repositories.interfaces.FastRepository;
 import com.sefford.kor.repositories.interfaces.Repository;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmQuery;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
 
 /**
  * RealmRepository is a implementation of the {@link com.sefford.kor.repositories.interfaces.Repository Repository}

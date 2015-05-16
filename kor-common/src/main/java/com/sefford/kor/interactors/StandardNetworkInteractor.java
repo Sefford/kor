@@ -18,9 +18,9 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * Standard Network Interactor that performs the Request Process in this order:
@@ -32,11 +32,11 @@ import com.sefford.kor.responses.ResponseInterface;
  * <p/>
  * </ul>
  * <p/>
- * In any moment the Strategy can notify of an error through {@link com.sefford.kor.interactors.interfaces.InteractorNotification#notifyError(com.sefford.kor.errors.ErrorInterface) NotifyError} interface.
+ * In any moment the Strategy can notify of an error through {@link com.sefford.kor.interactors.interfaces.InteractorNotification#notifyError(Error) NotifyError} interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class StandardNetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends NetworkInteractor<R, E> {
+public class StandardNetworkInteractor<R extends Response, E extends Error> extends NetworkInteractor<R, E> {
     /**
      * Creates a new instance of Standard Interactor
      *
@@ -51,7 +51,7 @@ public class StandardNetworkInteractor<R extends ResponseInterface, E extends Er
     @Override
     public void run() {
         try {
-            final R content = ((NetworkDelegate<R, E>) delegate).retrieveNetworkResponse();
+            final R content = ((NetworkDelegate<R, E>) delegate).execute();
             final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
             long start = System.currentTimeMillis();
             ((NetworkDelegate<R, E>) delegate).saveToCache(processedContent);

@@ -15,9 +15,9 @@
  */
 package com.sefford.kor.retrofit.interfaces;
 
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 import retrofit.RetrofitError;
 
@@ -26,7 +26,7 @@ import retrofit.RetrofitError;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface RetrofitRequest<R extends ResponseInterface, E extends ErrorInterface> extends NetworkDelegate<R, E> {
+public interface RetrofitRequest<R extends Response, E extends Error> extends NetworkDelegate<R, E> {
 
     /**
      * Generates a BaseError from a Retrofit error

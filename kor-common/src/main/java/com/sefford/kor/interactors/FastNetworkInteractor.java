@@ -18,10 +18,10 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.FastDelegate;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * Specialization of a Network Interactor to support fast cache saving.
@@ -35,7 +35,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class FastNetworkInteractor<R extends ResponseInterface, E extends ErrorInterface> extends NetworkInteractor<R, E> {
+public class FastNetworkInteractor<R extends Response, E extends Error> extends NetworkInteractor<R, E> {
 
     /**
      * Creates a new instance of Fast Saving Interactor
@@ -51,7 +51,7 @@ public class FastNetworkInteractor<R extends ResponseInterface, E extends ErrorI
     @Override
     public void run() {
         try {
-            final R content = ((NetworkDelegate<R, E>) delegate).retrieveNetworkResponse();
+            final R content = ((NetworkDelegate<R, E>) delegate).execute();
             final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
             final R savedMemoryContent = ((FastDelegate<R>) delegate).fastSave(processedContent);
             notifySuccess(savedMemoryContent);

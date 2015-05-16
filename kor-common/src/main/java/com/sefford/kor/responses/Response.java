@@ -21,7 +21,7 @@ package com.sefford.kor.responses;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface ResponseInterface {
+public interface Response {
     /**
      * Returns if the Interactor was successful.
      * <p/>

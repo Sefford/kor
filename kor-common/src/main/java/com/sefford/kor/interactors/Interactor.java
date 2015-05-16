@@ -17,10 +17,10 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.interactors.interfaces.InteractorIdentification;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.interactors.interfaces.Delegate;
 import com.sefford.kor.interactors.interfaces.InteractorNotification;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * Abstract Interactor
@@ -34,7 +34,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class Interactor<R extends ResponseInterface, E extends ErrorInterface> implements Runnable, InteractorNotification<R, E> {
+public abstract class Interactor<R extends Response, E extends Error> implements Runnable, InteractorNotification<R, E> {
     /**
      * Network Tag for Logging
      */
@@ -49,7 +49,7 @@ public abstract class Interactor<R extends ResponseInterface, E extends ErrorInt
     /**
      * Delegate that will be executed by the callback
      */
-    protected final InteractorIdentification delegate;
+    protected final Delegate delegate;
     /**
      * Logging Facilities
      */
@@ -62,7 +62,7 @@ public abstract class Interactor<R extends ResponseInterface, E extends ErrorInt
      * @param log      Logging facilities
      * @param delegate Request to execute
      */
-    protected Interactor(Postable bus, Loggable log, InteractorIdentification delegate) {
+    protected Interactor(Postable bus, Loggable log, Delegate delegate) {
         this.bus = bus;
         this.log = log;
         this.delegate = delegate;
@@ -78,7 +78,7 @@ public abstract class Interactor<R extends ResponseInterface, E extends ErrorInt
      *
      * @return Executing delegate
      */
-    public InteractorIdentification getDelegate() {
+    public Delegate getDelegate() {
         return delegate;
     }
 }

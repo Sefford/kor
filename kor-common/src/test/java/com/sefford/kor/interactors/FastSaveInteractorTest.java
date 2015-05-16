@@ -2,11 +2,10 @@ package com.sefford.kor.interactors;
 
 import com.sefford.kor.common.interfaces.Loggable;
 import com.sefford.kor.common.interfaces.Postable;
-import com.sefford.kor.errors.ErrorInterface;
+import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.FastDelegate;
-import com.sefford.kor.interactors.interfaces.InteractorIdentification;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class FastSaveInteractorTest {
 
     @Mock
-    ResponseInterface response;
+    Response response;
     @Mock
     TestDelegate delegate;
     @Mock
@@ -32,7 +31,7 @@ public class FastSaveInteractorTest {
     @Mock
     Loggable log;
     @Mock
-    ErrorInterface error;
+    Error error;
 
     FastNetworkInteractor interactor;
 
@@ -40,9 +39,9 @@ public class FastSaveInteractorTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        when(delegate.retrieveNetworkResponse()).thenReturn(response);
-        when(delegate.postProcess((ResponseInterface) any())).thenReturn(response);
-        when(delegate.fastSave((ResponseInterface) any())).thenReturn(response);
+        when(delegate.execute()).thenReturn(response);
+        when(delegate.postProcess((Response) any())).thenReturn(response);
+        when(delegate.fastSave((Response) any())).thenReturn(response);
         when(delegate.composeErrorResponse((Exception) any())).thenReturn(error);
         interactor = spy(new FastNetworkInteractor(bus, log, delegate));
     }
@@ -52,7 +51,7 @@ public class FastSaveInteractorTest {
         interactor.run();
 
         InOrder inOrder = Mockito.inOrder(delegate, interactor);
-        inOrder.verify(delegate, times(1)).retrieveNetworkResponse();
+        inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
         inOrder.verify(interactor, times(1)).notifySuccess(response);
@@ -66,7 +65,7 @@ public class FastSaveInteractorTest {
         interactor.run();
 
         InOrder inOrder = Mockito.inOrder(delegate, interactor);
-        inOrder.verify(delegate, times(1)).retrieveNetworkResponse();
+        inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
         inOrder.verify(interactor, times(0)).notifySuccess(response);
@@ -81,7 +80,7 @@ public class FastSaveInteractorTest {
         interactor.run();
 
         InOrder inOrder = Mockito.inOrder(delegate, interactor);
-        inOrder.verify(delegate, times(1)).retrieveNetworkResponse();
+        inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
         inOrder.verify(interactor, times(1)).notifySuccess(response);
@@ -90,29 +89,29 @@ public class FastSaveInteractorTest {
 
     }
 
-    class TestDelegate implements InteractorIdentification, NetworkDelegate, FastDelegate {
+    class TestDelegate implements NetworkDelegate, FastDelegate {
 
         @Override
-        public ResponseInterface retrieveNetworkResponse() {
+        public Response execute() {
             return null;
         }
 
         @Override
-        public ResponseInterface postProcess(ResponseInterface content) {
+        public Response postProcess(Response content) {
             return null;
         }
 
         @Override
-        public void saveToCache(ResponseInterface object) {
+        public void saveToCache(Response object) {
         }
 
         @Override
-        public ErrorInterface composeErrorResponse(Exception error) {
+        public Error composeErrorResponse(Exception error) {
             return null;
         }
 
         @Override
-        public ResponseInterface fastSave(ResponseInterface response) {
+        public Response fastSave(Response response) {
             return response;
         }
 

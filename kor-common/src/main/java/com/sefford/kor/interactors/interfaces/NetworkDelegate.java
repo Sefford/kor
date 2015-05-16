@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.errors.ErrorInterface;
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.errors.Error;
+import com.sefford.kor.responses.Response;
 
 /**
  * Interface for performing interactions to the network.
@@ -24,7 +24,7 @@ import com.sefford.kor.responses.ResponseInterface;
  * A delegate is intended to go through at least four phases
  * <p/>
  * <ul>
- * <li>Network Retrieval phase.</li>
+ * <li>Network Retrieval (execution) phase.</li>
  * <li>Post processing.</li>
  * <li>Saving to cache.</li>
  * <li></li>
@@ -33,21 +33,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface NetworkDelegate<R extends ResponseInterface, E extends ErrorInterface> extends InteractorIdentification {
-
-    /**
-     * Produces a {@link com.sefford.kor.responses.ResponseInterface ResponseInterface} type.
-     * <p/>
-     * In this phase the intended behavior will be to fetch data from the network and parse it into
-     * a manageable object by the developer method of choice.
-     * <p/>
-     * The completion of this method should indicate that the network response was correctly fetched
-     * and parsed. If there is any error, an exception of the appropiate type should be thrown and
-     * catched.
-     *
-     * @return A Response from the delegate Type
-     */
-    R retrieveNetworkResponse() throws Exception;
+public interface NetworkDelegate<R extends Response, E extends Error> extends Delegate<R, E> {
 
     /**
      * Does a processing of the Response.
@@ -76,14 +62,4 @@ public interface NetworkDelegate<R extends ResponseInterface, E extends ErrorInt
      */
     void saveToCache(R object);
 
-    /**
-     * Generates a BaseError from an exception.
-     * <p/>
-     * Gives the developer to extend some information to the error before notifying the UI that the
-     * delegate failed.
-     *
-     * @param error Exception that generated the error.
-     * @return Composed Error extending {@link com.sefford.kor.errors.ErrorInterface ErrorInterface}
-     */
-    E composeErrorResponse(Exception error);
 }

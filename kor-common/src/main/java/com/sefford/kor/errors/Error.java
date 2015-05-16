@@ -25,7 +25,7 @@ package com.sefford.kor.errors;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface ErrorInterface {
+public interface Error {
 
     /**
      * Returns the API info code

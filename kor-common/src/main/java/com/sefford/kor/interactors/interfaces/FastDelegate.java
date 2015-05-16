@@ -15,7 +15,7 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.responses.ResponseInterface;
+import com.sefford.kor.responses.Response;
 
 /**
  * Interface for Interactors that is intended to be used with delegates that require a fast memory save method.
@@ -25,7 +25,7 @@ import com.sefford.kor.responses.ResponseInterface;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface FastDelegate<R extends ResponseInterface> {
+public interface FastDelegate<R extends Response> {
 
     /**
      * Performs a Fast save.
