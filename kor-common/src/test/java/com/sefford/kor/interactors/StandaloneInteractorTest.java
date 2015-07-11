@@ -1,7 +1,7 @@
 package com.sefford.kor.interactors;
 
-import com.sefford.kor.common.interfaces.Loggable;
-import com.sefford.kor.common.interfaces.Postable;
+import com.sefford.common.interfaces.Loggable;
+import com.sefford.common.interfaces.Postable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

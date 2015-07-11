@@ -1,20 +1,17 @@
 package com.sefford.kor.interactors;
 
-import com.sefford.kor.common.interfaces.Loggable;
-import com.sefford.kor.common.interfaces.Postable;
+import com.sefford.common.interfaces.Loggable;
+import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.Delegate;
 import com.sefford.kor.responses.Response;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class InteractorTest {

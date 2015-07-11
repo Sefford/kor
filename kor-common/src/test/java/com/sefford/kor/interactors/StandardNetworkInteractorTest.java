@@ -1,11 +1,10 @@
 package com.sefford.kor.interactors;
 
-import com.sefford.kor.common.interfaces.Loggable;
-import com.sefford.kor.common.interfaces.Postable;
+import com.sefford.common.interfaces.Loggable;
+import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -13,10 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class StandardNetworkInteractorTest {
@@ -78,12 +74,12 @@ public class StandardNetworkInteractorTest {
         }
 
         @Override
-        public Response postProcess(Response content) {
+        public Response postProcess(Response response) {
             return null;
         }
 
         @Override
-        public void saveToCache(Response object) {
+        public void saveToCache(Response response) {
 
         }
 

@@ -1,7 +1,7 @@
 package com.sefford.kor.interactors;
 
-import com.sefford.kor.common.interfaces.Loggable;
-import com.sefford.kor.common.interfaces.Postable;
+import com.sefford.common.interfaces.Loggable;
+import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.UpdateableDelegate;
 import com.sefford.kor.responses.Response;
@@ -83,12 +83,12 @@ public class UpdateableInteractorTest {
         }
 
         @Override
-        public Response postProcess(Response content) {
+        public Response postProcess(Response response) {
             return null;
         }
 
         @Override
-        public void saveToCache(Response object) {
+        public void saveToCache(Response response) {
 
         }
 

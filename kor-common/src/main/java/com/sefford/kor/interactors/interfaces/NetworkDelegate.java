@@ -43,10 +43,10 @@ public interface NetworkDelegate<R extends Response, E extends Error> extends De
      * <p/>
      * While it is not an expected behavior, the developer can still have a chance to throw an exception.
      *
-     * @param content Response content to Process
-     * @return A modified Response content
+     * @param response Response response to Process
+     * @return A modified Response response
      */
-    R postProcess(R content);
+    R postProcess(R response);
 
     /**
      * Saves the response to Cache.
@@ -58,8 +58,8 @@ public interface NetworkDelegate<R extends Response, E extends Error> extends De
      * For those requests, {@link FastDelegate FastSaving} interface is
      * available for saving to the repository on a fast way, notifying and finally performing a full save.
      *
-     * @param object Response content to save to Cache
+     * @param response Response content to save to Cache
      */
-    void saveToCache(R object);
+    void saveToCache(R response);
 
 }

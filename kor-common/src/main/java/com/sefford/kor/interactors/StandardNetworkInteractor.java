@@ -16,8 +16,8 @@
 package com.sefford.kor.interactors;
 
 
-import com.sefford.kor.common.interfaces.Loggable;
-import com.sefford.kor.common.interfaces.Postable;
+import com.sefford.common.interfaces.Loggable;
+import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
