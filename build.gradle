@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+group = 'com.sefford'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+

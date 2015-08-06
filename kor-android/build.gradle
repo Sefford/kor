@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter();
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'org.robolectric:robolectric-gradle-plugin:1.1.+'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+    }
+}
+
+ext {
+    versionMajor = 1
+    versionMinor = 0
+    versionPatch = 5
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+apply plugin: 'com.android.library'
+apply plugin: 'org.robolectric'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'kor-android'
+
+    publishedGroupId = 'com.sefford'
+    libraryName = 'Kor Android'
+    artifact = 'kor-android'
+
+    libraryDescription = 'Kor Architecture extensions for Android'
+
+    siteUrl = 'https://github.com/Sefford/kor'
+    gitUrl = 'https://github.com/Sefford/kor.git'
+    issueUrl = "https://github.com/Sefford/kor/issues"
+
+    libraryVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+    developerId = 'Sefford'
+    developerName = 'Saul Diaz Gonzalez'
+    developerEmail = 'sefford@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 22
+        versionCode versionMajor * 100000 + versionMinor * 1000 + versionPatch * 100
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+    compile project(':kor-common')
+    compile 'com.sefford:kor-common:2.1.3'
+    compile 'com.android.support:support-v4:22.2.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'org.robolectric:robolectric:3.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

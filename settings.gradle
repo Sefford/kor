@@ -1,0 +1,2 @@
+include ':kor-common', ':kor-android'
+rootProject.name = 'kor'
