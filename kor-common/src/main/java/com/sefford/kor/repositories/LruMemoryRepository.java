@@ -15,12 +15,11 @@
  */
 package com.sefford.kor.repositories;
 
-import android.support.v4.util.LruCache;
-
 import com.sefford.kor.repositories.interfaces.FastRepository;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.interfaces.Updateable;
+import com.sefford.kor.repositories.utils.LruCache;
 
 import java.util.ArrayList;
 import java.util.Collection;

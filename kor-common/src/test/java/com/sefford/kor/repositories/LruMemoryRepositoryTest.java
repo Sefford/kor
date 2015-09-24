@@ -1,9 +1,8 @@
 package com.sefford.kor.repositories;
 
-import android.support.v4.util.LruCache;
-
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Updateable;
+import com.sefford.kor.repositories.utils.LruCache;
 
 import org.junit.Before;
 import org.junit.Test;

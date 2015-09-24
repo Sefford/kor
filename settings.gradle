@@ -1,2 +1,2 @@
-include ':kor-common', ':kor-android'
+include ':kor-common'
 rootProject.name = 'kor'
