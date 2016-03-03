@@ -64,8 +64,11 @@ public class FastNetworkInteractor<R extends Response, E extends Error> extends 
                 log.e(TAG, delegate.getInteractorName(), x);
             }
         } catch (Exception x) {
-            log.e(TAG, delegate.getInteractorName(), x);
-            notifyError(((NetworkDelegate<R, E>) delegate).composeErrorResponse(x));
+            final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
+            if (error.isLoggable()) {
+                log.e(TAG, delegate.getInteractorName(), x);
+            }
+            notifyError(error);
         }
     }
 }

@@ -47,4 +47,11 @@ public interface Error {
      * @return Message for logging purposes
      */
     String getMessage();
+
+    /**
+     * Flags if the error is bound to be logged
+     *
+     * @return TRUE when the error will be logged, false otherwise
+     */
+    boolean isLoggable();
 }

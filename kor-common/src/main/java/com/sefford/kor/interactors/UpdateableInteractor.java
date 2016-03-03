@@ -58,8 +58,11 @@ public class UpdateableInteractor<R extends Response, E extends Error> extends N
                 notifySuccess(processedContent);
             }
         } catch (Exception x) {
-            log.e(TAG, delegate.getInteractorName(), x);
-            notifyError(((NetworkDelegate<R, E>) delegate).composeErrorResponse(x));
+            final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
+            if (error.isLoggable()) {
+                log.e(TAG, delegate.getInteractorName(), x);
+            }
+            notifyError(error);
         }
     }
 }

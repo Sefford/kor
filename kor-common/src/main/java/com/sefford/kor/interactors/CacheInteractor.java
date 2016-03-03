@@ -19,6 +19,7 @@ import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.CacheDelegate;
+import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
 
 /**
@@ -79,8 +80,11 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
                 notifySuccess(processedContent);
             }
         } catch (Exception x) {
-            log.e(TAG, delegate.getInteractorName(), x);
-            notifyError(((CacheDelegate<R, E>) delegate).composeErrorResponse(x));
+            final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
+            if (error.isLoggable()) {
+                log.e(TAG, delegate.getInteractorName(), x);
+            }
+            notifyError(error);
         }
     }
 }
