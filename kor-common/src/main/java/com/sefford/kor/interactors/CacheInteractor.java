@@ -80,7 +80,7 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
                 notifySuccess(processedContent);
             }
         } catch (Exception x) {
-            final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
+            final E error = ((CacheDelegate<R, E>) delegate).composeErrorResponse(x);
             if (error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }

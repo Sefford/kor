@@ -18,6 +18,7 @@ package com.sefford.kor.interactors;
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
+import com.sefford.kor.interactors.interfaces.CacheDelegate;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.interactors.interfaces.UpdateableDelegate;
 import com.sefford.kor.responses.Response;
@@ -58,7 +59,7 @@ public class UpdateableInteractor<R extends Response, E extends Error> extends N
                 notifySuccess(processedContent);
             }
         } catch (Exception x) {
-            final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
+            final E error = ((UpdateableDelegate<R, E>) delegate).composeErrorResponse(x);
             if (error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
