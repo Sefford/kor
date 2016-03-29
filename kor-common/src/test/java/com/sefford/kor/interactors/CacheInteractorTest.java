@@ -9,7 +9,6 @@ import com.sefford.kor.responses.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -67,7 +66,6 @@ public class CacheInteractorTest {
         inOrder.verify(delegate, times(1)).composeErrorResponse((Exception) any());
         inOrder.verify(interactor, times(1)).notify(any(Error.class));
     }
-
 
     @Test
     public void testNotifyError() throws Exception {

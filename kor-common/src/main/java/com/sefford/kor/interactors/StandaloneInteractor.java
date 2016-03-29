@@ -16,9 +16,9 @@
 package com.sefford.kor.interactors;
 
 
+import com.sefford.common.NullPostable;
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
-import com.sefford.kor.repositories.utils.NullPostable;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
