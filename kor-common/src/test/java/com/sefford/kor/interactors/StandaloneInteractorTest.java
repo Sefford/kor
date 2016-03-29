@@ -50,7 +50,7 @@ public class StandaloneInteractorTest {
         }
 
         @Override
-        protected Interactor instantiateInteractor(Postable bus, Object options) {
+        protected Interactor instantiateInteractor(Postable bus, Object params) {
             return mockedInteractor;
         }
     }

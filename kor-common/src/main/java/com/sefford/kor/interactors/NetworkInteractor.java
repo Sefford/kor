@@ -42,9 +42,4 @@ public abstract class NetworkInteractor<R extends Response, E extends Error> ext
         super(bus, log, delegate);
     }
 
-    @Override
-    public void notifyError(E error) {
-        bus.post(error);
-    }
-
 }

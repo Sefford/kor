@@ -35,12 +35,17 @@ public class NetworkInteractorTest {
             public void run() {
                 // Do nathin
             }
+
+            @Override
+            public Object execute() {
+                return null;
+            }
         });
     }
 
     @Test
     public void testNotifyError() throws Exception {
-        interactor.notifyError(error);
+        interactor.notify(error);
         verify(bus, times(1)).post(error);
     }
 
@@ -60,6 +65,11 @@ public class NetworkInteractorTest {
         @Override
         public void run() {
 
+        }
+
+        @Override
+        public Object execute() {
+            return null;
         }
     }
 

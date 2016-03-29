@@ -19,7 +19,7 @@ import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.Delegate;
-import com.sefford.kor.interactors.interfaces.InteractorNotification;
+import com.sefford.kor.interactors.interfaces.Notifiable;
 import com.sefford.kor.responses.Response;
 
 /**
@@ -34,7 +34,7 @@ import com.sefford.kor.responses.Response;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class Interactor<R extends Response, E extends Error> implements Runnable, InteractorNotification<R, E> {
+public abstract class Interactor<R extends Response, E extends Error> implements Runnable, Notifiable {
     /**
      * Network Tag for Logging
      */
@@ -45,7 +45,7 @@ public abstract class Interactor<R extends Response, E extends Error> implements
      * This could be also done with Handlers, however the Fragments might exist in an inconsistent
      * state.
      */
-    protected final Postable bus;
+    protected final Postable postable;
     /**
      * Delegate that will be executed by the callback
      */
@@ -58,19 +58,24 @@ public abstract class Interactor<R extends Response, E extends Error> implements
     /**
      * Creates a new instance of a Base Interactor
      *
-     * @param bus      Notification Facility
+     * @param postable Notification Facility
      * @param log      Logging facilities
      * @param delegate Request to execute
      */
-    protected Interactor(Postable bus, Loggable log, Delegate delegate) {
-        this.bus = bus;
+    protected Interactor(Postable postable, Loggable log, Delegate delegate) {
+        this.postable = postable;
         this.log = log;
         this.delegate = delegate;
     }
 
     @Override
-    public void notifySuccess(R content) {
-        bus.post(content);
+    public void run() {
+        notify(execute());
+    }
+
+    @Override
+    public void notify(Object content) {
+        postable.post(content);
     }
 
     /**
@@ -81,4 +86,6 @@ public abstract class Interactor<R extends Response, E extends Error> implements
     public Delegate getDelegate() {
         return delegate;
     }
+
+    public abstract Object execute();
 }

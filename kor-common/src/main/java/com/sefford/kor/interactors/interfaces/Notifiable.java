@@ -15,28 +15,19 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
-import com.sefford.kor.errors.Error;
-import com.sefford.kor.responses.Response;
-
 /**
  * Strategy notification interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public interface InteractorNotification<R extends Response, E extends Error> {
+public interface Notifiable {
 
     /**
      * Notifies of the finishing of the delegate
      *
-     * @param content Processed response
+     * @param content Response
      */
-    void notifySuccess(R content);
+    void notify(Object content);
 
-    /**
-     * Notifies of an error on the delegate
-     *
-     * @param error Error
-     */
-    void notifyError(E error);
 }
 

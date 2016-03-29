@@ -52,7 +52,7 @@ public class StandardNetworkInteractorTest {
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
-        inOrder.verify(interactor, times(1)).notifySuccess(response);
+        inOrder.verify(interactor, times(1)).notify(response);
 
     }
 
@@ -65,7 +65,7 @@ public class StandardNetworkInteractorTest {
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
-        inOrder.verify(interactor, times(1)).notifyError(error);
+        inOrder.verify(interactor, times(1)).notify(error);
 
     }
 

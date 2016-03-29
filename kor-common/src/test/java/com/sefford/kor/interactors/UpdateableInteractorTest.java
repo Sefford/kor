@@ -52,7 +52,7 @@ public class UpdateableInteractorTest {
         verify(delegate, times(2)).execute();
         verify(delegate, times(2)).postProcess(response);
         verify(delegate, times(2)).saveToCache(response);
-        verify(interactor, times(2)).notifySuccess(response);
+        verify(interactor, times(2)).notify(response);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class UpdateableInteractorTest {
         order.verify(delegate, times(0)).postProcess(response);
         order.verify(delegate, times(0)).saveToCache(response);
         order.verify(delegate, times(1)).composeErrorResponse((Exception) any());
-        order.verify(interactor, times(1)).notifyError(error);
+        order.verify(interactor, times(1)).notify(error);
     }
 
     class TestDelegate implements UpdateableDelegate {

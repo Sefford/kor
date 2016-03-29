@@ -20,6 +20,7 @@ import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
+import com.sefford.kor.interactors.interfaces.Notifiable;
 import com.sefford.kor.responses.Response;
 
 /**
@@ -32,7 +33,7 @@ import com.sefford.kor.responses.Response;
  * <p/>
  * </ul>
  * <p/>
- * In any moment the Strategy can notify of an error through {@link com.sefford.kor.interactors.interfaces.InteractorNotification#notifyError(Error) NotifyError} interface.
+ * In any moment the Strategy can notify of an error through {@link Notifiable#notify(Object) NotifyError} interface.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -49,20 +50,20 @@ public class StandardNetworkInteractor<R extends Response, E extends Error> exte
     }
 
     @Override
-    public void run() {
+    public Object execute() {
         try {
             final R content = ((NetworkDelegate<R, E>) delegate).execute();
             final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
             long start = System.currentTimeMillis();
             ((NetworkDelegate<R, E>) delegate).saveToCache(processedContent);
             log.d(TAG, delegate.getInteractorName() + "(Saving):" + (System.currentTimeMillis() - start) + "ms");
-            notifySuccess(processedContent);
+            return processedContent;
         } catch (Exception x) {
             final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
             if (error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
-            notifyError(error);
+            return error;
         }
     }
 }
