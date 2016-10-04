@@ -72,7 +72,7 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
             return response;
         } catch (Exception x) {
             final E error = ((CacheDelegate<R, E>) delegate).composeErrorResponse(x);
-            if (error.isLoggable()) {
+            if (loggable && error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
             return error;

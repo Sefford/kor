@@ -60,7 +60,7 @@ public class StandardNetworkInteractor<R extends Response, E extends Error> exte
             return processedContent;
         } catch (Exception x) {
             final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
-            if (error.isLoggable()) {
+            if (loggable && error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
             return error;

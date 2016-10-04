@@ -60,7 +60,7 @@ public class UpdateableInteractor<R extends Response, E extends Error> extends N
             }
         } catch (Exception x) {
             final E error = ((UpdateableDelegate<R, E>) delegate).composeErrorResponse(x);
-            if (error.isLoggable()) {
+            if (loggable && error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
             notify(error);

@@ -54,6 +54,10 @@ public abstract class Interactor<R extends Response, E extends Error> implements
      * Logging Facilities
      */
     protected final Loggable log;
+    /**
+     * Enables or disables all logging on the interactor
+     */
+    protected boolean loggable;
 
     /**
      * Creates a new instance of a Base Interactor
@@ -63,9 +67,22 @@ public abstract class Interactor<R extends Response, E extends Error> implements
      * @param delegate Request to execute
      */
     protected Interactor(Postable postable, Loggable log, Delegate delegate) {
+        this(postable, log, delegate, false);
+    }
+
+    /**
+     * Creates a new instance of a Base Interactor
+     *
+     * @param postable Notification Facility
+     * @param log      Logging facilities
+     * @param delegate Request to execute
+     * @param loggable Logging flag
+     */
+    protected Interactor(Postable postable, Loggable log, Delegate delegate, boolean loggable) {
         this.postable = postable;
         this.log = log;
         this.delegate = delegate;
+        this.loggable = loggable;
     }
 
     @Override
@@ -85,6 +102,15 @@ public abstract class Interactor<R extends Response, E extends Error> implements
      */
     public Delegate getDelegate() {
         return delegate;
+    }
+
+    /**
+     * Enables or disables the flag "loggable"
+     *
+     * @param loggable TRUE to log all the things, FALSE otherwise.
+     */
+    public void setLoggable(boolean loggable) {
+        this.loggable = loggable;
     }
 
     public abstract Object execute();
