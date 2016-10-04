@@ -16,6 +16,7 @@
 package com.sefford.kor.interactors;
 
 
+import com.sefford.common.NullPostable;
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 
@@ -59,11 +60,11 @@ public abstract class StandaloneInteractor<O extends Object> {
      * Instantiates the new {@link Interactor Interactor} that will be executed on {@link #execute(Postable, Object) execute}
      * method.
      *
-     * @param bus     Postable where the {@link com.sefford.kor.responses.Response responses} and the {@link com.sefford.kor.errors.Error errors} will come through
-     * @param options Extension element to help the Interactor to configure itself
+     * @param bus    Postable where the {@link com.sefford.kor.responses.Response responses} and the {@link com.sefford.kor.errors.Error errors} will come through
+     * @param params Extension element to help the Interactor to configure itself
      * @return Interactor instance to be executed
      */
-    protected abstract Interactor instantiateInteractor(Postable bus, O options);
+    protected abstract Interactor instantiateInteractor(Postable bus, O params);
 
     /**
      * Executes the Interactor
@@ -73,5 +74,15 @@ public abstract class StandaloneInteractor<O extends Object> {
      */
     public void execute(Postable bus, O options) {
         executor.execute(instantiateInteractor(bus, options));
+    }
+
+    /**
+     * Executes the Interactor syncronously
+     *
+     * @param params
+     * @return Extension element to help the Interactor to configure itself
+     */
+    public Object execute(O params) {
+        return instantiateInteractor(NullPostable.INSTANCE, params).execute();
     }
 }

@@ -18,8 +18,8 @@ package com.sefford.kor.interactors;
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
-import com.sefford.kor.interactors.interfaces.CacheDelegate;
 import com.sefford.kor.interactors.interfaces.NetworkDelegate;
+import com.sefford.kor.interactors.interfaces.Notifiable;
 import com.sefford.kor.interactors.interfaces.UpdateableDelegate;
 import com.sefford.kor.responses.Response;
 
@@ -27,10 +27,10 @@ import com.sefford.kor.responses.Response;
  * Updateable Interactor, intended for networking. Keeps executing a phase of polling until it decides
  * it has to stop.
  * <p/>
- * Each of the loops will terminate in a call to {@link com.sefford.kor.interactors.interfaces.InteractorNotification#notifySuccess(Response) notifySuccess}
+ * Each of the loops will terminate in a call to {@link Notifiable#notify(Object) notify}
  * if no unexpected condition happened.
  * <p/>
- * Otherwise, it will produce a {@link com.sefford.kor.interactors.interfaces.InteractorNotification#notifyError(Error)}  notifyError} response.
+ * Otherwise, it will produce a {@link Notifiable#notify(Object)}  notify} response.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
@@ -56,14 +56,19 @@ public class UpdateableInteractor<R extends Response, E extends Error> extends N
                 long start = System.currentTimeMillis();
                 ((NetworkDelegate<R, E>) delegate).saveToCache(processedContent);
                 log.d(TAG, delegate.getInteractorName() + "(Saving):" + (System.currentTimeMillis() - start) + "ms");
-                notifySuccess(processedContent);
+                notify(processedContent);
             }
         } catch (Exception x) {
             final E error = ((UpdateableDelegate<R, E>) delegate).composeErrorResponse(x);
-            if (error.isLoggable()) {
+            if (loggable && error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
-            notifyError(error);
+            notify(error);
         }
+    }
+
+    @Override
+    public Object execute() {
+        throw new IllegalThreadStateException("Cannot be executed syncronously");
     }
 }

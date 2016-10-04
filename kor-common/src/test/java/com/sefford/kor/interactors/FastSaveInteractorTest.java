@@ -50,7 +50,7 @@ public class FastSaveInteractorTest {
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
-        inOrder.verify(interactor, times(1)).notifySuccess(response);
+        inOrder.verify(interactor, times(1)).notify(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
 
     }
@@ -64,9 +64,9 @@ public class FastSaveInteractorTest {
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
-        inOrder.verify(interactor, times(0)).notifySuccess(response);
+        inOrder.verify(interactor, times(0)).notify(response);
         inOrder.verify(delegate, times(0)).saveToCache(response);
-        inOrder.verify(interactor, times(1)).notifyError(error);
+        inOrder.verify(interactor, times(1)).notify(error);
 
     }
 
@@ -79,9 +79,9 @@ public class FastSaveInteractorTest {
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).fastSave(response);
-        inOrder.verify(interactor, times(1)).notifySuccess(response);
+        inOrder.verify(interactor, times(1)).notify(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
-        inOrder.verify(interactor, times(0)).notifyError(error);
+        inOrder.verify(interactor, times(0)).notify(error);
 
     }
 

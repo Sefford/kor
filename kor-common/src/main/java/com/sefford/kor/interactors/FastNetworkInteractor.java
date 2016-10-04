@@ -34,14 +34,16 @@ import com.sefford.kor.responses.Response;
  * will only be logged to avoid error duplication.
  *
  * @author Saul Diaz <sefford@gmail.com>
+ * @deprecated Incompatible with the latest versions
  */
+@Deprecated
 public class FastNetworkInteractor<R extends Response, E extends Error> extends NetworkInteractor<R, E> {
 
     /**
      * Creates a new instance of Fast Saving Interactor
      *
-     * @param bus     Notification Facility
-     * @param log     Logging facilities
+     * @param bus      Notification Facility
+     * @param log      Logging facilities
      * @param delegate Request to execute
      */
     public FastNetworkInteractor(Postable bus, Loggable log, NetworkDelegate<R, E> delegate) {
@@ -54,7 +56,7 @@ public class FastNetworkInteractor<R extends Response, E extends Error> extends 
             final R content = ((NetworkDelegate<R, E>) delegate).execute();
             final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
             final R savedMemoryContent = ((FastDelegate<R>) delegate).fastSave(processedContent);
-            notifySuccess(savedMemoryContent);
+            notify(savedMemoryContent);
             try {
                 long start = System.currentTimeMillis();
                 ((NetworkDelegate<R, E>) delegate).saveToCache(savedMemoryContent);
@@ -68,7 +70,13 @@ public class FastNetworkInteractor<R extends Response, E extends Error> extends 
             if (error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
-            notifyError(error);
+            notify(error);
         }
     }
+
+    @Override
+    public Object execute() {
+        throw new IllegalThreadStateException("Cannot be executed syncronously");
+    }
+
 }

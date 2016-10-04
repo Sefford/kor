@@ -19,7 +19,6 @@ import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
 import com.sefford.kor.interactors.interfaces.CacheDelegate;
-import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
 
 /**
@@ -42,7 +41,7 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
      * This could be also done with Handlers, however the Fragments might exist in an inconsistent
      * state.
      */
-    protected final Postable bus;
+    protected final Postable postable;
     /**
      * Logging facilities.
      */
@@ -55,36 +54,28 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
     /**
      * Creates a new Cache Interactor.
      *
-     * @param bus Bus to notify the results
-     * @param log Logging facilities
+     * @param postable Bus to notify the results
+     * @param log      Logging facilities
      */
-    public CacheInteractor(Postable bus, Loggable log, CacheDelegate<R, E> delegate) {
-        super(bus, log, delegate);
+    public CacheInteractor(Postable postable, Loggable log, CacheDelegate<R, E> delegate) {
+        super(postable, log, delegate);
         this.log = log;
-        this.bus = bus;
+        this.postable = postable;
     }
 
     @Override
-    public void notifyError(E error) {
-        // Do nothing
-    }
-
-    @Override
-    public void run() {
+    public Object execute() {
         long start = System.currentTimeMillis();
-        final R processedContent;
         try {
-            processedContent = ((CacheDelegate<R, E>) delegate).execute();
+            final R response = ((CacheDelegate<R, E>) delegate).execute();
             log.d(TAG, delegate.getInteractorName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
-            if (processedContent.isSuccess()) {
-                notifySuccess(processedContent);
-            }
+            return response;
         } catch (Exception x) {
             final E error = ((CacheDelegate<R, E>) delegate).composeErrorResponse(x);
-            if (error.isLoggable()) {
+            if (loggable && error.isLoggable()) {
                 log.e(TAG, delegate.getInteractorName(), x);
             }
-            notifyError(error);
+            return error;
         }
     }
 }
