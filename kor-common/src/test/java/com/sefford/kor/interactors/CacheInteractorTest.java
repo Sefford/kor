@@ -83,6 +83,11 @@ public class CacheInteractorTest {
         }
 
         @Override
+        public void logErrorResponse(Loggable log) {
+
+        }
+
+        @Override
         public boolean isCacheValid() {
             return false;
         }

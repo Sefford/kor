@@ -98,6 +98,11 @@ public class UpdateableInteractorTest {
         }
 
         @Override
+        public void logErrorResponse(Loggable log) {
+
+        }
+
+        @Override
         public String getInteractorName() {
             return null;
         }

@@ -21,15 +21,12 @@ group = 'com.sefford'
 
 ext {
     versionMajor = 2
-    versionMinor = 3
-    versionPatch = 1
+    versionMinor = 4
+    versionPatch = 0
 }
 version = "${versionMajor}.${versionMinor}.${versionPatch}"
 
 description = 'kor-common'
-
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
 
 repositories {
     mavenCentral()
@@ -103,7 +100,7 @@ dependencies {
     compile 'com.sefford:commons:1.1.0'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'org.mockito:mockito-core:2.1.0'
 }
 
 tasks.install.mustRunAfter build

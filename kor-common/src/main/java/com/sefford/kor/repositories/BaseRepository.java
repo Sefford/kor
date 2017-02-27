@@ -112,7 +112,7 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
 
     @Override
     public V get(K id) {
-        V result = currentLevel.get(id) == null && hasNextLevel() ? nextLevel.get(id) : currentLevel.get(id);
+        V result = !currentLevel.contains(id) && hasNextLevel() ? nextLevel.get(id) : currentLevel.get(id);
         if (result != null && currentLevel.get(id) == null) {
             currentLevel.save(result);
         }

@@ -12,6 +12,6 @@ before_install:
   - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --filter platform-tools,android-8,extra-android-support,66,$ANDROID_SDKS --no-ui --force
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
-  - oraclejdk7
+  - oraclejdk8
   - openjdk7
   - openjdk6

@@ -93,6 +93,11 @@ public class StandardNetworkInteractorTest {
         }
 
         @Override
+        public void logErrorResponse(Loggable log) {
+
+        }
+
+        @Override
         public String getInteractorName() {
             return null;
         }

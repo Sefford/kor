@@ -15,6 +15,7 @@
  */
 package com.sefford.kor.interactors.interfaces;
 
+import com.sefford.common.interfaces.Loggable;
 import com.sefford.kor.responses.Response;
 
 /**
@@ -48,6 +49,13 @@ public interface Delegate<R extends Response, E extends com.sefford.kor.errors.E
      * @return Composed Error extending {@link com.sefford.kor.errors.Error ErrorInterface}
      */
     E composeErrorResponse(Exception error);
+
+    /**
+     * Logs an error response
+     *
+     * @param log Loggable element
+     */
+    void logErrorResponse(Loggable log);
 
     /**
      * Returns delegate name.
