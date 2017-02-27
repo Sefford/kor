@@ -61,7 +61,7 @@ public class StandardNetworkInteractor<R extends Response, E extends Error> exte
         } catch (Exception x) {
             final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
             if (loggable && error.isLoggable()) {
-                delegate.logErrorResponse(log);
+                delegate.logErrorResponse(log, x);
             }
             return error;
         }

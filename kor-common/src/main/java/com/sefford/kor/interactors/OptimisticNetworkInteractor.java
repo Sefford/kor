@@ -3,7 +3,6 @@ package com.sefford.kor.interactors;
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
 import com.sefford.kor.errors.Error;
-import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.interactors.interfaces.Notifiable;
 import com.sefford.kor.interactors.interfaces.OptimisticDelegate;
 import com.sefford.kor.responses.Response;
@@ -48,7 +47,7 @@ public class OptimisticNetworkInteractor<R extends Response, E extends Error> ex
             final E error = ((OptimisticDelegate<R, E>) delegate).composeErrorResponse(x);
             ((OptimisticDelegate<R, E>) delegate).revertCacheStatus();
             if (loggable && error.isLoggable()) {
-                delegate.logErrorResponse(log);
+                delegate.logErrorResponse(log, x);
             }
             return error;
         }

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## Kor Common 2.4.1
+_2017-02-27_
+
+* Corrected a small error with the signature of `logErrorResponse(Loggable)` method
+
 ## Kor Common 2.4.0
 _2017-02-27_
 

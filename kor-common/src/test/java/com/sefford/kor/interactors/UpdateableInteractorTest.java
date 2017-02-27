@@ -98,7 +98,7 @@ public class UpdateableInteractorTest {
         }
 
         @Override
-        public void logErrorResponse(Loggable log) {
+        public void logErrorResponse(Loggable log, Exception x) {
 
         }
 

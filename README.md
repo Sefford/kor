@@ -21,14 +21,14 @@ Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](ht
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
 </dependency>
 ```
 
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:2.4.0'
+compile 'com.sefford:kor-common:2.4.1'
 ```
 
 

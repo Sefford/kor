@@ -96,7 +96,7 @@ public class NetworkInteractorTest {
         }
 
         @Override
-        public void logErrorResponse(Loggable log) {
+        public void logErrorResponse(Loggable log, Exception ex) {
 
         }
 

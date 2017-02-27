@@ -55,7 +55,7 @@ public interface Delegate<R extends Response, E extends com.sefford.kor.errors.E
      *
      * @param log Loggable element
      */
-    void logErrorResponse(Loggable log);
+    void logErrorResponse(Loggable log, Exception x);
 
     /**
      * Returns delegate name.
