@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -21,6 +22,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -304,6 +306,43 @@ public class BaseRepositoryTest {
     public void testIsAvailable() throws Exception {
         when(currentLevel.isAvailable()).thenReturn(Boolean.TRUE);
         assertTrue(repository.isAvailable());
+    }
+
+    @Test
+    public void testThreeTierResolvesGetCorrectly() throws Exception {
+        final Repository<Long, TestElement> firstLevel = mock(Repository.class);
+        final Repository<Long, TestElement> secondLevel = mock(Repository.class);
+        final Repository<Long, TestElement> thirdLevel = mock(Repository.class);
+
+        final BaseRepository<Long, TestElement> localLevel = new BaseRepositoryImpl(firstLevel, secondLevel);
+        final BaseRepository<Long, TestElement> repository = new BaseRepositoryImpl(localLevel, thirdLevel);
+
+        when(firstLevel.get(EXPECTED_FIRST_ID)).thenReturn(null);
+        when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
+        when(secondLevel.isAvailable()).thenReturn(Boolean.FALSE);
+        when(thirdLevel.isAvailable()).thenReturn(Boolean.TRUE);
+        when(thirdLevel.get(EXPECTED_FIRST_ID)).thenReturn(mock(TestElement.class));
+
+        assertNotNull(repository.get(EXPECTED_FIRST_ID));
+    }
+
+    @Test
+    public void testThreeTierResolvesContainsCorrectly() throws Exception {
+        final Repository<Long, TestElement> firstLevel = mock(Repository.class);
+        final Repository<Long, TestElement> secondLevel = mock(Repository.class);
+        final Repository<Long, TestElement> thirdLevel = mock(Repository.class);
+
+        final BaseRepository<Long, TestElement> localLevel = new BaseRepositoryImpl(firstLevel, secondLevel);
+        final BaseRepository<Long, TestElement> repository = new BaseRepositoryImpl(localLevel, thirdLevel);
+
+        when(firstLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
+        when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
+        when(secondLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
+        when(secondLevel.isAvailable()).thenReturn(Boolean.FALSE);
+        when(thirdLevel.isAvailable()).thenReturn(Boolean.TRUE);
+        when(thirdLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
+
+        assertTrue(repository.contains(EXPECTED_FIRST_ID));
     }
 
     class TestElement implements RepoElement<Long>, Updateable<TestElement> {

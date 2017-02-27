@@ -107,6 +107,11 @@ public class FastSaveInteractorTest {
         }
 
         @Override
+        public void logErrorResponse(Loggable log) {
+
+        }
+
+        @Override
         public Response fastSave(Response response) {
             return response;
         }

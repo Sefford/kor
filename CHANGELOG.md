@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## Kor Common 2.4.0
+_2017-02-27_
+
+* Added new `OptimisticNetworkInteractor`for providing fast UI updates then doing the hard work
+* Correction of `BaseRepository` where `get(K)` was relying on `get(K)` instead of using contains, prompting for more efficient lookups
+* Added a new `logErrorResponse(Loggable)`method that allows better error reporting on Fabric 
+
 ## Kor Common 2.1
 _2015-05-16_
 
