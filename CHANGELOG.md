@@ -5,7 +5,7 @@ Changelog
 _2017-02-27_
 
 * Added new `OptimisticNetworkInteractor`for providing fast UI updates then doing the hard work
-* Correction of `BaseRepository` where `get(K)` was relying on `get(K)` instead of using contains, prompting for more efficient lookups
+* Correction of `BaseRepository` where `get(K)` was relying on `Repository.get(K)` instead of using `Repository.contains(K)`, prompting for less efficient lookups
 * Added a new `logErrorResponse(Loggable)`method that allows better error reporting on Fabric 
 
 ## Kor Common 2.1
