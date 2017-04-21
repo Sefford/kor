@@ -48,11 +48,11 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
 
     /**
      * Creates a new instance of a BaseRepository with next level.
-     *
+     * <p>
      * This next level can be optionally initialized to null.
      *
-     * @param  currentLevel Current Level of the Repository
-     * @param nextLevel Next Level of the Repository
+     * @param currentLevel Current Level of the Repository
+     * @param nextLevel    Next Level of the Repository
      */
     protected BaseRepository(Repository<K, V> currentLevel, Repository<K, V> nextLevel) {
         this.currentLevel = currentLevel;
@@ -91,7 +91,7 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
 
     @Override
     public boolean contains(K id) {
-        return currentLevel.contains(id) || (hasNextLevel() ? nextLevel.contains(id) : false);
+        return currentLevel.contains(id) | (hasNextLevel() && nextLevel.contains(id));
     }
 
     @Override
@@ -105,18 +105,21 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
     @Override
     public void deleteAll(List<V> elements) {
         currentLevel.deleteAll(elements);
-        if (hasNextLevel()){
+        if (hasNextLevel()) {
             nextLevel.deleteAll(elements);
         }
     }
 
     @Override
     public V get(K id) {
-        V result = !currentLevel.contains(id) && hasNextLevel() ? nextLevel.get(id) : currentLevel.get(id);
-        if (result != null && currentLevel.get(id) == null) {
-            currentLevel.save(result);
+        V element = currentLevel.contains(id) ? currentLevel.get(id) : (hasNextLevel() ? nextLevel.get(id) : null);
+        if (element == null && hasNextLevel() && currentLevel.contains(id) && nextLevel.contains(id)) {
+            element = nextLevel.get(id);
         }
-        return result;
+        if (element != null && !currentLevel.contains(id)) {
+            currentLevel.save(element);
+        }
+        return element;
     }
 
     @Override
@@ -134,7 +137,7 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
             results.put(element.getId(), element);
         }
         if (hasNextLevel()) {
-            for (final V nextElement : nextLevel.getAll()){
+            for (final V nextElement : nextLevel.getAll()) {
                 if (!results.containsKey(nextElement.getId())) {
                     results.put(nextElement.getId(), nextElement);
                 }

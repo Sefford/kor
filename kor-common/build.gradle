@@ -22,7 +22,7 @@ group = 'com.sefford'
 ext {
     versionMajor = 2
     versionMinor = 4
-    versionPatch = 1
+    versionPatch = 3
 }
 version = "${versionMajor}.${versionMinor}.${versionPatch}"
 

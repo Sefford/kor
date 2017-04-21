@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## Kor Common 2.4.3
+_2017-04-21_
+
+* Minor fixes on certain circumstances with `BaseRepository`
+
 ## Kor Common 2.4.1
 _2017-02-27_
 

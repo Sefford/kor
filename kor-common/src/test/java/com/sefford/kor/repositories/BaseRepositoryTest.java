@@ -230,7 +230,9 @@ public class BaseRepositoryTest {
 
     @Test
     public void testGetInCurrentLevelNoNextLevel() throws Exception {
+        when(currentLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
         when(currentLevel.get(EXPECTED_FIRST_ID)).thenReturn(mockedElement1);
+
         assertEquals(mockedElement1, repository.get(EXPECTED_FIRST_ID));
     }
 
@@ -286,7 +288,10 @@ public class BaseRepositoryTest {
 
     @Test
     public void testGetAllIdsNullElements() throws Exception {
+        when(currentLevel.contains(anyLong())).thenReturn(Boolean.TRUE);
+
         repository.getAll(ids);
+
         verify(currentLevel, atLeastOnce()).get(anyLong());
     }
 
