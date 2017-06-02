@@ -28,7 +28,7 @@ public interface Delegate<R extends Response, E extends com.sefford.kor.errors.E
     /**
      * Produces a {@link Response ResponseInterface} type.
      * <p/>
-     * In this phase the intended behavior will be to perform some action or logic (fetching network or cache information,
+     * In this phase the intended behavior will be to perform some action or logic (fetching network or lru information,
      * sorting...) and parse it into a manageable object by the developer method of choice.
      * <p/>
      * The completion of this method should indicate that the network response was correctly fetched

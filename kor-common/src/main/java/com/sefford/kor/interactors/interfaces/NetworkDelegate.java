@@ -26,7 +26,7 @@ import com.sefford.kor.responses.Response;
  * <ul>
  * <li>Network Retrieval (execution) phase.</li>
  * <li>Post processing.</li>
- * <li>Saving to cache.</li>
+ * <li>Saving to lru.</li>
  * <li></li>
  * <p/>
  * </ul>
@@ -39,7 +39,7 @@ public interface NetworkDelegate<R extends Response, E extends Error> extends De
      * Does a processing of the Response.
      * <p/>
      * In the default implementation this is a chance for the developer to execute code regarding the response.
-     * This might range from crossing information from the cache to the fetched data to validate it.
+     * This might range from crossing information from the lru to the fetched data to validate it.
      * <p/>
      * While it is not an expected behavior, the developer can still have a chance to throw an exception.
      *

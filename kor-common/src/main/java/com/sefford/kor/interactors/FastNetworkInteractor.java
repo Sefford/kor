@@ -24,7 +24,7 @@ import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
 
 /**
- * Specialization of a Network Interactor to support fast cache saving.
+ * Specialization of a Network Interactor to support fast lru saving.
  * <p/>
  * This strategy adds a first fast save on the repository to have the information already on the repository,
  * then notifies the UI. After the notification a standard full-save is performed on the repository

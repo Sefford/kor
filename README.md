@@ -93,7 +93,7 @@ crossing from the data.
 idea is to analyze the exception and output an ErrorResponse which the UI layer can use to give the user detailed information.
 
 For heavy-duty operations, `FastDelegate` interface is available to provide a chance to make a preliminary persistence to
-memory and notifiy the user to give out the response while offloading to a slower cache in the background of the `Request`.
+memory and notifiy the user to give out the response while offloading to a slower lru in the background of the `Request`.
 
 The case of the `CacheDelegate` the behavior is slightly different. A `CacheDelegate`is supposed to fetch the information
 from the persistence system. As such, it lacks `postProcess` and `saveToCache` stages. In the earlier step, because the
@@ -101,9 +101,9 @@ information is supposed to have been saved on the system via an early `NetworkDe
 necessary steps. In the latter, for obvious reasons.
 
 * **isCacheValid:** This stage is meant to be executed _before_ the actual retrieveFromCache, and it is meant to peek at
-the cache data to know in advance if the information is valid (e.g. has not expired or it is present) before trying to
+the lru data to know in advance if the information is valid (e.g. has not expired or it is present) before trying to
 retrieve the data
-* **execute:** As stated this is the stage for actually getting the information from the cache.
+* **execute:** As stated this is the stage for actually getting the information from the lru.
 
 Finally, the `UpdateableDelegate` adds a **keepLooping()** method to check the execution of a `NetworkDelegate` flow.
 Remember that while a `UpdateableDelegate` can keep periodically running, this is battery and network-costly and
@@ -120,7 +120,7 @@ Each of the `Interactors` work typically with a specified kind of `Delegate`.
 does not notify of anything to reduce the noise during the execution.
 * **StandardNetworkInteractor:** Retrieves the information from network, postprocesses it, saves it into the persistence and
 notifies it.
-* **FastNetworkInteractor:** Retrieves the information from the network, postprocesses it, saves into a fast cache (typically
+* **FastNetworkInteractor:** Retrieves the information from the network, postprocesses it, saves into a fast lru (typically
 memory), notifies to the result and then resumes the saving to the persistence.
 * **UpdateableInteractor:** Performs a loop over the `StandardNetworkInteractor` until the condition is fullfilled. On each
 of the loops notifies the result to the system.
