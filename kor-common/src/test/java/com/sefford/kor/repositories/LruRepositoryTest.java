@@ -3,6 +3,7 @@ package com.sefford.kor.repositories;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.interfaces.Updateable;
+import com.sefford.kor.repositories.utils.TestElement;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -103,37 +104,4 @@ public class LruRepositoryTest {
         assertFalse(repository.contains(id));
         assertFalse(lruRepository.contains(id));
     }
-
-
-    class TestElement implements RepoElement<Integer>, Updateable<TestElement> {
-
-        final int id;
-
-        TestElement(int id) {
-            this.id = id;
-        }
-
-
-        @Override
-        public Integer getId() {
-            return id;
-        }
-
-        @Override
-        public TestElement update(TestElement other) {
-            return this;
-        }
-
-        @Override
-        public boolean equals(Object that) {
-            return id == ((TestElement) that).id;
-        }
-
-        @Override
-        public int hashCode() {
-            return id;
-        }
-    }
-
-
 }

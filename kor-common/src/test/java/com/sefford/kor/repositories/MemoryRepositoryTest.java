@@ -3,6 +3,7 @@ package com.sefford.kor.repositories;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Updateable;
 
+import com.sefford.kor.repositories.utils.TestElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,9 +23,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MemoryRepositoryTest {
-    private static final long EXPECTED_FIRST_ID = 1;
-    private static final long EXPECTED_SECOND_ID = 2;
-    private static final long EXPECTED_THIRD_ID = 3;
+    private static final int EXPECTED_FIRST_ID = 1;
+    private static final int EXPECTED_SECOND_ID = 2;
+    private static final int EXPECTED_THIRD_ID = 3;
 
     @Mock
     private TestElement mockedElement1;
@@ -34,11 +35,11 @@ public class MemoryRepositoryTest {
     private TestElement mockedElement3;
 
     private List<TestElement> elements = new ArrayList<TestElement>();
-    private List<Long> ids = new ArrayList<Long>();
+    private List<Integer> ids = new ArrayList<Integer>();
     @Mock
-    Map<Long, TestElement> map;
+    Map<Integer, TestElement> map;
 
-    MemoryRepository<Long, TestElement> repository;
+    MemoryRepository<Integer, TestElement> repository;
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +65,7 @@ public class MemoryRepositoryTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = spy(new MemoryRepository<Long, TestElement>(map));
+        repository = spy(new MemoryRepository<Integer, TestElement>(map));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class MemoryRepositoryTest {
 
     @Test
     public void testIsAvailableNotAvailable() throws Exception {
-        repository = new MemoryRepository<Long, TestElement>(null);
+        repository = new MemoryRepository<Integer, TestElement>(null);
         assertFalse(repository.isAvailable());
     }
 
@@ -181,18 +182,4 @@ public class MemoryRepositoryTest {
         verify(map, times(1)).get(EXPECTED_SECOND_ID);
         verify(map, times(1)).get(EXPECTED_THIRD_ID);
     }
-
-    class TestElement implements RepoElement<Long>, Updateable<TestElement> {
-
-        @Override
-        public Long getId() {
-            return null;
-        }
-
-        @Override
-        public TestElement update(TestElement other) {
-            return this;
-        }
-    }
-
 }

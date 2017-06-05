@@ -90,7 +90,7 @@ public class LruRepository<K, V extends RepoElement<K>>
 
     @Override
     public Collection<V> getAll(Collection<K> ids) {
-        List<V> result = new ArrayList<>();
+        final List<V> result = new ArrayList<>();
         for (final K id : ids) {
             final V element = get(id);
             if (element != null) {
