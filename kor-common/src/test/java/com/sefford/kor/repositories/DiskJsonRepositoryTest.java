@@ -48,7 +48,7 @@ public class DiskJsonRepositoryTest {
         initMocks(this);
 
         repository = spy(new DiskJsonRepository<>(folder, new Gson(), loggable, TestElement.class));
-        doNothing().when(((DiskJsonRepository) repository)).write(any());
+        doNothing().when(((DiskJsonRepository) repository)).write(any(TestElement.class));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class DiskJsonRepositoryTest {
         final File mockedFile1 = prepareFileForDeletion(0);
         final File mockedFile2 = prepareFileForDeletion(1);
 
-        ((DiskJsonRepository) repository).deleteAll(Arrays.asList(new TestElement(0), new TestElement(1)));
+        repository.deleteAll(Arrays.asList(new TestElement(0), new TestElement(1)));
 
         verify(mockedFile1, times(1)).delete();
         verify(mockedFile2, times(1)).delete();
@@ -109,7 +109,7 @@ public class DiskJsonRepositoryTest {
     public void testRetrieval() throws Exception {
         final TestElement element = prepareElementForRetrieval(0);
 
-        assertThat(((DiskJsonRepository) repository).get(0), is(element));
+        assertThat(repository.get(0), is(element));
     }
 
     @Test
