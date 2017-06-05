@@ -98,6 +98,7 @@ install {
 
 dependencies {
     compile 'com.sefford:commons:1.1.0'
+    compile 'com.google.code.gson:gson:2.8.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.1.0'

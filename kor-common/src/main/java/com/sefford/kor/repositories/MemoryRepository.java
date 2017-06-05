@@ -20,10 +20,7 @@ import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.interfaces.Updateable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Simple abstraction of a repository that only supports volatile memory caching.
@@ -49,11 +46,18 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
     protected final Map<K, V> cache;
 
     /**
+     * Creates a new instance of Memory repository with a default Hashmap implementation
+     */
+    public MemoryRepository() {
+        this(new HashMap<>());
+    }
+
+    /**
      * Creates a new instance of Memory repository
      *
      * @param cache Storage map of the repository
      */
-    protected MemoryRepository(Map<K, V> cache) {
+    public MemoryRepository(Map<K, V> cache) {
         this.cache = cache;
     }
 
