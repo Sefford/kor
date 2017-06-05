@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.repositories.utils;
 
-import com.sefford.kor.repositories.interfaces.ExpirationPolicy;
 import com.sefford.kor.repositories.interfaces.Clock;
+import com.sefford.kor.repositories.interfaces.ExpirationPolicy;
 
 import java.util.HashMap;
 

@@ -1,5 +1,17 @@
 Changelog
 =========
+## Kor common 2.5.1
+_2017-06-05_
+
+* Added DiskJsonRepository to allow to-disk JSon peristence 
+
+## Kor common 2.5.0
+_2017-06-05_
+
+* Refactored Repository structures to apply better OOP methodologies
+* Added `LruRepository` to allow Repositories to hold a limited number of elements
+* Added `ExpirationRepository` to allow Repositories to have an Expiration Policy
+* Added `TimeExpirationPolicy` as a PoC expiration policy
 
 ## Kor common 2.5.0
 _2017-06-05_

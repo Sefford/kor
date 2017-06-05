@@ -18,12 +18,13 @@ package com.sefford.kor.repositories;
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.utils.TestElement;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
