@@ -5,6 +5,7 @@ import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.interfaces.Updateable;
 
+import com.sefford.kor.repositories.utils.TestElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,9 +19,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BaseFastRepositoryTest {
-    private static final long EXPECTED_FIRST_ID = 1;
-    private static final long EXPECTED_SECOND_ID = 2;
-    private static final long EXPECTED_THIRD_ID = 3;
+    private static final int EXPECTED_FIRST_ID = 1;
+    private static final int EXPECTED_SECOND_ID = 2;
+    private static final int EXPECTED_THIRD_ID = 3;
 
     @Mock
     private TestElement mockedElement1;
@@ -32,9 +33,9 @@ public class BaseFastRepositoryTest {
     private TestRepository currentLevel;
 
     private List<TestElement> elements = new ArrayList<TestElement>();
-    private List<Long> ids = new ArrayList<Long>();
+    private List<Integer> ids = new ArrayList<>();
 
-    private BaseFastRepository<Long, TestElement> repository;
+    private BaseFastRepository<Integer, TestElement> repository;
 
     @Before
     public void setUp() throws Exception {
@@ -81,33 +82,20 @@ public class BaseFastRepositoryTest {
         verify(currentLevel, times(1)).saveAllInMemory(elements);
     }
 
-    class TestElement implements RepoElement<Long>, Updateable<TestElement> {
+    class TestRepository implements Repository<Integer, TestElement>, FastRepository<Integer, TestElement> {
 
         @Override
-        public Long getId() {
-            return null;
-        }
-
-        @Override
-        public TestElement update(TestElement other) {
-            return this;
-        }
-    }
-
-    class TestRepository implements Repository<Long, TestElement>, FastRepository<Long, TestElement> {
-
-        @Override
-        public boolean containsInMemory(Long id) {
+        public boolean containsInMemory(Integer id) {
             return false;
         }
 
         @Override
-        public TestElement getFromMemory(Long id) {
+        public TestElement getFromMemory(Integer id) {
             return null;
         }
 
         @Override
-        public Collection<TestElement> getAllFromMemory(List<Long> ids) {
+        public Collection<TestElement> getAllFromMemory(List<Integer> ids) {
             return null;
         }
 
@@ -127,12 +115,12 @@ public class BaseFastRepositoryTest {
         }
 
         @Override
-        public boolean contains(Long id) {
+        public boolean contains(Integer id) {
             return false;
         }
 
         @Override
-        public void delete(Long id, TestElement element) {
+        public void delete(Integer id, TestElement element) {
 
         }
 
@@ -142,12 +130,12 @@ public class BaseFastRepositoryTest {
         }
 
         @Override
-        public TestElement get(Long id) {
+        public TestElement get(Integer id) {
             return null;
         }
 
         @Override
-        public Collection<TestElement> getAll(Collection<Long> ids) {
+        public Collection<TestElement> getAll(Collection<Integer> ids) {
             return null;
         }
 
@@ -172,7 +160,7 @@ public class BaseFastRepositoryTest {
         }
     }
 
-    class BaseFastRepositoryImpl extends BaseFastRepository<Long, TestElement> {
+    class BaseFastRepositoryImpl extends BaseFastRepository<Integer, TestElement> {
 
         /**
          * Creates a new instance of a BaseRepository with next level.
@@ -182,7 +170,7 @@ public class BaseFastRepositoryTest {
          * @param currentLevel Current Level of the Repository
          * @param nextLevel    Next Level of the Repository
          */
-        protected BaseFastRepositoryImpl(FastRepository<Long, TestElement> currentLevel, Repository<Long, TestElement> nextLevel) {
+        protected BaseFastRepositoryImpl(FastRepository<Integer, TestElement> currentLevel, Repository<Integer, TestElement> nextLevel) {
             super(currentLevel, nextLevel);
         }
     }

@@ -27,7 +27,7 @@ import com.sefford.kor.responses.Response;
  * This strategy retrieves the delegate's information from the Repository then notifies if the information
  * was successfully retrieved from it.
  * <p/>
- * To do not disturb the process of fetching from network, as the cache delegate work faster this
+ * To do not disturb the process of fetching from network, as the lru delegate work faster this
  * implementation of CacheInteractor does not notifies of errors to the UI.
  * <p/>
  * It delegates the work to a {@link com.sefford.kor.interactors.interfaces.CacheDelegate CacheDelegate} object.

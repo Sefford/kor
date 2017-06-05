@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * BaseRepository implements a Chain of Responsibility pattern for the Repositories.
  * <p/>
- * In order to achieve true interchangeable cache levels, the default repositories are built upon
+ * In order to achieve true interchangeable lru levels, the default repositories are built upon
  * a chain of responibility pattern, so the updates can happen sequentially on the repository hierarchy.
  * <p/>
  * While the default implementation is based around this hierarchial organization of repositories,

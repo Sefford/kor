@@ -28,7 +28,7 @@ import com.sefford.kor.responses.Response;
  * * <ul>
  * <li>Network Retrieval phase.</li>
  * <li>Post processing.</li>
- * <li>Saving to cache.</li>
+ * <li>Saving to lru.</li>
  * <li>Notifying to the UI for success</li>
  * <p/>
  * </ul>

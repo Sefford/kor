@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Extension of {@link com.sefford.kor.repositories.BaseRepository BaseRepository} to support fast
- * cache saving.
+ * lru saving.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */

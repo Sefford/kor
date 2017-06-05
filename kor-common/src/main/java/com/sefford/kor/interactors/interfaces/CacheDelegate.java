@@ -21,7 +21,7 @@ import com.sefford.kor.responses.Response;
 /**
  * Interface for managing Cache Interactors.
  * <p/>
- * A cache delegate is intended to be able to check if the cache is valid then retrieve it if it is.
+ * A lru delegate is intended to be able to check if the lru is valid then retrieve it if it is.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */

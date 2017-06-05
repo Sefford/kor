@@ -4,7 +4,7 @@ import com.sefford.kor.errors.Error;
 import com.sefford.kor.responses.Response;
 
 /**
- * Interface for performing interactions to the network with optimistic results for cache.
+ * Interface for performing interactions to the network with optimistic results for lru.
  * <p/>
  * A delegate is intended to go through at least four phases
  * <p/>
@@ -21,7 +21,7 @@ import com.sefford.kor.responses.Response;
 public interface OptimisticDelegate<R extends Response, E extends Error> extends Delegate<R, E> {
 
     /**
-     * Performs expected changes to the cache before the API call is executed
+     * Performs expected changes to the lru before the API call is executed
      */
     void performCacheChanges();
 
@@ -29,7 +29,7 @@ public interface OptimisticDelegate<R extends Response, E extends Error> extends
      * Does a processing of the Response.
      * <p/>
      * In the default implementation this is a chance for the developer to execute code regarding the response.
-     * This might range from crossing information from the cache to the fetched data to validate it.
+     * This might range from crossing information from the lru to the fetched data to validate it.
      * <p/>
      * While it is not an expected behavior, the developer can still have a chance to throw an exception.
      *
@@ -39,7 +39,7 @@ public interface OptimisticDelegate<R extends Response, E extends Error> extends
     R postProcess(R response);
 
     /**
-     * Opportunity to revert changes to the cache
+     * Opportunity to revert changes to the lru
      */
     void revertCacheStatus();
 }

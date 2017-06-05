@@ -35,7 +35,7 @@ public interface FastDelegate<R extends Response> {
      * <p/>
      * For more info refer to {@link com.sefford.kor.repositories.interfaces.FastRepository FastRepository} documentation
      *
-     * @param response Response element to save to memory cache.
+     * @param response Response element to save to memory lru.
      * @return Saved response.
      */
     R fastSave(R response);

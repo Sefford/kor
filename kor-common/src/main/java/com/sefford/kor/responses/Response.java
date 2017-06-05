@@ -36,7 +36,7 @@ public interface Response {
     /**
      * Returns if the delegate comes from the network or not.
      * <p/>
-     * The basic implementation only discerns between network and non-network (cache), but extensions of
+     * The basic implementation only discerns between network and non-network (lru), but extensions of
      * ResponseInterface may allow for a more fine-grained information about their sources.
      *
      * @return TRUE if the response comes from the network, FALSE othewise
