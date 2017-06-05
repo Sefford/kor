@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2017 Saúl Díaz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sefford.kor.repositories;
 
 import com.google.gson.Gson;
@@ -15,18 +30,52 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by sefford on 6/5/17.
+ * Repository for saving JSon directly to disk
+ *
+ * @author Saul Diaz <sefford@gmail.com>
  */
 public class DiskJsonRepository<K, V extends RepoElement<K>>
         implements Repository<K, V> {
 
     private static final String TAG = "DiskJsonRepository";
 
+    /**
+     * Gson Converter
+     */
     final Gson gson;
+    /**
+     * Loggable for I/O Errors
+     */
     final Loggable log;
+    /**
+     * Folder where the IDs will be saved
+     */
     final File folder;
+    /**
+     * Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
+     */
     final Class<V> clazz;
 
+    /**
+     * Created a new DiskJsonRepository
+     *
+     * @param folder Root folder of the cache as a path
+     * @param gson   Gson Converter
+     * @param log    Loggable for I/O Errors
+     * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
+     */
+    public DiskJsonRepository(String folder, Gson gson, Loggable log, Class<V> clazz) {
+        this(new File(folder), gson, log, clazz);
+    }
+
+    /**
+     * Created a new DiskJsonRepository
+     *
+     * @param folder Root folder of the cache
+     * @param gson   Gson Converter
+     * @param log    Loggable for I/O Errors
+     * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
+     */
     public DiskJsonRepository(File folder, Gson gson, Loggable log, Class<V> clazz) {
         this.gson = gson;
         this.log = log;
