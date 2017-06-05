@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## Kor common 2.5.0
+_2017-06-05_
+
+* Refactored Repository structures to apply better OOP methodologies
+* Added `LruRepository` to allow Repositories to hold a limited number of elements
+* Added `ExpirationRepository` to allow Repositories to have an Expiration Policy
+
 ## Kor Common 2.4.3
 _2017-04-21_
 
