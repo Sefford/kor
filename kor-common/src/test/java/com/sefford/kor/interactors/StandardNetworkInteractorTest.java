@@ -7,6 +7,8 @@ import com.sefford.kor.interactors.interfaces.NetworkDelegate;
 import com.sefford.kor.responses.Response;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
