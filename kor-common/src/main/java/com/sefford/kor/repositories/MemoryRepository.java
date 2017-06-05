@@ -49,7 +49,7 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
      * Creates a new instance of Memory repository with a default Hashmap implementation
      */
     public MemoryRepository() {
-        this(new HashMap<>());
+        this(new HashMap<K, V>());
     }
 
     /**
