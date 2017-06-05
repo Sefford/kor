@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * BaseRepository implements a Chain of Responsibility pattern for the Repositories.
+ * TwoTierRepository implements a Chain of Responsibility pattern for the Repositories.
  * <p/>
  * In order to achieve true interchangeable lru levels, the default repositories are built upon
  * a chain of responibility pattern, so the updates can happen sequentially on the repository hierarchy.
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class BaseRepository<K, V extends RepoElement<K>> implements Repository<K, V> {
+public class TwoTierRepository<K, V extends RepoElement<K>> implements Repository<K, V> {
 
     /**
      * Next level of the repository if any.
@@ -47,14 +47,14 @@ public abstract class BaseRepository<K, V extends RepoElement<K>> implements Rep
     protected final Repository<K, V> nextLevel;
 
     /**
-     * Creates a new instance of a BaseRepository with next level.
+     * Creates a new instance of a TwoTierRepository with next level.
      * <p>
      * This next level can be optionally initialized to null.
      *
      * @param currentLevel Current Level of the Repository
      * @param nextLevel    Next Level of the Repository
      */
-    protected BaseRepository(Repository<K, V> currentLevel, Repository<K, V> nextLevel) {
+    public TwoTierRepository(Repository<K, V> currentLevel, Repository<K, V> nextLevel) {
         this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
     }

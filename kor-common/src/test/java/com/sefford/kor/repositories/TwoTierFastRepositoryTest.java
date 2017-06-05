@@ -29,10 +29,11 @@ import java.util.List;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class BaseFastRepositoryTest {
+public class TwoTierFastRepositoryTest {
     private static final int EXPECTED_FIRST_ID = 1;
     private static final int EXPECTED_SECOND_ID = 2;
     private static final int EXPECTED_THIRD_ID = 3;
@@ -49,7 +50,7 @@ public class BaseFastRepositoryTest {
     private List<TestElement> elements = new ArrayList<TestElement>();
     private List<Integer> ids = new ArrayList<>();
 
-    private BaseFastRepository<Integer, TestElement> repository;
+    private TwoTierFastRepository<Integer, TestElement> repository;
 
     @Before
     public void setUp() throws Exception {
@@ -63,7 +64,8 @@ public class BaseFastRepositoryTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = new BaseFastRepositoryImpl(currentLevel, null);
+        repository = new TwoTierFastRepository<Integer, TestElement>(currentLevel, null) {
+        };
     }
 
     @Test
@@ -171,21 +173,6 @@ public class BaseFastRepositoryTest {
         @Override
         public boolean isAvailable() {
             return false;
-        }
-    }
-
-    class BaseFastRepositoryImpl extends BaseFastRepository<Integer, TestElement> {
-
-        /**
-         * Creates a new instance of a BaseRepository with next level.
-         * <p/>
-         * This next level can be optionally initialized to null.
-         *
-         * @param currentLevel Current Level of the Repository
-         * @param nextLevel    Next Level of the Repository
-         */
-        protected BaseFastRepositoryImpl(FastRepository<Integer, TestElement> currentLevel, Repository<Integer, TestElement> nextLevel) {
-            super(currentLevel, nextLevel);
         }
     }
 }

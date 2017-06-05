@@ -1,5 +1,14 @@
 Changelog
 =========
+## Kor common 2.5.3
+_2017-06-05_
+
+* Now you do not need to extend `TwoTierRepository` and `MemoryRepository` to use it directly
+* `BaseRepository` renamed to `TwoTierRepository`
+* Minor improvements
+
+
+* Added DiskJsonRepository to allow to-disk JSon peristence 
 ## Kor common 2.5.1
 _2017-06-05_
 

@@ -35,7 +35,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class BaseRepositoryTest {
+public class TwoTierRepositoryTest {
     private static final int EXPECTED_FIRST_ID = 1;
     private static final int EXPECTED_SECOND_ID = 2;
     private static final int EXPECTED_THIRD_ID = 3;
@@ -54,7 +54,7 @@ public class BaseRepositoryTest {
     private List<TestElement> elements = new ArrayList<TestElement>();
     private List<Integer> ids = new ArrayList<Integer>();
 
-    private BaseRepository<Integer, TestElement> repository;
+    private TwoTierRepository<Integer, TestElement> repository;
 
     @Before
     public void setUp() throws Exception {
@@ -81,7 +81,7 @@ public class BaseRepositoryTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = spy(new BaseRepositoryImpl(currentLevel, nextLevel));
+        repository = spy(new TwoTierRepository(currentLevel, nextLevel));
 
         doReturn(Boolean.FALSE).when(repository).hasNextLevel();
     }
@@ -95,13 +95,13 @@ public class BaseRepositoryTest {
 
     @Test
     public void testHasNextLevelNextLevelNotAvailable() throws Exception {
-        repository = new BaseRepositoryImpl(currentLevel, null);
+        repository = new TwoTierRepository(currentLevel, null);
         assertFalse(repository.hasNextLevel());
     }
 
     @Test
     public void testHasNextLevelNextLevel() throws Exception {
-        repository = new BaseRepositoryImpl(currentLevel, nextLevel);
+        repository = new TwoTierRepository(currentLevel, nextLevel);
         when(nextLevel.isAvailable()).thenReturn(Boolean.TRUE);
         assertTrue(repository.hasNextLevel());
     }
@@ -302,7 +302,7 @@ public class BaseRepositoryTest {
 
     @Test
     public void testIsAvailableNullCurrent() throws Exception {
-        repository = new BaseRepositoryImpl(null, null);
+        repository = new TwoTierRepository(null, null);
 
         assertFalse(repository.isAvailable());
     }
@@ -324,8 +324,8 @@ public class BaseRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final BaseRepository<Integer, TestElement> localLevel = new BaseRepositoryImpl(firstLevel, secondLevel);
-        final BaseRepository<Integer, TestElement> repository = new BaseRepositoryImpl(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
 
         when(firstLevel.get(EXPECTED_FIRST_ID)).thenReturn(null);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
@@ -342,8 +342,8 @@ public class BaseRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final BaseRepository<Integer, TestElement> localLevel = new BaseRepositoryImpl(firstLevel, secondLevel);
-        final BaseRepository<Integer, TestElement> repository = new BaseRepositoryImpl(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
 
         when(firstLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
@@ -361,8 +361,8 @@ public class BaseRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final BaseRepository<Integer, TestElement> localLevel = new BaseRepositoryImpl(firstLevel, secondLevel);
-        final BaseRepository<Integer, TestElement> repository = new BaseRepositoryImpl(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
 
         when(firstLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
@@ -376,20 +376,4 @@ public class BaseRepositoryTest {
 
         assertThat(repository.get(EXPECTED_FIRST_ID), is(mockedElement1));
     }
-
-    class BaseRepositoryImpl extends BaseRepository<Integer, TestElement> {
-
-        /**
-         * Creates a new instance of a BaseRepository with next level.
-         * <p/>
-         * This next level can be optionally initialized to null.
-         *
-         * @param currentLevel Current Level of the Repository
-         * @param nextLevel    Next Level of the Repository
-         */
-        protected BaseRepositoryImpl(Repository<Integer, TestElement> currentLevel, Repository<Integer, TestElement> nextLevel) {
-            super(currentLevel, nextLevel);
-        }
-    }
-
 }

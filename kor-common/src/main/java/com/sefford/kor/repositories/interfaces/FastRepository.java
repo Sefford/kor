@@ -15,6 +15,8 @@
  */
 package com.sefford.kor.repositories.interfaces;
 
+import com.sefford.kor.repositories.TwoTierRepository;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * save and retrieve elements from themselves in a secondary way.
  * <p/>
  * The objective of this API is to provide a different way of saving and retrieving the elements
- * without accessing the normal get and set methods in which the standard implementation of {@link com.sefford.kor.repositories.BaseRepository BaseRepository}
+ * without accessing the normal get and set methods in which the standard implementation of {@link TwoTierRepository TwoTierRepository}
  * saves and retrieves on several levels sequentially.
  * <p/>
  * This gives the developer the chance to perform a simple save or retrieval in a single level of the

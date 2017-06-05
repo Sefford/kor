@@ -161,7 +161,7 @@ public class DiskJsonRepositoryTest {
 
     @Test
     public void testAvailabilityWhenFolderIsNull() throws Exception {
-        repository = new DiskJsonRepository<>(null, new Gson(), loggable, TestElement.class);
+        repository = new DiskJsonRepository<>((File) null, new Gson(), loggable, TestElement.class);
 
         assertFalse(repository.isAvailable());
     }

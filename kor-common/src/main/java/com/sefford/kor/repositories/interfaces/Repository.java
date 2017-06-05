@@ -15,6 +15,8 @@
  */
 package com.sefford.kor.repositories.interfaces;
 
+import com.sefford.kor.repositories.TwoTierRepository;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -101,7 +103,7 @@ public interface Repository<K, V> {
      * Is available will return if the Repository is available (i.e. it is initialized)-
      * <p/>
      * As this method is called every time an operation is performed on the repository if extending from
-     * {@link com.sefford.kor.repositories.BaseRepository BaseRepository} to discern if the next level
+     * {@link TwoTierRepository TwoTierRepository} to discern if the next level
      * of the repository is available, it is recommended this to be a easy and fast operation.
      *
      * @return TRUE if the Repository is operative, FALSE otherwise

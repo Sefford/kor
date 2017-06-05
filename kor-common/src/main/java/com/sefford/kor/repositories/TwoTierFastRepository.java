@@ -23,22 +23,22 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Extension of {@link com.sefford.kor.repositories.BaseRepository BaseRepository} to support fast
+ * Extension of {@link TwoTierRepository TwoTierRepository} to support fast
  * lru saving.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public abstract class BaseFastRepository<K, V extends RepoElement<K>> extends BaseRepository<K, V> implements FastRepository<K, V> {
+public abstract class TwoTierFastRepository<K, V extends RepoElement<K>> extends TwoTierRepository<K, V> implements FastRepository<K, V> {
 
     /**
-     * Creates a new instance of a BaseRepository with next level.
+     * Creates a new instance of a TwoTierRepository with next level.
      * <p/>
      * This next level can be optionally initialized to null.
      *
      * @param currentLevel Current Level of the Repository
      * @param nextLevel    Next Level of the Repository
      */
-    protected BaseFastRepository(FastRepository<K, V> currentLevel, Repository<K, V> nextLevel) {
+    protected TwoTierFastRepository(FastRepository<K, V> currentLevel, Repository<K, V> nextLevel) {
         super((Repository<K, V>) currentLevel, nextLevel);
     }
 
