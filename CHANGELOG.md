@@ -1,5 +1,9 @@
 Changelog
 =========
+## Kor common 2.5.1
+_2017-06-05_
+
+* Added DiskJsonRepository to allow to-disk JSon peristence 
 
 ## Kor common 2.5.0
 _2017-06-05_
