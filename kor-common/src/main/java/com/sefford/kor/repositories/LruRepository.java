@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Saúl Díaz
+ * Copyright (C) 2017 Saúl Díaz
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,23 +25,31 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Simple abstraction of a repository which provides a Memory interface using {@link com.sefford.kor.repositories.utils.LruCache LruCache}
- * instead of a {@link java.util.Map Map} backend.
- * <p/>
- * This allows the repository to be able to keep a steady footprint in memory instead of grabbing
- * all available space.
- * <p/>
- * Declaring additional memory repositories is as easy as extending this repository with particular
- * classes for Keys and Values.
+ * Repository which adds the capability to hold a limited number of items in cache.
+ * <p>
+ * The elements do use a {@link LruCache LruCache} as implementation and currently only
+ * supports a quantity-based LRU (not a size-based one)
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
 public class LruRepository<K, V extends RepoElement<K>>
         implements Repository<K, V>, FastRepository<K, V> {
 
+    /**
+     * LRU which backs up the maximum amount of elements it can hold
+     */
     protected final LruCache<K> lru;
+    /**
+     * Core {@link Repository Repository} which backs up the LRU repository itself
+     */
     protected final Repository<K, V> repository;
 
+    /**
+     * Wraps a repository which can only hold maxSize elements
+     *
+     * @param repository Core repository to add the capability to
+     * @param maxSize    Max elements capable to add to the repository
+     */
     public LruRepository(Repository<K, V> repository, int maxSize) {
         this.repository = repository;
         this.lru = new LruCache<>(maxSize);

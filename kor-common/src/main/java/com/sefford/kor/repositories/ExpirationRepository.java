@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2017 Saúl Díaz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sefford.kor.repositories;
 
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy;
@@ -11,14 +26,29 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by sefford on 6/2/17.
+ * Repository which allows the capabilities to implement a {@link ExpirationPolicy ExpirationPolicy} to
+ * evict automatically the elements which expire.
+ *
+ * @author Saul Diaz Gonzalez <sefford@gmail.com>
  */
 public class ExpirationRepository<K, V extends RepoElement<K>>
         implements Repository<K, V>, FastRepository<K, V> {
 
+    /**
+     * Core {@link Repository Repository} which backs up the Expiration repository itself
+     */
     final Repository<K, V> repository;
+    /**
+     * Elements expiration policy
+     */
     final ExpirationPolicy<K> policy;
 
+    /**
+     * Wraps a Repository and enables to apply an Expiration Policy to elements
+     *
+     * @param repository Repository to wrap.
+     * @param policy     Expiration policy to apply to the elements
+     */
     public ExpirationRepository(Repository<K, V> repository, ExpirationPolicy<K> policy) {
         this.repository = repository;
         this.policy = policy;
