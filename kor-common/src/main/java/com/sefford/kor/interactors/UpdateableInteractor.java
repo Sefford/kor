@@ -49,21 +49,23 @@ public class UpdateableInteractor<R extends Response, E extends Error> extends N
 
     @Override
     public void run() {
+        long start = System.currentTimeMillis();
         try {
+            delegate.startPerformanceLog(log);
             while (((UpdateableDelegate) delegate).keepLooping()) {
                 final R content = ((NetworkDelegate<R, E>) delegate).execute();
                 final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
-                long start = System.currentTimeMillis();
                 ((NetworkDelegate<R, E>) delegate).saveToCache(processedContent);
-                log.d(TAG, delegate.getInteractorName() + "(Saving):" + (System.currentTimeMillis() - start) + "ms");
                 notify(processedContent);
             }
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
         } catch (Exception x) {
             final E error = ((UpdateableDelegate<R, E>) delegate).composeErrorResponse(x);
             if (loggable && error.isLoggable()) {
                 delegate.logErrorResponse(log, x);
             }
             notify(error);
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
         }
     }
 

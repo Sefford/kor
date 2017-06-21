@@ -106,6 +106,16 @@ public class UpdateableInteractorTest {
         public String getInteractorName() {
             return null;
         }
+
+        @Override
+        public void startPerformanceLog(Loggable loggable) {
+
+        }
+
+        @Override
+        public void endPerformanceLog(Loggable loggable, long start) {
+
+        }
     }
 
 }

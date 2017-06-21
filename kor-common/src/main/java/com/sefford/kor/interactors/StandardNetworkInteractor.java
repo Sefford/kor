@@ -51,18 +51,20 @@ public class StandardNetworkInteractor<R extends Response, E extends Error> exte
 
     @Override
     public Object execute() {
+        long start = System.currentTimeMillis();
         try {
+            delegate.startPerformanceLog(log);
             final R content = ((NetworkDelegate<R, E>) delegate).execute();
             final R processedContent = ((NetworkDelegate<R, E>) delegate).postProcess(content);
-            long start = System.currentTimeMillis();
             ((NetworkDelegate<R, E>) delegate).saveToCache(processedContent);
-            log.d(TAG, delegate.getInteractorName() + "(Saving):" + (System.currentTimeMillis() - start) + "ms");
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return processedContent;
         } catch (Exception x) {
             final E error = ((NetworkDelegate<R, E>) delegate).composeErrorResponse(x);
             if (loggable && error.isLoggable()) {
                 delegate.logErrorResponse(log, x);
             }
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return error;
         }
     }

@@ -36,12 +36,13 @@ public class OptimisticNetworkInteractor<R extends Response, E extends Error> ex
 
     @Override
     public Object execute() {
+        long start = System.currentTimeMillis();
         try {
+            delegate.startPerformanceLog(log);
             ((OptimisticDelegate<R, E>) delegate).performCacheChanges();
             final R content = ((OptimisticDelegate<R, E>) delegate).execute();
             final R processedContent = ((OptimisticDelegate<R, E>) delegate).postProcess(content);
-            long start = System.currentTimeMillis();
-            log.d(TAG, delegate.getInteractorName() + "(Saving):" + (System.currentTimeMillis() - start) + "ms");
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return processedContent;
         } catch (Exception x) {
             final E error = ((OptimisticDelegate<R, E>) delegate).composeErrorResponse(x);
@@ -49,6 +50,7 @@ public class OptimisticNetworkInteractor<R extends Response, E extends Error> ex
             if (loggable && error.isLoggable()) {
                 delegate.logErrorResponse(log, x);
             }
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return error;
         }
     }

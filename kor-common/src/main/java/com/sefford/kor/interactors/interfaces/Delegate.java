@@ -66,4 +66,19 @@ public interface Delegate<R extends Response, E extends com.sefford.kor.errors.E
      * @return String with delegate name.
      */
     String getInteractorName();
+
+    /**
+     * Helper to start performance logging
+     *
+     * @param loggable Loggable interface to access logging facilities
+     */
+    void startPerformanceLog(Loggable loggable);
+
+    /**
+     * Helper to finish performance logging
+     *
+     * @param loggable Loggable interface to access logging facilities
+     * @param start Start time when the logging started
+     */
+    void endPerformanceLog(Loggable loggable, long start);
 }

@@ -67,14 +67,16 @@ public class CacheInteractor<R extends Response, E extends Error> extends Intera
     public Object execute() {
         long start = System.currentTimeMillis();
         try {
+            delegate.startPerformanceLog(log);
             final R response = ((CacheDelegate<R, E>) delegate).execute();
-            log.d(TAG, delegate.getInteractorName() + "(Retrieving):" + (System.currentTimeMillis() - start) + "ms");
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return response;
         } catch (Exception x) {
             final E error = ((CacheDelegate<R, E>) delegate).composeErrorResponse(x);
             if (loggable && error.isLoggable()) {
                 delegate.logErrorResponse(log, x);
             }
+            delegate.endPerformanceLog(log, (System.currentTimeMillis() - start));
             return error;
         }
     }

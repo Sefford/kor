@@ -120,5 +120,15 @@ public class FastSaveInteractorTest {
         public String getInteractorName() {
             return "";
         }
+
+        @Override
+        public void startPerformanceLog(Loggable loggable) {
+
+        }
+
+        @Override
+        public void endPerformanceLog(Loggable loggable, long start) {
+
+        }
     }
 }
