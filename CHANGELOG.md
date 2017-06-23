@@ -1,6 +1,6 @@
 Changelog
 =========
-## Kor common 2.5.4
+## Kor common 2.5.5
 _2017-06-21_
 
 * Improved interactors to support performance logging facilities
