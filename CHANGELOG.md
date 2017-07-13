@@ -1,6 +1,12 @@
 Changelog
 =========
 ## Kor common 2.5.5
+_2017-07-13_
+
+* Added `Populator` plugin for `LruRepositories`, so `LruCaches` can be populated in certain circumstances like when using `DiskJsonRepositories`
+* Added `FileTimeExpirationPolicy` for `ExpirationRepository` when backing `DiskJsonRepostory`
+ 
+## Kor common 2.5.5
 _2017-06-21_
 
 * Improved interactors to support performance logging facilities

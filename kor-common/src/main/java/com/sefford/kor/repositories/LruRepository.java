@@ -16,6 +16,7 @@
 package com.sefford.kor.repositories;
 
 import com.sefford.kor.repositories.interfaces.FastRepository;
+import com.sefford.kor.repositories.interfaces.Populator;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 import com.sefford.kor.repositories.utils.LruCache;
@@ -53,6 +54,18 @@ public class LruRepository<K, V extends RepoElement<K>>
     public LruRepository(Repository<K, V> repository, int maxSize) {
         this.repository = repository;
         this.lru = new LruCache<>(maxSize);
+    }
+
+    /**
+     * Wraps a repository which can only hold maxSize elements
+     *
+     * @param repository Core repository to add the capability to
+     * @param populator Initial population strategy of the LRU
+     * @param maxSize    Max elements capable to add to the repository
+     */
+    public LruRepository(Repository<K, V> repository, Populator populator, int maxSize) {
+        this(repository, maxSize);
+        populator.populate(lru);
     }
 
     @Override
