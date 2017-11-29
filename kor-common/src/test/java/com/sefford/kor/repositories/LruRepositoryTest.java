@@ -23,6 +23,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.*;
 
 /**
@@ -73,6 +74,14 @@ public class LruRepositoryTest {
     }
 
     @Test
+    public void testDoesContainWhenTheUnderlyingRepoDenies() throws Exception {
+        lruRepository.save(new TestElement(0));
+        repository.delete(0, null);
+
+        doesNotContain(0);
+    }
+
+    @Test
     public void testDeletion() throws Exception {
         lruRepository.save(new TestElement(0));
         lruRepository.delete(0, null);
@@ -83,17 +92,26 @@ public class LruRepositoryTest {
     @Test
     public void testRetrieval() throws Exception {
         TestElement originalElement = new TestElement(0);
-
         lruRepository.save(originalElement);
+
         TestElement testElement = lruRepository.get(0);
         assertThat(testElement, is(originalElement));
+    }
+
+    @Test
+    public void testRetrievalWhenTheElementIsNotPersisted() throws Exception {
+        TestElement originalElement = new TestElement(0);
+        lruRepository.save(originalElement);
+        repository.delete(0, null);
+
+        TestElement testElement = lruRepository.get(0);
+        assertThat(testElement, is(nullValue()));
     }
 
     @Test
     public void testClearing() throws Exception {
         lruRepository.save(new TestElement(0));
         lruRepository.save(new TestElement(1));
-
 
         lruRepository.clear();
 

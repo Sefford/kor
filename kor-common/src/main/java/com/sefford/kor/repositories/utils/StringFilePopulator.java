@@ -24,9 +24,6 @@ import com.sefford.kor.repositories.interfaces.CacheFolder;
  */
 public class StringFilePopulator extends FilePopulator<String> {
 
-    /**
-     * {@inheritDoc}
-     */
     public StringFilePopulator(CacheFolder<String> folder) {
         super(folder);
     }

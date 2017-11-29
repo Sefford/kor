@@ -60,7 +60,7 @@ public class LruRepository<K, V extends RepoElement<K>>
      * Wraps a repository which can only hold maxSize elements
      *
      * @param repository Core repository to add the capability to
-     * @param populator Initial population strategy of the LRU
+     * @param populator  Initial population strategy of the LRU
      * @param maxSize    Max elements capable to add to the repository
      */
     public LruRepository(Repository<K, V> repository, Populator populator, int maxSize) {
@@ -87,7 +87,12 @@ public class LruRepository<K, V extends RepoElement<K>>
 
     @Override
     public boolean contains(K id) {
-        return lru.contains(id);
+        final boolean idInLru = lru.contains(id);
+        if (idInLru && !repository.contains(id)) {
+            lru.remove(id);
+            return false;
+        }
+        return idInLru;
     }
 
     @Override
@@ -106,7 +111,11 @@ public class LruRepository<K, V extends RepoElement<K>>
     @Override
     public V get(K id) {
         lru.refresh(id);
-        return repository.get(id);
+        V element = repository.get(id);
+        if (element == null || id.equals(element.getId())) {
+            delete(id, null);
+        }
+        return element;
     }
 
     @Override
@@ -134,7 +143,7 @@ public class LruRepository<K, V extends RepoElement<K>>
 
     @Override
     public boolean containsInMemory(K id) {
-        return lru.contains(id);
+        return contains(id);
     }
 
     @Override
