@@ -62,7 +62,7 @@ public class ExpirationRepository<K, V extends RepoElement<K>>
 
     @Override
     public boolean contains(K id) {
-        if (policy.isExpired(id)) {
+        if (policy.isExpired(id) || !repository.contains(id)) {
             delete(id, null);
             return false;
         }
@@ -84,7 +84,7 @@ public class ExpirationRepository<K, V extends RepoElement<K>>
 
     @Override
     public V get(K id) {
-        if (policy.isExpired(id)) {
+        if (policy.isExpired(id) || !repository.contains(id)) {
             delete(id, null);
             return null;
         }
@@ -109,7 +109,7 @@ public class ExpirationRepository<K, V extends RepoElement<K>>
         final Iterator<V> itr = all.iterator();
         while (itr.hasNext()) {
             final V element = itr.next();
-            if (policy.isExpired(element.getId())) {
+            if (policy.isExpired(element.getId()) || !repository.contains(element.getId())) {
                 itr.remove();
                 delete(element.getId(), element);
             }
