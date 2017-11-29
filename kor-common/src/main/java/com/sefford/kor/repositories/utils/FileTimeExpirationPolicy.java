@@ -88,7 +88,7 @@ public class FileTimeExpirationPolicy<K> implements ExpirationPolicy<K> {
     @Override
     public boolean isExpired(K id) {
         final File file = folder.getFile(id);
-        return file == null || time.getCurrentTimeMillis() - file.lastModified() >= keepAliveTime;
+        return file == null || !file.exists()|| time.getCurrentTimeMillis() - file.lastModified() >= keepAliveTime;
     }
 
     /**
