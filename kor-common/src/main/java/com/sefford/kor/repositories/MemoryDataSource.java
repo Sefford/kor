@@ -29,7 +29,7 @@ import java.util.*;
  * of a memory repository can be kind of tailored through the use of different map subclasses as
  * HashMap (a typical implementation) or TreeMap for sorted access.
  * <p/>
- * A limitation of the MemoryRepository is that it does not constraint itself to a memory size. The
+ * A limitation of the MemoryDataSource is that it does not constraint itself to a memory size. The
  * developer is intended to manually clear unused entries.
  * <p/>
  * Declaring additional memory repositories is as easy as extending this repository with particular
@@ -37,7 +37,7 @@ import java.util.*;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
+public class MemoryDataSource<K, V extends RepoElement<K> & Updateable<V>>
         implements Repository<K, V>, FastRepository<K, V> {
 
     /**
@@ -48,7 +48,7 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
     /**
      * Creates a new instance of Memory repository with a default Hashmap implementation
      */
-    public MemoryRepository() {
+    public MemoryDataSource() {
         this(new HashMap<K, V>());
     }
 
@@ -57,7 +57,7 @@ public class MemoryRepository<K, V extends RepoElement<K> & Updateable<V>>
      *
      * @param cache Storage map of the repository
      */
-    public MemoryRepository(Map<K, V> cache) {
+    public MemoryDataSource(Map<K, V> cache) {
         this.cache = cache;
     }
 

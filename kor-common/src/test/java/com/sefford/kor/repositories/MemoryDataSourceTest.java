@@ -31,7 +31,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class MemoryRepositoryTest {
+public class MemoryDataSourceTest {
     private static final int EXPECTED_FIRST_ID = 1;
     private static final int EXPECTED_SECOND_ID = 2;
     private static final int EXPECTED_THIRD_ID = 3;
@@ -48,7 +48,7 @@ public class MemoryRepositoryTest {
     @Mock
     Map<Integer, TestElement> map;
 
-    MemoryRepository<Integer, TestElement> repository;
+    MemoryDataSource<Integer, TestElement> repository;
 
     @Before
     public void setUp() throws Exception {
@@ -74,7 +74,7 @@ public class MemoryRepositoryTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = spy(new MemoryRepository<Integer, TestElement>(map));
+        repository = spy(new MemoryDataSource<Integer, TestElement>(map));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class MemoryRepositoryTest {
 
     @Test
     public void testIsAvailableNotAvailable() throws Exception {
-        repository = new MemoryRepository<Integer, TestElement>(null);
+        repository = new MemoryDataSource<Integer, TestElement>(null);
         assertFalse(repository.isAvailable());
     }
 

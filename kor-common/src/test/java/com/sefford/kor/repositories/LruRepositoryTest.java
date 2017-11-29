@@ -36,7 +36,7 @@ public class LruRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        repository = new MemoryRepository<>(new HashMap<Integer, TestElement>());
+        repository = new MemoryDataSource<>(new HashMap<Integer, TestElement>());
         lruRepository = new LruRepository<>(repository, 3);
     }
 

@@ -35,9 +35,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class DiskJsonRepositoryTest {
+public class DiskJsonDataSourceTest {
 
-    DiskJsonRepository<Integer, TestElement> repository;
+    DiskJsonDataSource<Integer, TestElement> repository;
     @Mock
     File folder;
     @Mock
@@ -47,8 +47,8 @@ public class DiskJsonRepositoryTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        repository = spy(new DiskJsonRepository<>(folder, new Gson(), loggable, TestElement.class));
-        doNothing().when(((DiskJsonRepository) repository)).write(any(TestElement.class));
+        repository = spy(new DiskJsonDataSource<>(folder, new Gson(), loggable, TestElement.class));
+        doNothing().when(((DiskJsonDataSource) repository)).write(any(TestElement.class));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class DiskJsonRepositoryTest {
 
     @Test
     public void testContainmentWhenTheFileIsNull() throws Exception {
-        doReturn(null).when(((DiskJsonRepository) repository)).getFile(0);
+        doReturn(null).when(((DiskJsonDataSource) repository)).getFile(0);
 
         assertFalse(repository.contains(0));
     }
@@ -73,7 +73,7 @@ public class DiskJsonRepositoryTest {
     @Test
     public void testContainmentWhenTheFileDoesNotExist() throws Exception {
         final File mockedFile = mock(File.class);
-        doReturn(mockedFile).when(((DiskJsonRepository) repository)).getFile(0);
+        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(0);
 
         assertFalse(repository.contains(0));
     }
@@ -145,7 +145,7 @@ public class DiskJsonRepositoryTest {
 
         repository.save(element);
 
-        verify(((DiskJsonRepository) repository), times(1)).write(element);
+        verify(((DiskJsonDataSource) repository), times(1)).write(element);
     }
 
     @Test
@@ -155,13 +155,13 @@ public class DiskJsonRepositoryTest {
 
         repository.saveAll(Arrays.asList(element, element1));
 
-        verify(((DiskJsonRepository) repository), times(1)).write(element);
-        verify(((DiskJsonRepository) repository), times(1)).write(element1);
+        verify(((DiskJsonDataSource) repository), times(1)).write(element);
+        verify(((DiskJsonDataSource) repository), times(1)).write(element1);
     }
 
     @Test
     public void testAvailabilityWhenFolderIsNull() throws Exception {
-        repository = new DiskJsonRepository<>((File) null, new Gson(), loggable, TestElement.class);
+        repository = new DiskJsonDataSource<>((File) null, new Gson(), loggable, TestElement.class);
 
         assertFalse(repository.isAvailable());
     }
@@ -181,7 +181,7 @@ public class DiskJsonRepositoryTest {
     private File prepareFileForDeletion(int id) {
         final File mockedFile1 = mock(File.class);
         when(mockedFile1.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile1).when(((DiskJsonRepository) repository)).getFile(id);
+        doReturn(mockedFile1).when(((DiskJsonDataSource) repository)).getFile(id);
         return mockedFile1;
     }
 
@@ -189,8 +189,8 @@ public class DiskJsonRepositoryTest {
         final File mockedFile = mock(File.class);
         final TestElement element = new TestElement(id);
         when(mockedFile.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile).when(((DiskJsonRepository) repository)).getFile(id);
-        doReturn(element).when(((DiskJsonRepository) repository)).read(mockedFile);
+        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(id);
+        doReturn(element).when(((DiskJsonDataSource) repository)).read(mockedFile);
         return element;
     }
 
@@ -198,8 +198,8 @@ public class DiskJsonRepositoryTest {
         final File mockedFile = mock(File.class);
         final TestElement element = new TestElement(id);
         when(mockedFile.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile).when(((DiskJsonRepository) repository)).getFile(id);
-        doReturn(element).when(((DiskJsonRepository) repository)).read(mockedFile);
+        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(id);
+        doReturn(element).when(((DiskJsonDataSource) repository)).read(mockedFile);
         return mockedFile;
     }
 

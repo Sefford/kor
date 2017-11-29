@@ -34,10 +34,10 @@ import java.util.List;
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-public class DiskJsonRepository<K, V extends RepoElement<K>>
+public class DiskJsonDataSource<K, V extends RepoElement<K>>
         implements Repository<K, V> {
 
-    private static final String TAG = "DiskJsonRepository";
+    private static final String TAG = "DiskJsonDataSource";
 
     /**
      * Gson Converter
@@ -57,26 +57,26 @@ public class DiskJsonRepository<K, V extends RepoElement<K>>
     final Class<V> clazz;
 
     /**
-     * Created a new DiskJsonRepository
+     * Created a new DiskJsonDataSource
      *
      * @param folder Root folder of the cache as a path
      * @param gson   Gson Converter
      * @param log    Loggable for I/O Errors
      * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
      */
-    public DiskJsonRepository(String folder, Gson gson, Loggable log, Class<V> clazz) {
+    public DiskJsonDataSource(String folder, Gson gson, Loggable log, Class<V> clazz) {
         this(new File(folder), gson, log, clazz);
     }
 
     /**
-     * Created a new DiskJsonRepository
+     * Created a new DiskJsonDataSource
      *
      * @param folder Root folder of the cache
      * @param gson   Gson Converter
      * @param log    Loggable for I/O Errors
      * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
      */
-    public DiskJsonRepository(File folder, Gson gson, Loggable log, Class<V> clazz) {
+    public DiskJsonDataSource(File folder, Gson gson, Loggable log, Class<V> clazz) {
         this.gson = gson;
         this.log = log;
         this.folder = folder;

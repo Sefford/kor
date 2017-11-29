@@ -1,5 +1,12 @@
 Changelog
 =========
+## Kor common 2.7.0
+_2017-11-29_
+
+* **Breaking from 2.7.0 onwards:** `MemoryRepository` has been renamed to `MemoryDataSource` and `DiskJsonRepository` has been renamed to `DiskJsonDataSource`.
+* Introduced `MemoryJsonDataSource`
+* Improved `LruRepository` by honoring the state of the underlying repository in gets and contains.
+
 ## Kor common 2.5.5
 _2017-07-13_
 

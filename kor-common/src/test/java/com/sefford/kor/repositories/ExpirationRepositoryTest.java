@@ -46,7 +46,7 @@ public class ExpirationRepositoryTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        repository = new MemoryRepository<>(new HashMap<Integer, TestElement>());
+        repository = new MemoryDataSource<>(new HashMap<Integer, TestElement>());
         expirationRepo = new ExpirationRepository<>(repository, policy);
     }
 
