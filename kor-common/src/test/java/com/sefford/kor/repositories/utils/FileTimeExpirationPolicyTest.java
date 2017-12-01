@@ -115,6 +115,7 @@ public class FileTimeExpirationPolicyTest {
                 if (EXPECTED_ID.equals(id)) {
                     File mock = mock(File.class);
                     when(mock.lastModified()).thenReturn(100L);
+                    when(mock.exists()).thenReturn(true);
                     return mock;
                 }
                 return null;

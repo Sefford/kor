@@ -87,7 +87,8 @@ public class ExpirationRepositoryTest {
         when(policy.isExpired(0)).thenReturn(Boolean.FALSE);
 
         assertFalse(expirationRepo.contains(0));
-        verify(policy, never()).notifyDeleted(0);
+
+        verify(policy, atLeastOnce()).notifyDeleted(0);
     }
 
     @Test

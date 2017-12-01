@@ -112,7 +112,7 @@ public class LruRepository<K, V extends RepoElement<K>>
     public V get(K id) {
         lru.refresh(id);
         V element = repository.get(id);
-        if (element == null || id.equals(element.getId())) {
+        if (element == null || !id.equals(element.getId())) {
             delete(id, null);
         }
         return element;
