@@ -17,7 +17,7 @@ public abstract class CacheFolderImpl<K> implements CacheFolder<K> {
     /**
      * File which honors the folder the instance is representing
      */
-    final File root;
+    protected final File root;
 
     /**
      * Creates a new instance of CacheFolder.
