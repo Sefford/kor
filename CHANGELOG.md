@@ -1,5 +1,9 @@
 Changelog
 =========
+## Kor common 2.8.0
+* **Breaking: 2.8.0 onwards:** `DiskJsonDataSource` now uses a `CacheFolder` interface to work instead of a simple File.
+* Default implementation `CacheFolderImpl` for both DataSources and `FileExpirationPolicy`.
+
 ## Kor common 2.7.0
 _2017-11-29_
 

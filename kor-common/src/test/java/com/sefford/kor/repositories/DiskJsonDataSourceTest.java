@@ -17,7 +17,9 @@ package com.sefford.kor.repositories;
 
 import com.google.gson.Gson;
 import com.sefford.common.interfaces.Loggable;
+import com.sefford.kor.repositories.interfaces.CacheFolder;
 import com.sefford.kor.repositories.utils.TestElement;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,9 +29,17 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
@@ -39,7 +49,7 @@ public class DiskJsonDataSourceTest {
 
     DiskJsonDataSource<Integer, TestElement> repository;
     @Mock
-    File folder;
+    CacheFolder<Integer> folder;
     @Mock
     Loggable loggable;
 
@@ -55,7 +65,7 @@ public class DiskJsonDataSourceTest {
     public void testClearing() throws Exception {
         final File mockedFile1 = mock(File.class);
         final File mockedFile2 = mock(File.class);
-        when(folder.listFiles()).thenReturn(new File[]{mockedFile1, mockedFile2});
+        when(folder.files()).thenReturn(new File[]{mockedFile1, mockedFile2});
 
         repository.clear();
 
@@ -65,7 +75,7 @@ public class DiskJsonDataSourceTest {
 
     @Test
     public void testContainmentWhenTheFileIsNull() throws Exception {
-        doReturn(null).when(((DiskJsonDataSource) repository)).getFile(0);
+        doReturn(null).when(folder).getFile(0);
 
         assertFalse(repository.contains(0));
     }
@@ -73,7 +83,7 @@ public class DiskJsonDataSourceTest {
     @Test
     public void testContainmentWhenTheFileDoesNotExist() throws Exception {
         final File mockedFile = mock(File.class);
-        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(0);
+        doReturn(mockedFile).when(folder).getFile(0);
 
         assertFalse(repository.contains(0));
     }
@@ -130,7 +140,7 @@ public class DiskJsonDataSourceTest {
         final File file = prepareFileForRetrieval(0);
         final File file1 = prepareFileForRetrieval(1);
         final File file2 = prepareFileForRetrieval(2);
-        when(folder.listFiles()).thenReturn(new File[]{file, file1, file2});
+        when(folder.files()).thenReturn(new File[]{file, file1, file2});
 
         final Collection<TestElement> elements = repository.getAll();
 
@@ -161,7 +171,7 @@ public class DiskJsonDataSourceTest {
 
     @Test
     public void testAvailabilityWhenFolderIsNull() throws Exception {
-        repository = new DiskJsonDataSource<>((File) null, new Gson(), loggable, TestElement.class);
+        repository = new DiskJsonDataSource<>(null, new Gson(), loggable, TestElement.class);
 
         assertFalse(repository.isAvailable());
     }
@@ -181,7 +191,7 @@ public class DiskJsonDataSourceTest {
     private File prepareFileForDeletion(int id) {
         final File mockedFile1 = mock(File.class);
         when(mockedFile1.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile1).when(((DiskJsonDataSource) repository)).getFile(id);
+        doReturn(mockedFile1).when(folder).getFile(id);
         return mockedFile1;
     }
 
@@ -189,7 +199,7 @@ public class DiskJsonDataSourceTest {
         final File mockedFile = mock(File.class);
         final TestElement element = new TestElement(id);
         when(mockedFile.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(id);
+        doReturn(mockedFile).when(folder).getFile(id);
         doReturn(element).when(((DiskJsonDataSource) repository)).read(mockedFile);
         return element;
     }
@@ -198,7 +208,7 @@ public class DiskJsonDataSourceTest {
         final File mockedFile = mock(File.class);
         final TestElement element = new TestElement(id);
         when(mockedFile.exists()).thenReturn(Boolean.TRUE);
-        doReturn(mockedFile).when(((DiskJsonDataSource) repository)).getFile(id);
+        doReturn(mockedFile).when(folder).getFile(id);
         doReturn(element).when(((DiskJsonDataSource) repository)).read(mockedFile);
         return mockedFile;
     }

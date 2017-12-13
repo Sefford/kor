@@ -18,6 +18,7 @@ package com.sefford.kor.repositories;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.sefford.common.interfaces.Loggable;
+import com.sefford.kor.repositories.interfaces.CacheFolder;
 import com.sefford.kor.repositories.interfaces.RepoElement;
 import com.sefford.kor.repositories.interfaces.Repository;
 
@@ -50,23 +51,11 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
     /**
      * Folder where the IDs will be saved
      */
-    final File folder;
+    final CacheFolder<K> folder;
     /**
      * Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
      */
     final Class<V> clazz;
-
-    /**
-     * Created a new DiskJsonDataSource
-     *
-     * @param folder Root folder of the cache as a path
-     * @param gson   Gson Converter
-     * @param log    Loggable for I/O Errors
-     * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
-     */
-    public DiskJsonDataSource(String folder, Gson gson, Loggable log, Class<V> clazz) {
-        this(new File(folder), gson, log, clazz);
-    }
 
     /**
      * Created a new DiskJsonDataSource
@@ -76,19 +65,16 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
      * @param log    Loggable for I/O Errors
      * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
      */
-    public DiskJsonDataSource(File folder, Gson gson, Loggable log, Class<V> clazz) {
+    public DiskJsonDataSource(CacheFolder<K> folder, Gson gson, Loggable log, Class<V> clazz) {
         this.gson = gson;
         this.log = log;
         this.folder = folder;
         this.clazz = clazz;
-        if (folder != null && !this.folder.exists()) {
-            this.folder.mkdirs();
-        }
     }
 
     @Override
     public void clear() {
-        final File[] files = folder.listFiles();
+        final File[] files = folder.files();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 files[i].delete();
@@ -98,13 +84,13 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
 
     @Override
     public boolean contains(K id) {
-        final File file = getFile(id);
+        final File file = folder.getFile(id);
         return file != null && file.exists();
     }
 
     @Override
     public void delete(K id, V element) {
-        final File file = getFile(id);
+        final File file = folder.getFile(id);
         if (file != null) {
             file.delete();
         }
@@ -119,7 +105,7 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
 
     @Override
     public V get(K id) {
-        return read(getFile(id));
+        return read(folder.getFile(id));
     }
 
     @Override
@@ -137,7 +123,7 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
     @Override
     public Collection<V> getAll() {
         final List<V> elements = new ArrayList<>();
-        final File[] files = folder.listFiles();
+        final File[] files = folder.files();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 final V element = read(files[i]);
@@ -168,13 +154,9 @@ public class DiskJsonDataSource<K, V extends RepoElement<K>>
         return folder != null && folder.exists();
     }
 
-    File getFile(K id) {
-        return new File(folder, id + ".json");
-    }
-
     void write(V element) {
         try {
-            final File file = getFile(element.getId());
+            final File file = folder.getFile(element.getId());
             if (!file.exists()) {
                 file.createNewFile();
             }

@@ -6,29 +6,20 @@ A Clean Architecture Implementation core library.
 Download
 --------
 
-### Bundle
-
-Kor-Common comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-common/2.1/kor-common-2.1.jar)
-
-Kor-Retrofit comes bundled in `jar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-retrofit/1.1/kor-retrofit-1.1.jar)
-
-Kor-Android comes bundled in `aar` format. Grab the latest bundle from [here](http://search.maven.org/remotecontent?filepath=com/sefford/kor-android/1.0.1/kor-android-1.0.1.aar)
-
-
 ### Maven
 #### Kor-Common
 ```XML
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>2.7.0</version>
+    <version>2.8.0</version>
 </dependency>
 ```
 
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:2.7.0'
+compile 'com.sefford:kor-common:2.8.0'
 ```
 
 
@@ -147,16 +138,6 @@ Kor-Android module also provides a LRUMemory implementation.
 For a model element to be usable with repositories, it requires to implement both `RepoElement` interface to provide
 an unique ID to save and get from the Repository and a Updateable implementation to update information inside the Model
 element itself.
-
-Kor Flavors
-===========
-
-* **Kor-Common:** The backbone of the Kor Architecture. It is useable, but will not work out-of-the box,
-requiring the developer to implement their own `Executors` and `Interactor` factory. It is a good point
-to extend the architecture to suit your needs.
-* **Kor-Android:** Adds Android extensions for the Kor architecture, providing a LRUCache-based Repository in addition of
-the basic Map one.
-* **Kor-Retrofit:** Adds extensions for using the [Retrofit Library](https://github.com/square/retrofit).
 
 Interesting literature
 ======================
