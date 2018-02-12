@@ -53,7 +53,7 @@ public class FileTimeExpirationPolicyTest {
 
             @Override
             public File getFile(String id) {
-                return null;
+                return  mock(File.class);
             }
         }, 0);
 

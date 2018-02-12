@@ -35,15 +35,15 @@ public class CacheInteractorTest {
         initMocks(this);
 
         when(delegate.execute()).thenReturn(response);
-        interactor = spy(new CacheInteractor(bus, log, delegate));
+        interactor = new CacheInteractor(bus, log, delegate);
     }
 
     @Test
     public void testOnRunSuccessful() throws Throwable {
         interactor.run();
-        InOrder inOrder = Mockito.inOrder(delegate, interactor);
+        InOrder inOrder = Mockito.inOrder(delegate, bus);
         inOrder.verify(delegate, times(1)).execute();
-        inOrder.verify(interactor, times(1)).notify(response);
+        inOrder.verify(bus, times(1)).post(response);
     }
 
     @Test
@@ -52,12 +52,12 @@ public class CacheInteractorTest {
         doReturn(error).when(delegate).composeErrorResponse((RuntimeException) any());
         interactor.run();
 
-        InOrder inOrder = Mockito.inOrder(delegate, response, interactor);
+        InOrder inOrder = Mockito.inOrder(delegate, response, bus);
         inOrder.verify(delegate, times(1)).execute();
-        inOrder.verify(response, times(0)).isSuccess();
-        inOrder.verify(interactor, times(0)).notify(response);
+        inOrder.verify(response, times(0)).getSuccess();
+        inOrder.verify(bus, times(0)).post(response);
         inOrder.verify(delegate, times(1)).composeErrorResponse((Exception) any());
-        inOrder.verify(interactor, times(1)).notify(any(Error.class));
+        inOrder.verify(bus, times(1)).post(any(Error.class));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CacheInteractorTest {
         }
 
         @Override
-        public String getInteractorName() {
+        public String getName() {
             return "";
         }
 

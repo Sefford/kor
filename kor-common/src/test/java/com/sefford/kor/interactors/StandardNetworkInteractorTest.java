@@ -36,20 +36,20 @@ public class StandardNetworkInteractorTest {
         initMocks(this);
 
         when(delegate.execute()).thenReturn(response);
-        when(delegate.postProcess((Response) any())).thenReturn(response);
-        when(delegate.composeErrorResponse((Exception) any())).thenReturn(error);
-        interactor = spy(new StandardNetworkInteractor(bus, log, delegate));
+        when(delegate.postProcess(any())).thenReturn(response);
+        when(delegate.composeErrorResponse(any())).thenReturn(error);
+        interactor = new StandardNetworkInteractor<>(bus, log, delegate);
     }
 
     @Test
     public void testSuccess() throws Throwable {
         interactor.run();
 
-        InOrder inOrder = Mockito.inOrder(delegate, interactor);
+        InOrder inOrder = Mockito.inOrder(delegate, bus);
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
-        inOrder.verify(interactor, times(1)).notify(response);
+        inOrder.verify(bus, times(1)).post(response);
 
     }
 
@@ -58,11 +58,11 @@ public class StandardNetworkInteractorTest {
         doThrow(new RuntimeException()).when(delegate).saveToCache(response);
         interactor.run();
 
-        InOrder inOrder = Mockito.inOrder(delegate, interactor);
+        InOrder inOrder = Mockito.inOrder(delegate, bus);
         inOrder.verify(delegate, times(1)).execute();
         inOrder.verify(delegate, times(1)).postProcess(response);
         inOrder.verify(delegate, times(1)).saveToCache(response);
-        inOrder.verify(interactor, times(1)).notify(error);
+        inOrder.verify(bus, times(1)).post(error);
 
     }
 
@@ -95,7 +95,7 @@ public class StandardNetworkInteractorTest {
         }
 
         @Override
-        public String getInteractorName() {
+        public String getName() {
             return null;
         }
 

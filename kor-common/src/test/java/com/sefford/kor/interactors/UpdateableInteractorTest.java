@@ -41,7 +41,7 @@ public class UpdateableInteractorTest {
         when(delegate.execute()).thenReturn(response);
         when(delegate.composeErrorResponse((Exception) any())).thenReturn(error);
 
-        interactor = spy(new UpdateableInteractor(bus, log, delegate));
+        interactor = new UpdateableInteractor(bus, log, delegate);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class UpdateableInteractorTest {
         verify(delegate, times(2)).execute();
         verify(delegate, times(2)).postProcess(response);
         verify(delegate, times(2)).saveToCache(response);
-        verify(interactor, times(2)).notify(response);
+        verify(bus, times(2)).post(response);
     }
 
     @Test
@@ -61,13 +61,13 @@ public class UpdateableInteractorTest {
 
         interactor.run();
 
-        InOrder order = inOrder(delegate, interactor);
+        InOrder order = inOrder(delegate, bus);
         order.verify(delegate, times(1)).keepLooping();
         order.verify(delegate, times(1)).execute();
         order.verify(delegate, times(0)).postProcess(response);
         order.verify(delegate, times(0)).saveToCache(response);
         order.verify(delegate, times(1)).composeErrorResponse((Exception) any());
-        order.verify(interactor, times(1)).notify(error);
+        order.verify(bus, times(1)).post(error);
     }
 
     class TestDelegate implements UpdateableDelegate {
@@ -103,7 +103,7 @@ public class UpdateableInteractorTest {
         }
 
         @Override
-        public String getInteractorName() {
+        public String getName() {
             return null;
         }
 

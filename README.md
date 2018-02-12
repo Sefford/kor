@@ -12,14 +12,14 @@ Download
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>2.8.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:2.8.0'
+compile 'com.sefford:kor-common:3.0.0'
 ```
 
 

@@ -101,7 +101,7 @@ public class NetworkInteractorTest {
         }
 
         @Override
-        public String getInteractorName() {
+        public String getName() {
             return "";
         }
 

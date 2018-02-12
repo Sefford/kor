@@ -81,27 +81,19 @@ public class TwoTierRepositoryTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = spy(new TwoTierRepository(currentLevel, nextLevel));
+        repository = new TwoTierRepository<>(currentLevel, nextLevel);
 
-        doReturn(Boolean.FALSE).when(repository).hasNextLevel();
-    }
-
-    @Test
-    public void testHasNextLevelNoNextLevel() throws Exception {
-        doCallRealMethod().when(repository).hasNextLevel();
-
-        assertFalse(repository.hasNextLevel());
+        doReturn(Boolean.FALSE).when(nextLevel).isAvailable();
     }
 
     @Test
     public void testHasNextLevelNextLevelNotAvailable() throws Exception {
-        repository = new TwoTierRepository(currentLevel, null);
         assertFalse(repository.hasNextLevel());
     }
 
     @Test
     public void testHasNextLevelNextLevel() throws Exception {
-        repository = new TwoTierRepository(currentLevel, nextLevel);
+        repository = new TwoTierRepository<>(currentLevel, nextLevel);
         when(nextLevel.isAvailable()).thenReturn(Boolean.TRUE);
         assertTrue(repository.hasNextLevel());
     }
@@ -114,7 +106,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testSaveNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         assertEquals(mockedElement1, repository.save(mockedElement1));
         verify(nextLevel, times(1)).save(mockedElement1);
@@ -128,7 +120,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testSaveAllNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         assertEquals(elements.size(), repository.saveAll(elements).size());
         verify(nextLevel, times(1)).saveAll(anyCollection());
@@ -142,14 +134,14 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testContainsNotInCurrentNoInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         assertFalse(repository.contains(EXPECTED_FIRST_ID));
     }
 
     @Test
     public void testContainsNotInCurrentInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(nextLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
 
         assertTrue(repository.contains(EXPECTED_FIRST_ID));
@@ -164,7 +156,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testContainsInCurrentNoInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(currentLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
 
         assertTrue(repository.contains(EXPECTED_FIRST_ID));
@@ -172,7 +164,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testContainsInCurrentInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(currentLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
         when(nextLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.TRUE);
 
@@ -189,7 +181,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testDeleteNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         repository.delete(EXPECTED_FIRST_ID, mockedElement1);
         verify(currentLevel, times(1)).delete(EXPECTED_FIRST_ID, mockedElement1);
@@ -205,7 +197,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testDeleteAllNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         repository.deleteAll(elements);
         verify(currentLevel, times(1)).deleteAll(elements);
@@ -219,14 +211,14 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testGetNotCurrentLevelNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         assertNull(repository.get(EXPECTED_FIRST_ID));
     }
 
     @Test
     public void testGetNotCurrentLevelInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(nextLevel.get(EXPECTED_FIRST_ID)).thenReturn(mockedElement1);
 
         assertEquals(mockedElement1, repository.get(EXPECTED_FIRST_ID));
@@ -243,7 +235,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testGetInCurrentLevelNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(nextLevel.get(EXPECTED_FIRST_ID)).thenReturn(mockedElement1);
 
         assertEquals(mockedElement1, repository.get(EXPECTED_FIRST_ID));
@@ -251,7 +243,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testGetInCurrentLevelInNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
         when(nextLevel.get(EXPECTED_FIRST_ID)).thenReturn(mockedElement1);
         when(nextLevel.get(EXPECTED_FIRST_ID)).thenReturn(mockedElement1);
 
@@ -268,7 +260,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testClearNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         repository.clear();
         verify(currentLevel, times(1)).clear();
@@ -284,7 +276,7 @@ public class TwoTierRepositoryTest {
 
     @Test
     public void testGetAllNextLevel() throws Exception {
-        doReturn(Boolean.TRUE).when(repository).hasNextLevel();
+        doReturn(Boolean.TRUE).when(nextLevel).isAvailable();
 
         repository.getAll();
         verify(currentLevel, atLeastOnce()).getAll();
@@ -298,13 +290,6 @@ public class TwoTierRepositoryTest {
         repository.getAll(ids);
 
         verify(currentLevel, atLeastOnce()).get(anyInt());
-    }
-
-    @Test
-    public void testIsAvailableNullCurrent() throws Exception {
-        repository = new TwoTierRepository(null, null);
-
-        assertFalse(repository.isAvailable());
     }
 
     @Test
@@ -324,8 +309,8 @@ public class TwoTierRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
-        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository<>(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository<>(localLevel, thirdLevel);
 
         when(firstLevel.get(EXPECTED_FIRST_ID)).thenReturn(null);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
@@ -342,8 +327,8 @@ public class TwoTierRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
-        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository<>(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository<>(localLevel, thirdLevel);
 
         when(firstLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);
@@ -361,8 +346,8 @@ public class TwoTierRepositoryTest {
         final Repository<Integer, TestElement> secondLevel = mock(Repository.class);
         final Repository<Integer, TestElement> thirdLevel = mock(Repository.class);
 
-        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository(firstLevel, secondLevel);
-        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository(localLevel, thirdLevel);
+        final TwoTierRepository<Integer, TestElement> localLevel = new TwoTierRepository<>(firstLevel, secondLevel);
+        final TwoTierRepository<Integer, TestElement> repository = new TwoTierRepository<>(localLevel, thirdLevel);
 
         when(firstLevel.contains(EXPECTED_FIRST_ID)).thenReturn(Boolean.FALSE);
         when(firstLevel.isAvailable()).thenReturn(Boolean.TRUE);

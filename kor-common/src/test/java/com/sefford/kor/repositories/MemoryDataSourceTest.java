@@ -74,7 +74,7 @@ public class MemoryDataSourceTest {
         ids.add(EXPECTED_SECOND_ID);
         ids.add(EXPECTED_THIRD_ID);
 
-        repository = spy(new MemoryDataSource<Integer, TestElement>(map));
+        repository = new MemoryDataSource<>(map);
     }
 
     @Test
@@ -141,44 +141,8 @@ public class MemoryDataSourceTest {
     }
 
     @Test
-    public void testContainsInMemory() throws Exception {
-        repository.containsInMemory(EXPECTED_FIRST_ID);
-        verify(repository, times(1)).contains(EXPECTED_FIRST_ID);
-    }
-
-    @Test
-    public void testGetFromMemory() throws Exception {
-        repository.getFromMemory(EXPECTED_FIRST_ID);
-        verify(repository, times(1)).get(EXPECTED_FIRST_ID);
-    }
-
-    @Test
-    public void testGetAllFromMemory() throws Exception {
-        repository.getAllFromMemory(ids);
-        verify(repository, times(1)).getAll();
-    }
-
-    @Test
-    public void testSaveInMemory() throws Exception {
-        repository.saveInMemory(mockedElement1);
-        verify(repository, times(1)).save(mockedElement1);
-    }
-
-    @Test
-    public void testSaveAllInMemory() throws Exception {
-        repository.saveAllInMemory(elements);
-        verify(repository, times(1)).saveAll(elements);
-    }
-
-    @Test
     public void testIsAvailable() throws Exception {
         assertTrue(repository.isAvailable());
-    }
-
-    @Test
-    public void testIsAvailableNotAvailable() throws Exception {
-        repository = new MemoryDataSource<Integer, TestElement>(null);
-        assertFalse(repository.isAvailable());
     }
 
     @Test

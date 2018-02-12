@@ -29,7 +29,7 @@ public class CacheFolderImplTest {
         folder = new CacheFolderTestImpl(file);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void crashesIfFolderNull() throws Exception {
         new CacheFolderTestImpl(null);
     }

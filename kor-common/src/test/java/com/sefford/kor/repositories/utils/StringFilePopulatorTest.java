@@ -105,33 +105,6 @@ public class StringFilePopulatorTest {
         }
     }
 
-    @Test
-    public void shouldNotPopulateIfFileArrayIsNull() throws Exception {
-        populator = new StringFilePopulator(new CacheFolder<String>() {
-            @Override
-            public File[] files() {
-                return null;
-            }
-
-            @Override
-            public boolean exists() {
-                return true;
-            }
-
-            @Override
-            public File getFile(String id) {
-                return null;
-            }
-        });
-
-        populator.populate(lruCache);
-
-        for (int i = 0; i < EXPECTED_NUMBER_OF_FILES; i++) {
-            assertFalse(lruCache.contains(Integer.toString(i)));
-        }
-    }
-
-
     class FakeCacheFolder implements CacheFolder<String> {
 
         @Override

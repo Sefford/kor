@@ -159,20 +159,6 @@ public class ExpirationRepositoryTest {
     }
 
     @Test
-    public void testAvailabilityWhenPolicyIsNull() throws Exception {
-        expirationRepo = new ExpirationRepository<>(repository, null);
-
-        assertFalse(expirationRepo.isAvailable());
-    }
-
-    @Test
-    public void testAvailabilityWhenRepositoryIsNull() throws Exception {
-        expirationRepo = new ExpirationRepository<>(null, policy);
-
-        assertFalse(expirationRepo.isAvailable());
-    }
-
-    @Test
     public void testAvailabilityWhenTheRepoIsWorking() throws Exception {
         assertTrue(expirationRepo.isAvailable());
     }

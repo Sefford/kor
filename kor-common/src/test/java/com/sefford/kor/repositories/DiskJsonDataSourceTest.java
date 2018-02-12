@@ -58,7 +58,7 @@ public class DiskJsonDataSourceTest {
         initMocks(this);
 
         repository = spy(new DiskJsonDataSource<>(folder, new Gson(), loggable, TestElement.class));
-        doNothing().when(((DiskJsonDataSource) repository)).write(any(TestElement.class));
+        doNothing().when(repository).write(any());
     }
 
     @Test
@@ -170,13 +170,6 @@ public class DiskJsonDataSourceTest {
     }
 
     @Test
-    public void testAvailabilityWhenFolderIsNull() throws Exception {
-        repository = new DiskJsonDataSource<>(null, new Gson(), loggable, TestElement.class);
-
-        assertFalse(repository.isAvailable());
-    }
-
-    @Test
     public void testAvailabilityWhenFolderDoesNotExist() throws Exception {
         assertFalse(repository.isAvailable());
     }
@@ -212,5 +205,4 @@ public class DiskJsonDataSourceTest {
         doReturn(element).when(((DiskJsonDataSource) repository)).read(mockedFile);
         return mockedFile;
     }
-
 }

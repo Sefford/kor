@@ -1,5 +1,11 @@
 Changelog
 =========
+## Kor common 3.0.0
+_2018-02-12_
+
+* Ported to Kotlin
+* Removed `FastInteractor` capabilities
+
 ## Kor common 2.8.0
 * **Breaking: 2.8.0 onwards:** `DiskJsonDataSource` now uses a `CacheFolder` interface to work instead of a simple File.
 * Default implementation `CacheFolderImpl` for both DataSources and `FileExpirationPolicy`.

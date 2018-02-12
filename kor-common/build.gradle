@@ -1,4 +1,5 @@
 buildscript {
+    ext.kotlin_version = '1.2.21'
     repositories {
         mavenCentral()
         mavenLocal()
@@ -8,10 +9,12 @@ buildscript {
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'maven-publish'
@@ -20,8 +23,8 @@ apply plugin: 'jacoco'
 group = 'com.sefford'
 
 ext {
-    versionMajor = 2
-    versionMinor = 8
+    versionMajor = 3
+    versionMinor = 0
     versionPatch = 0
 }
 version = "${versionMajor}.${versionMinor}.${versionPatch}"
@@ -101,12 +104,24 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.1.0'
+    testCompile 'org.mockito:mockito-core:2.15.0'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
+    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 tasks.install.mustRunAfter build
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: './bintray.gradle'
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 
