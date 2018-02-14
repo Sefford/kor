@@ -68,8 +68,8 @@ protected constructor(
      * @param bus     Postable where the [responses][com.sefford.kor.responses.Response] and the [errors][com.sefford.kor.errors.Error] will come through
      * @param options Extension element to help the Interactor to configure itself
      */
-    fun execute(bus: Postable, options: O?) {
-        executor.execute(instantiateInteractor(bus, options))
+    open fun execute(bus: Postable, params: O? = null) {
+        executor.execute(instantiateInteractor(bus, params))
     }
 
     /**
@@ -78,7 +78,7 @@ protected constructor(
      * @param params
      * @return Extension element to help the Interactor to configure itself
      */
-    fun execute(params: O): Any {
+    open fun execute(params: O? = null): Any {
         return instantiateInteractor(NullPostable.INSTANCE, params).execute()
     }
 }
