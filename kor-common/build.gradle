@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext.kotlin_version = '1.2.30'
     repositories {
         mavenCentral()
         mavenLocal()
@@ -25,7 +25,7 @@ group = 'com.sefford'
 ext {
     versionMajor = 3
     versionMinor = 0
-    versionPatch = 0
+    versionPatch = 1
 }
 version = "${versionMajor}.${versionMinor}.${versionPatch}"
 
@@ -102,6 +102,8 @@ install {
 dependencies {
     compile 'com.sefford:commons:1.1.0'
     compile 'com.google.code.gson:gson:2.8.1'
+    compile 'io.arrow-kt:arrow-core:0.6.1'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.15.0'
