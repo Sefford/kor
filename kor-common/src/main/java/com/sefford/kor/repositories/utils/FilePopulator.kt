@@ -18,8 +18,6 @@ package com.sefford.kor.repositories.utils
 import com.sefford.kor.repositories.interfaces.CacheFolder
 import com.sefford.kor.repositories.interfaces.Populator
 
-import java.io.File
-
 /**
  * Populator strategy for physical [CacheFolders][CacheFolder]
  *

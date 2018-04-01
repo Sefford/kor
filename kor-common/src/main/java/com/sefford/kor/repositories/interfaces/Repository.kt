@@ -15,6 +15,8 @@
  */
 package com.sefford.kor.repositories.interfaces
 
+import arrow.core.Either
+import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.TwoTierRepository
 
 /**
@@ -24,7 +26,7 @@ import com.sefford.kor.repositories.TwoTierRepository
  * They work on a simple CRUD API.
  *
  *
- * Aditionally each repository can flag in advance if the repository itself is "ready" through [isAvailable interface][Repository.isAvailable].
+ * Aditionally each repository can flag in advance if the repository itself is "ready" through [isReady interface][Repository.isReady].
  * Might be cases, as Network Repositories or Disk Repositories where the availability might not be guaranteed
  * because of hardware or connectivity problems.
  *
@@ -55,7 +57,7 @@ interface Repository<K, V> {
      *
      * @return TRUE if the Repository is operative, FALSE otherwise
      */
-    val isAvailable: Boolean
+    val isReady: Boolean
 
     /**
      * Clears the repository
@@ -76,7 +78,7 @@ interface Repository<K, V> {
      * @param id id to delete
      * @param element element to delete
      */
-    fun delete(id: K, element: V?)
+    fun delete(id: K, element: V)
 
     /**
      * Deletes an element from the repository
@@ -91,7 +93,22 @@ interface Repository<K, V> {
      *
      * @param elements List of elements to delete
      */
-    fun deleteAll(elements: Collection<V>)
+    fun delete(elements: Collection<V>)
+
+    /**
+     * Deletes a list of elements from the repository
+     *
+     * @param elements List of elements to delete
+     */
+    fun delete(vararg elements: V)
+
+
+    /**
+     * Deletes a list of elements from the repository
+     *
+     * @param elements List of elements to delete
+     */
+    fun delete(elements: Iterator<V>)
 
     /**
      * Gets an element from the repository
@@ -99,24 +116,58 @@ interface Repository<K, V> {
      * @param id Id of the element to retrieve
      * @return Found element or NULL if it is not stored in the repository
      */
-    operator fun get(id: K): V?
+    operator fun get(id: K): Either<RepositoryError, V>
 
     /**
      * Returns all requested elements
+     *
+     * @param ids a collection of IDs
      */
-    fun getAll(ids: Collection<K>): Collection<V>
+    fun get(ids: Collection<K>): Collection<V>
 
     /**
-     * Saves an element to the repository
+     * Returns all requested elements
+     *
+     * @param ids several IDs in a row
+     */
+    fun get(vararg ids: K): Collection<V>
+
+    /**
+     * Returns all requested elements
+     *
+     * @param ids iterator of IDs
+     */
+    fun get(ids: Iterator<K>): Collection<V>
+
+    /**
+     * Saves an element to the repository.
      *
      * @param element Element to save
      */
-    fun save(element: V): V
+    fun save(element: V): Either<RepositoryError, V>
 
     /**
      * Saves a list of elements to the repository
      *
      * @param elements List of Elements to save
+     * @return the list of elements which the repository was able to persist
      */
-    fun saveAll(elements: Collection<V>): Collection<V>
+    fun save(elements: Collection<V>): Collection<V>
+
+    /**
+     * Saves a list of elements to the repository
+     *
+     * @param elements List of Elements to save
+     * @return the list of elements which the repository was able to persist
+     */
+    fun save(vararg elements: V): Collection<V>
+
+    /**
+     * Saves a list of elements to the repository
+     *
+     * @param elements List of Elements to save
+     * @return the list of elements which the repository was able to persist
+     */
+    fun save(elements: Iterator<V>): Collection<V>
+
 }

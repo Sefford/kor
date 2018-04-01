@@ -15,7 +15,7 @@
  */
 package com.sefford.kor.repositories.utils
 
-import java.util.LinkedHashSet
+import java.util.*
 
 /**
  * Basic implementation of a LRU by quantity rather than weight.

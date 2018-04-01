@@ -15,11 +15,12 @@
  */
 package com.sefford.kor.repositories
 
+import arrow.core.Either
+import arrow.core.Left
+import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
-
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 /**
  * TwoTierRepository implements a Chain of Responsibility pattern for the Repositories.
@@ -57,47 +58,52 @@ class TwoTierRepository<K, V : RepoElement<K>>
 
     override val all: Collection<V>
         get() {
-            val results = HashMap<K, V>()
-            for (element in currentLevel.all) {
-                results[element.id] = element
-            }
+            val results = currentLevel.all
             if (hasNextLevel()) {
-                for (nextElement in nextLevel.all) {
-                    if (!results.containsKey(nextElement.id)) {
-                        results[nextElement.id] = nextElement
-                    }
-                }
+                return results.union(nextLevel.all).toList()
             }
-            return results.values
+            return results
         }
 
-    override val isAvailable: Boolean
-        get() = currentLevel.isAvailable
+    override val isReady: Boolean
+        get() = currentLevel.isReady or nextLevel.isReady
 
     /**
      * Checks if the current repository has next level.
      *
      * @return TRUE if affirmative, FALSE otherwise
      */
-    protected fun hasNextLevel(): Boolean {
-        return nextLevel.isAvailable
+    internal fun hasNextLevel(): Boolean {
+        return nextLevel.isReady
     }
 
-    override fun save(element: V): V {
-        val result = currentLevel.save(element)
-        if (hasNextLevel()) {
-            nextLevel.save(element)
+    override fun save(element: V): Either<RepositoryError, V> {
+        if (!isReady) {
+            return Left(RepositoryError.NotReady)
         }
-        return result
+        val currentLevelResult = currentLevel.save(element)
+        if (hasNextLevel()) {
+            val nextLevelResult = nextLevel.save(element)
+            return if (nextLevelResult.isRight()) nextLevelResult else currentLevelResult
+        }
+        return currentLevelResult
     }
 
-    override fun saveAll(elements: Collection<V>): Collection<V> {
-        val results = ArrayList<V>()
+    override fun save(elements: Collection<V>): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(vararg elements: V): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(elements: Iterator<V>): Collection<V> {
+        val results = mutableListOf<V>()
         for (element in elements) {
-            results.add(save(element))
-        }
-        if (hasNextLevel()) {
-            nextLevel.saveAll(elements)
+            val saved = save(element)
+            when (saved) {
+                is Either.Right -> results.add(saved.b)
+            }
         }
         return results
     }
@@ -106,7 +112,7 @@ class TwoTierRepository<K, V : RepoElement<K>>
         return currentLevel.contains(id) or (hasNextLevel() && nextLevel.contains(id))
     }
 
-    override fun delete(id: K, element: V?) {
+    override fun delete(id: K, element: V) {
         currentLevel.delete(id, element)
         if (hasNextLevel()) {
             nextLevel.delete(id, element)
@@ -120,20 +126,48 @@ class TwoTierRepository<K, V : RepoElement<K>>
         }
     }
 
-    fun deleteAll(elements: List<V>) {
-        currentLevel.deleteAll(elements)
-        if (hasNextLevel()) {
-            nextLevel.deleteAll(elements)
+    override fun delete(elements: Collection<V>) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(vararg elements: V) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(elements: Iterator<V>) {
+        for (element in elements) {
+            delete(element.id, element)
         }
     }
 
-    override fun get(id: K): V? {
-        var element: V? = if (currentLevel.contains(id)) currentLevel[id] else if (hasNextLevel()) nextLevel[id] else null
-        if (element == null && hasNextLevel() && currentLevel.contains(id) && nextLevel.contains(id)) {
-            element = nextLevel[id]
+    override fun get(id: K): Either<RepositoryError, V> {
+        if (!isReady) {
+            return Left(RepositoryError.NotReady)
         }
-        if (element != null && !currentLevel.contains(id)) {
-            currentLevel.save(element)
+        when {
+            currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) -> {
+                val result = currentLevel[id]
+                when (result) {
+                    is Either.Left -> {
+                        currentLevel.delete(id)
+                        return propagate(nextLevel[id], currentLevel)
+                    }
+                    is Either.Right -> return result
+                }
+            }
+            currentLevel.contains(id) -> return currentLevel[id]
+            !currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) -> {
+                val result = nextLevel[id]
+                propagate(result, currentLevel)
+                return result
+            }
+        }
+        return Left(RepositoryError.NotFound(id))
+    }
+
+    internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>): Either<RepositoryError, V> {
+        when (element) {
+            is Either.Right -> propagationRepo.save(element.b)
         }
         return element
     }
@@ -145,20 +179,22 @@ class TwoTierRepository<K, V : RepoElement<K>>
         }
     }
 
-    override fun getAll(ids: Collection<K>): Collection<V> {
+    override fun get(ids: Collection<K>): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(vararg ids: K): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(ids: Iterator<K>): Collection<V> {
         val results = ArrayList<V>()
         for (id in ids) {
             val element = get(id)
-            if (element != null) {
-                results.add(element)
+            when (element) {
+                is Either.Right -> results.add(element.b)
             }
         }
         return results
-    }
-
-    override fun deleteAll(elements: Collection<V>) {
-        for (element in elements) {
-            delete(element.id, element)
-        }
     }
 }

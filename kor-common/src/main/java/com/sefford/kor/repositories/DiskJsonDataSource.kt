@@ -15,65 +15,60 @@
  */
 package com.sefford.kor.repositories
 
-import com.google.gson.Gson
-import com.google.gson.JsonParseException
+import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
 import com.sefford.common.interfaces.Loggable
+import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
+import com.sefford.kor.repositories.interfaces.JsonConverter
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
-
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Repository for saving JSon directly to disk
  *
  * @author Saul Diaz <sefford></sefford>@gmail.com>
  */
-open class DiskJsonDataSource<K, V : RepoElement<K>>
+class DiskJsonDataSource<K, V : RepoElement<K>>
 /**
  * Created a new DiskJsonDataSource
  *
  * @param folder Root folder of the cache
- * @param gson   Gson Converter
+ * @param converter   Gson Converter
  * @param log    Loggable for I/O Errors
  * @param clazz  Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
  */
-(
+internal constructor(
         /**
          * Folder where the IDs will be saved
          */
-        internal val folder: CacheFolder<K>,
-        /**
-         * Gson Converter
-         */
-        internal val gson: Gson,
-        /**
-         * Loggable for I/O Errors
-         */
-        internal val log: Loggable,
-        /**
-         * Class of the Repository elements to allow the conversion between JSon and POJOs and viceversa
-         */
-        internal val clazz: Class<V>) : Repository<K, V> {
+        private val folder: CacheFolder<K>,
+
+        private val data: DataHandler<K, V>) : Repository<K, V> {
+
+    constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) : this(folder, DefaultDataHandler(folder, converter, log))
 
     override val all: Collection<V>
         get() {
             val elements = ArrayList<V>()
             val files = folder.files()
             for (i in files.indices) {
-                val element = read(files[i])
-                if (element != null) {
-                    elements.add(element)
+                val element = data.read(files[i])
+                when (element) {
+                    is Either.Right -> elements.add(element.b)
+                    else -> files[i].delete()
                 }
             }
             return elements
         }
 
-    override val isAvailable: Boolean
+    override val isReady: Boolean
         get() = folder.exists()
 
     override fun clear() {
@@ -90,7 +85,7 @@ open class DiskJsonDataSource<K, V : RepoElement<K>>
         return file?.exists() ?: false
     }
 
-    override fun delete(id: K, element: V?) {
+    override fun delete(id: K, element: V) {
         delete(id)
     }
 
@@ -99,61 +94,86 @@ open class DiskJsonDataSource<K, V : RepoElement<K>>
         file?.delete()
     }
 
-    override fun deleteAll(elements: Collection<V>) {
+    override fun delete(elements: Collection<V>) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(vararg elements: V) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(elements: Iterator<V>) {
         for (element in elements) {
             delete(element.id, element)
         }
     }
 
-    override fun get(id: K): V? {
-        return read(folder.getFile(id))
+    override fun get(id: K): Either<RepositoryError, V> {
+        if (!isReady) {
+            return Left(RepositoryError.NotReady)
+        }
+        val file = folder.getFile(id)
+        if (file == null || !file.exists()) {
+            return Left(RepositoryError.NotFound(id))
+        }
+        return data.read(file)
     }
 
-    override fun getAll(ids: Collection<K>): Collection<V> {
-        val elements = ArrayList<V>()
+    override fun get(ids: Collection<K>): Collection<V> {
+        return get(ids.iterator())
+    }
+
+
+    override fun get(vararg ids: K): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(ids: Iterator<K>): Collection<V> {
+        val elements = mutableListOf<V>()
         for (id in ids) {
             val element = get(id)
-            if (element != null) {
-                elements.add(element)
+            when (element) {
+                is Either.Right -> elements.add(element.b)
             }
         }
         return elements
     }
 
-    override fun save(element: V): V {
-        write(element)
-        return element
+    override fun save(element: V): Either<RepositoryError, V> {
+        if (!isReady) {
+            return Left(RepositoryError.NotReady)
+        }
+        return data.write(element)
     }
 
-    override fun saveAll(elements: Collection<V>): Collection<V> {
+    override fun save(elements: Collection<V>): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(vararg elements: V): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(elements: Iterator<V>): Collection<V> {
+        val results = mutableListOf<V>()
         for (element in elements) {
-            save(element)
-        }
-        return elements
-    }
-
-    open fun write(element: V) {
-        try {
-            val file = folder.getFile(element.id)
-            if (file != null && !file.exists()) {
-                file.createNewFile()
+            val result = save(element)
+            when (result) {
+                is Either.Right -> results.add(result.b)
             }
-            val outputStreamWriter = FileOutputStream(file)
-            outputStreamWriter.write(gson.toJson(element).toByteArray())
-            outputStreamWriter.close()
-        } catch (e: IOException) {
-            log.e(TAG, "File write failed: " + e.toString(), e)
-        } catch (e: OutOfMemoryError) {
-            log.e(TAG, "File write failed: " + e.toString(), e)
-        } catch (e: IncompatibleClassChangeError) {
-            log.e(TAG, "File write failed: " + e.toString(), e)
         }
-
+        return results
     }
 
-    open fun read(file: File?): V? {
-        if (file != null && file.exists()) {
-            try {
+    internal interface DataHandler<K, V> {
+        fun read(file: File): Either<RepositoryError, V>
+
+        fun write(element: V): Either<RepositoryError, V>
+    }
+
+    class DefaultDataHandler<K, V : RepoElement<K>>(val folder: CacheFolder<K>, val converter: JsonConverter<V>, val log: Loggable) : DataHandler<K, V> {
+        override fun read(file: File): Either<RepositoryError, V> {
+            return try {
                 val length = file.length().toInt()
                 val bytes = ByteArray(length)
 
@@ -165,24 +185,51 @@ open class DiskJsonDataSource<K, V : RepoElement<K>>
                 } finally {
                     `in`.close()
                 }
-
-                return gson.fromJson(String(bytes), clazz)
+                return converter.deserialize(String(bytes))
             } catch (e: IOException) {
                 log.e(TAG, "File read failed: " + e.toString(), e)
+                Left(RepositoryError.CannotRetrieve(e))
             } catch (e: OutOfMemoryError) {
                 log.e(TAG, "File read failed: " + e.toString(), e)
+                Left(RepositoryError.CannotRetrieve(e))
             } catch (e: UnsupportedOperationException) {
                 file.delete()
+                Left(RepositoryError.CannotRetrieve(e))
             } catch (e: IncompatibleClassChangeError) {
                 file.delete()
+                Left(RepositoryError.CannotRetrieve(e))
             } catch (e: IllegalArgumentException) {
                 file.delete()
-            } catch (e: JsonParseException) {
-                file.delete()
+                Left(RepositoryError.CannotRetrieve(e))
+            }
+        }
+
+        override fun write(element: V): Either<RepositoryError, V> {
+            return try {
+                val file = folder.getFile(element.id)
+                if (file != null && !file.exists()) {
+                    file.createNewFile()
+                }
+                val outputStreamWriter = FileOutputStream(file)
+                val json = converter.serialize(element)
+                when (json) {
+                    is Either.Left -> Left(json.a)
+                    is Either.Right -> {
+                        outputStreamWriter.write(json.b.toByteArray())
+                        outputStreamWriter.close()
+                        Right(element)
+                    }
+                }
+            } catch (e: IOException) {
+                Left(RepositoryError.CannotPersist(e))
+            } catch (e: OutOfMemoryError) {
+                Left(RepositoryError.CannotPersist(e))
+            } catch (e: IncompatibleClassChangeError) {
+                Left(RepositoryError.CannotPersist(e))
             }
 
         }
-        return null
+
     }
 
     companion object {

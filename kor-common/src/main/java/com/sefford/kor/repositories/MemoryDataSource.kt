@@ -15,6 +15,10 @@
  */
 package com.sefford.kor.repositories
 
+import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
+import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.interfaces.Updateable
@@ -40,33 +44,52 @@ class MemoryDataSource<K, V>
  *
  * @param cache Storage map of the repository
  */
-(val cache: MutableMap<K, V>) : Repository<K, V> where V : RepoElement<K>, V : Updateable<V> {
+(private val cache: MutableMap<K, V>) : Repository<K, V> where V : RepoElement<K> {
 
     constructor() : this(mutableMapOf())
 
-    override fun save(element: V): V {
-        var result = get(element.id)
-        if (result == null) {
-            cache[element.id] = element
-            result = element
-        } else {
-            result.update(element)
+    override fun save(element: V): Either<RepositoryError, V> {
+        val result = get(element.id)
+        when (result) {
+            is Either.Right -> {
+                if (result.b is Updateable<*>) {
+                    (result.b as Updateable<V>).update(result.b)
+                } else {
+                    cache[element.id] = element
+                }
+                return Right(result.b)
+            }
+            is Either.Left -> {
+                cache[element.id] = element
+                return Right(element)
+            }
         }
-        return result
     }
 
-    override fun saveAll(elements: Collection<V>): Collection<V> {
+    override fun save(elements: Collection<V>): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(vararg elements: V): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(elements: Iterator<V>): Collection<V> {
+        val results = mutableListOf<V>()
         for (element in elements) {
-            save(element)
+            val result = save(element)
+            when (result) {
+                is Either.Right -> results.add(result.b)
+            }
         }
-        return elements
+        return results
     }
 
     override fun contains(id: K): Boolean {
         return cache.containsKey(id)
     }
 
-    override fun delete(id: K, element: V?) {
+    override fun delete(id: K, element: V) {
         delete(id)
     }
 
@@ -74,22 +97,41 @@ class MemoryDataSource<K, V>
         cache.remove(id)
     }
 
-    override fun deleteAll(elements: Collection<V>) {
+    override fun delete(elements: Collection<V>) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(vararg elements: V) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(elements: Iterator<V>) {
         for (element in elements) {
             delete(element.id, element)
         }
     }
 
-    override fun get(id: K): V? {
-        return cache[id]
+    override fun get(id: K): Either<RepositoryError, V> {
+        if (!cache.contains(id)) {
+            return Left(RepositoryError.NotFound(id))
+        }
+        return Right(cache[id]!!)
     }
 
-    override fun getAll(ids: Collection<K>): Collection<V> {
+    override fun get(ids: Collection<K>): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(vararg ids: K): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(ids: Iterator<K>): Collection<V> {
         val result = ArrayList<V>()
         for (id in ids) {
             val element = get(id)
-            if (element != null) {
-                result.add(element)
+            when (element) {
+                is Either.Right -> result.add(element.b)
             }
         }
         return result
@@ -102,6 +144,6 @@ class MemoryDataSource<K, V>
     override val all: Collection<V>
         get() = cache.values
 
-    override val isAvailable: Boolean
+    override val isReady: Boolean
         get() = true
 }

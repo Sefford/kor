@@ -15,7 +15,6 @@
  */
 package com.sefford.kor.interactors.interfaces
 
-import com.sefford.kor.errors.Error
 import com.sefford.kor.responses.Response
 
 /**

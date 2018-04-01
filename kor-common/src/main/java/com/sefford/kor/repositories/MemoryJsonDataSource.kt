@@ -1,17 +1,17 @@
 package com.sefford.kor.repositories
 
-import com.google.gson.Gson
+import arrow.core.*
+import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.interfaces.JsonConverter
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
-
 import java.util.*
 
 /**
  * Created by sefford on 6/5/17.
  */
 
-class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val gson: Gson,
-                                                  internal val clazz: Class<V>) : Repository<K, V> {
+class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val converter: JsonConverter<V>) : Repository<K, V> {
 
     internal val cache: MutableMap<K, String> = mutableMapOf()
 
@@ -19,12 +19,15 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val gson: Gson,
         get() {
             val elements = ArrayList<V>()
             for (id in cache.keys) {
-                elements.add(get(id)!!)
+                val element = get(id)
+                when (element) {
+                    is Either.Right -> elements.add(element.b)
+                }
             }
             return elements
         }
 
-    override val isAvailable: Boolean
+    override val isReady: Boolean
         get() = true
 
     override fun clear() {
@@ -35,7 +38,7 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val gson: Gson,
         return cache.containsKey(id)
     }
 
-    override fun delete(id: K, element: V?) {
+    override fun delete(id: K, element: V) {
         delete(id)
     }
 
@@ -43,35 +46,73 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val gson: Gson,
         cache.remove(id)
     }
 
-    override fun deleteAll(elements: Collection<V>) {
+    override fun delete(vararg elements: V) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(elements: Collection<V>) {
+        delete(elements.iterator())
+    }
+
+    override fun delete(elements: Iterator<V>) {
         for (element in elements) {
             delete(element.id, element)
         }
     }
 
-    override fun get(id: K): V? {
-        return gson.fromJson(cache[id], clazz)
+    override fun get(id: K): Either<RepositoryError, V> {
+        if (!cache.containsKey(id)) {
+            return Either.left(RepositoryError.NotFound(id))
+        }
+        return converter.deserialize(cache[id])
     }
 
-    override fun getAll(ids: Collection<K>): Collection<V> {
+    override fun get(ids: Collection<K>): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(vararg ids: K): Collection<V> {
+        return get(ids.iterator())
+    }
+
+    override fun get(ids: Iterator<K>): Collection<V> {
         val elements = ArrayList<V>()
         for (id in ids) {
-            if (cache.containsKey(id)) {
-                elements.add(get(id)!!)
+            val element = get(id)
+            when (element) {
+                is Either.Right -> elements.add(element.b)
+                else -> {
+                }
             }
         }
         return elements
     }
 
-    override fun save(element: V): V {
-        cache[element.id] = gson.toJson(element)
-        return element
+    override fun save(element: V): Either<RepositoryError, V> {
+        val result = converter.serialize(element)
+        when (result) {
+            is Either.Left -> return Left(result.a)
+            is Either.Right -> cache[element.id] = result.b
+        }
+        return Right(element)
     }
 
-    override fun saveAll(elements: Collection<V>): Collection<V> {
+    override fun save(elements: Collection<V>): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(vararg elements: V): Collection<V> {
+        return save(elements.iterator())
+    }
+
+    override fun save(elements: Iterator<V>): Collection<V> {
+        val results = mutableListOf<V>()
         for (element in elements) {
-            save(element)
+            val result = save(element)
+            when (result) {
+                is Either.Right -> results.add(result.b)
+            }
         }
-        return elements
+        return results
     }
 }

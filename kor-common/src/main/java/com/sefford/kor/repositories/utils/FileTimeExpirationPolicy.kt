@@ -19,8 +19,6 @@ import com.sefford.kor.repositories.interfaces.CacheFolder
 import com.sefford.kor.repositories.interfaces.Clock
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy
 
-import java.io.File
-
 /**
  * Default time Policy for [CacheFolders][CacheFolder]. The expiration date is marked by the last modified date
  * of the file.
