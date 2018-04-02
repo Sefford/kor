@@ -231,6 +231,8 @@ class DiskJsonDataSourceTest {
     fun `should be able to persist in batch via varargs`() {
         val element = TestElement(0)
         val element1 = TestElement(1)
+        whenever(dataHandler.write(element)).thenReturn(Right(element))
+        whenever(dataHandler.write(element1)).thenReturn(Right(element1))
 
         repository.save(element, element1)
 
@@ -242,6 +244,8 @@ class DiskJsonDataSourceTest {
     fun `should be able to persist in batch via collection`() {
         val element = TestElement(0)
         val element1 = TestElement(1)
+        whenever(dataHandler.write(element)).thenReturn(Right(element))
+        whenever(dataHandler.write(element1)).thenReturn(Right(element1))
 
         repository.save(listOf(element, element1))
 
@@ -253,6 +257,8 @@ class DiskJsonDataSourceTest {
     fun `should be able to persist in batch via iterator`() {
         val element = TestElement(0)
         val element1 = TestElement(1)
+        whenever(dataHandler.write(element)).thenReturn(Right(element))
+        whenever(dataHandler.write(element1)).thenReturn(Right(element1))
 
         repository.save(listOf(element, element1).iterator())
 

@@ -17,7 +17,6 @@ package com.sefford.kor.repositories
 
 import arrow.core.Either
 import arrow.core.Left
-import arrow.core.Right
 import com.nhaarman.mockito_kotlin.*
 import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.Repository
@@ -26,12 +25,11 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations.initMocks
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class TwoTierRepositoryTest {
 

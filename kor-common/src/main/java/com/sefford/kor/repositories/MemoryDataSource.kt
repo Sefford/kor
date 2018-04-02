@@ -76,12 +76,7 @@ class MemoryDataSource<K, V>
 
     override fun save(elements: Iterator<V>): Collection<V> {
         val results = mutableListOf<V>()
-        for (element in elements) {
-            val result = save(element)
-            when (result) {
-                is Either.Right -> results.add(result.b)
-            }
-        }
+        elements.forEach { element -> save(element).map { results.add(it) } }
         return results
     }
 
@@ -106,9 +101,7 @@ class MemoryDataSource<K, V>
     }
 
     override fun delete(elements: Iterator<V>) {
-        for (element in elements) {
-            delete(element.id, element)
-        }
+        elements.forEach { element -> delete(element.id, element) }
     }
 
     override fun get(id: K): Either<RepositoryError, V> {
@@ -128,12 +121,7 @@ class MemoryDataSource<K, V>
 
     override fun get(ids: Iterator<K>): Collection<V> {
         val result = ArrayList<V>()
-        for (id in ids) {
-            val element = get(id)
-            when (element) {
-                is Either.Right -> result.add(element.b)
-            }
-        }
+        ids.forEach { id -> get(id).map { result.add(it) } }
         return result
     }
 

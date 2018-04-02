@@ -18,6 +18,7 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
+import arrow.core.flatMap
 import com.sefford.common.interfaces.Loggable
 import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
@@ -59,11 +60,7 @@ internal constructor(
             val elements = ArrayList<V>()
             val files = folder.files()
             for (i in files.indices) {
-                val element = data.read(files[i])
-                when (element) {
-                    is Either.Right -> elements.add(element.b)
-                    else -> files[i].delete()
-                }
+                data.read(files[i]).fold({ files[i].delete() }, { elements.add(it) })
             }
             return elements
         }
@@ -131,10 +128,7 @@ internal constructor(
     override fun get(ids: Iterator<K>): Collection<V> {
         val elements = mutableListOf<V>()
         for (id in ids) {
-            val element = get(id)
-            when (element) {
-                is Either.Right -> elements.add(element.b)
-            }
+            get(id).map { elements.add(it) }
         }
         return elements
     }
@@ -157,10 +151,7 @@ internal constructor(
     override fun save(elements: Iterator<V>): Collection<V> {
         val results = mutableListOf<V>()
         for (element in elements) {
-            val result = save(element)
-            when (result) {
-                is Either.Right -> results.add(result.b)
-            }
+            save(element).map { results.add(it) }
         }
         return results
     }
@@ -211,15 +202,12 @@ internal constructor(
                     file.createNewFile()
                 }
                 val outputStreamWriter = FileOutputStream(file)
-                val json = converter.serialize(element)
-                when (json) {
-                    is Either.Left -> Left(json.a)
-                    is Either.Right -> {
-                        outputStreamWriter.write(json.b.toByteArray())
-                        outputStreamWriter.close()
-                        Right(element)
-                    }
-                }
+                return converter.serialize(element).fold({ Left(it) },
+                        {
+                            outputStreamWriter.write(it.toByteArray())
+                            outputStreamWriter.close()
+                            Right(element)
+                        })
             } catch (e: IOException) {
                 Left(RepositoryError.CannotPersist(e))
             } catch (e: OutOfMemoryError) {
@@ -227,9 +215,7 @@ internal constructor(
             } catch (e: IncompatibleClassChangeError) {
                 Left(RepositoryError.CannotPersist(e))
             }
-
         }
-
     }
 
     companion object {

@@ -17,6 +17,7 @@ package com.sefford.kor.repositories
 
 import arrow.core.Either
 import arrow.core.Left
+import arrow.core.Right
 import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
@@ -83,8 +84,7 @@ class TwoTierRepository<K, V : RepoElement<K>>
         }
         val currentLevelResult = currentLevel.save(element)
         if (hasNextLevel()) {
-            val nextLevelResult = nextLevel.save(element)
-            return if (nextLevelResult.isRight()) nextLevelResult else currentLevelResult
+            return nextLevel.save(element).fold({ currentLevelResult }, { Right(it) })
         }
         return currentLevelResult
     }
@@ -99,12 +99,7 @@ class TwoTierRepository<K, V : RepoElement<K>>
 
     override fun save(elements: Iterator<V>): Collection<V> {
         val results = mutableListOf<V>()
-        for (element in elements) {
-            val saved = save(element)
-            when (saved) {
-                is Either.Right -> results.add(saved.b)
-            }
-        }
+        elements.forEach { save(it).map { results.add(it) } }
         return results
     }
 
@@ -135,9 +130,7 @@ class TwoTierRepository<K, V : RepoElement<K>>
     }
 
     override fun delete(elements: Iterator<V>) {
-        for (element in elements) {
-            delete(element.id, element)
-        }
+        elements.forEach { delete(it.id, it) }
     }
 
     override fun get(id: K): Either<RepositoryError, V> {
@@ -145,30 +138,21 @@ class TwoTierRepository<K, V : RepoElement<K>>
             return Left(RepositoryError.NotReady)
         }
         when {
-            currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) -> {
-                val result = currentLevel[id]
-                when (result) {
-                    is Either.Left -> {
-                        currentLevel.delete(id)
-                        return propagate(nextLevel[id], currentLevel)
-                    }
-                    is Either.Right -> return result
-                }
-            }
+            currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) ->
+                return currentLevel[id].fold({
+                    currentLevel.delete(id)
+                    propagate(nextLevel[id], currentLevel)
+                }, { Right(it) })
             currentLevel.contains(id) -> return currentLevel[id]
             !currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) -> {
-                val result = nextLevel[id]
-                propagate(result, currentLevel)
-                return result
+                return propagate(nextLevel[id], currentLevel)
             }
         }
         return Left(RepositoryError.NotFound(id))
     }
 
     internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>): Either<RepositoryError, V> {
-        when (element) {
-            is Either.Right -> propagationRepo.save(element.b)
-        }
+        element.map { propagationRepo.save(it) }
         return element
     }
 
@@ -189,12 +173,7 @@ class TwoTierRepository<K, V : RepoElement<K>>
 
     override fun get(ids: Iterator<K>): Collection<V> {
         val results = ArrayList<V>()
-        for (id in ids) {
-            val element = get(id)
-            when (element) {
-                is Either.Right -> results.add(element.b)
-            }
-        }
+        ids.forEach { get(it).map { results.add(it) } }
         return results
     }
 }

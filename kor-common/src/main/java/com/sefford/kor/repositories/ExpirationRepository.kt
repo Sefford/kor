@@ -60,9 +60,7 @@ class ExpirationRepository<K, V : RepoElement<K>>(private val repository: Reposi
 
     override fun save(element: V): Either<RepositoryError, V> {
         val result = repository.save(element)
-        if (result.isRight()) {
-            policy.notifyCreated(element.id)
-        }
+        result.map { policy.notifyCreated(it.id) }
         return result
     }
 

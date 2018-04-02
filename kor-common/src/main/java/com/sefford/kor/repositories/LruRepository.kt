@@ -18,9 +18,7 @@ class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>, private
 
     override fun save(element: V): Either<RepositoryError, V> {
         val result = repository.save(element)
-        if (result.isRight()) {
-            evict(element.id)
-        }
+        result.map { evict(it.id) }
         return result
     }
 
@@ -77,9 +75,7 @@ class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>, private
     override fun get(id: K): Either<RepositoryError, V> {
         lru.refresh(id)
         val element = repository[id]
-        if (element.isLeft()) {
-            delete(id)
-        }
+        element.swap().map { delete(id) }
         return element
     }
 

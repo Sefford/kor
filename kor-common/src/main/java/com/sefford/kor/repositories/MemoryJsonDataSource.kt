@@ -18,12 +18,7 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val converter: JsonCo
     override val all: Collection<V>
         get() {
             val elements = ArrayList<V>()
-            for (id in cache.keys) {
-                val element = get(id)
-                when (element) {
-                    is Either.Right -> elements.add(element.b)
-                }
-            }
+            cache.keys.forEach { get(it).map { elements.add(it) } }
             return elements
         }
 
@@ -55,9 +50,7 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val converter: JsonCo
     }
 
     override fun delete(elements: Iterator<V>) {
-        for (element in elements) {
-            delete(element.id, element)
-        }
+        elements.forEach { delete(it.id, it) }
     }
 
     override fun get(id: K): Either<RepositoryError, V> {
@@ -77,24 +70,15 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val converter: JsonCo
 
     override fun get(ids: Iterator<K>): Collection<V> {
         val elements = ArrayList<V>()
-        for (id in ids) {
-            val element = get(id)
-            when (element) {
-                is Either.Right -> elements.add(element.b)
-                else -> {
-                }
-            }
-        }
+        ids.forEach { get(it).map { elements.add(it) } }
         return elements
     }
 
     override fun save(element: V): Either<RepositoryError, V> {
-        val result = converter.serialize(element)
-        when (result) {
-            is Either.Left -> return Left(result.a)
-            is Either.Right -> cache[element.id] = result.b
-        }
-        return Right(element)
+        return converter.serialize(element).fold({ Left(it) }, {
+            cache[element.id] = it
+            Right(element)
+        })
     }
 
     override fun save(elements: Collection<V>): Collection<V> {
@@ -107,12 +91,7 @@ class MemoryJsonDataSource<K, V : RepoElement<K>>(internal val converter: JsonCo
 
     override fun save(elements: Iterator<V>): Collection<V> {
         val results = mutableListOf<V>()
-        for (element in elements) {
-            val result = save(element)
-            when (result) {
-                is Either.Right -> results.add(result.b)
-            }
-        }
+        elements.forEach { save(it).map { results.add(it) } }
         return results
     }
 }
