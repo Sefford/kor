@@ -53,7 +53,7 @@ class MemoryDataSource<K, V>
         when (result) {
             is Either.Right -> {
                 if (result.b is Updateable<*>) {
-                    (result.b as Updateable<V>).update(result.b)
+                    (result.b as Updateable<V>).update(element)
                 } else {
                     cache[element.id] = element
                 }

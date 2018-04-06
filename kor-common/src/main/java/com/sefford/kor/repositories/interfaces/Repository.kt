@@ -40,7 +40,7 @@ import com.sefford.kor.repositories.TwoTierRepository
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-interface Repository<K, V> {
+interface Repository<K, V : RepoElement<K>> {
 
     /**
      * Returns all elements from the repository

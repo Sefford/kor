@@ -16,6 +16,8 @@ interface StandaloneUseCase<P : Any, E : Error, R : Response> {
 
     fun execute(thread: CoroutineContext = CommonPool, postable: Postable, params: P) = launch(thread) { execute(params).fold({ postable.post(it) }, { postable.post(it) }) }
 
+    fun execute(postable: Postable, params: P) = execute(CommonPool, postable, params)
+
     suspend fun async(params: P): Either<E, R> = kotlinx.coroutines.experimental.async(CommonPool) { instantiate(params).execute() }.await()
 
 }
