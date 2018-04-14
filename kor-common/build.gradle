@@ -101,9 +101,9 @@ install {
 
 dependencies {
     compile 'com.sefford:commons:1.1.0'
-    compile 'io.arrow-kt:arrow-core:0.6.1'
-    compile 'io.arrow-kt:arrow-data:0.6.1'
-    compile 'io.arrow-kt:arrow-effects:0.6.1'
+    compile 'io.arrow-kt:arrow-core:0.7.1'
+    compile 'io.arrow-kt:arrow-data:0.7.1'
+    compile 'io.arrow-kt:arrow-effects:0.7.1'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
 
     testCompile 'junit:junit:4.12'

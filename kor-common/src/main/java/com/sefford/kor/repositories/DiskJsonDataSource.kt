@@ -19,6 +19,7 @@ import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
 import arrow.core.flatMap
+import com.chicisimo.data.StubDataSource
 import com.sefford.common.interfaces.Loggable
 import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
@@ -51,7 +52,7 @@ internal constructor(
          */
         private val folder: CacheFolder<K>,
 
-        private val data: DataHandler<K, V>) : Repository<K, V> {
+        private val data: DataHandler<K, V>) : Repository<K, V>, StubDataSource<K, V> {
 
     constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) : this(folder, DefaultDataHandler(folder, converter, log))
 
@@ -91,20 +92,6 @@ internal constructor(
         file?.delete()
     }
 
-    override fun delete(elements: Collection<V>) {
-        delete(elements.iterator())
-    }
-
-    override fun delete(vararg elements: V) {
-        delete(elements.iterator())
-    }
-
-    override fun delete(elements: Iterator<V>) {
-        for (element in elements) {
-            delete(element.id, element)
-        }
-    }
-
     override fun get(id: K): Either<RepositoryError, V> {
         if (!isReady) {
             return Left(RepositoryError.NotReady)
@@ -116,44 +103,11 @@ internal constructor(
         return data.read(file)
     }
 
-    override fun get(ids: Collection<K>): Collection<V> {
-        return get(ids.iterator())
-    }
-
-
-    override fun get(vararg ids: K): Collection<V> {
-        return get(ids.iterator())
-    }
-
-    override fun get(ids: Iterator<K>): Collection<V> {
-        val elements = mutableListOf<V>()
-        for (id in ids) {
-            get(id).map { elements.add(it) }
-        }
-        return elements
-    }
-
     override fun save(element: V): Either<RepositoryError, V> {
         if (!isReady) {
             return Left(RepositoryError.NotReady)
         }
         return data.write(element)
-    }
-
-    override fun save(elements: Collection<V>): Collection<V> {
-        return save(elements.iterator())
-    }
-
-    override fun save(vararg elements: V): Collection<V> {
-        return save(elements.iterator())
-    }
-
-    override fun save(elements: Iterator<V>): Collection<V> {
-        val results = mutableListOf<V>()
-        for (element in elements) {
-            save(element).map { results.add(it) }
-        }
-        return results
     }
 
     internal interface DataHandler<K, V> {

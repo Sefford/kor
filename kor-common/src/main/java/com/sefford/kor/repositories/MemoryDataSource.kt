@@ -18,6 +18,7 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
+import com.chicisimo.data.StubDataSource
 import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
@@ -44,7 +45,7 @@ class MemoryDataSource<K, V>
  *
  * @param cache Storage map of the repository
  */
-(private val cache: MutableMap<K, V>) : Repository<K, V> where V : RepoElement<K> {
+(private val cache: MutableMap<K, V>) : Repository<K, V>, StubDataSource<K, V> where V : RepoElement<K> {
 
     constructor() : this(mutableMapOf())
 
@@ -66,20 +67,6 @@ class MemoryDataSource<K, V>
         }
     }
 
-    override fun save(elements: Collection<V>): Collection<V> {
-        return save(elements.iterator())
-    }
-
-    override fun save(vararg elements: V): Collection<V> {
-        return save(elements.iterator())
-    }
-
-    override fun save(elements: Iterator<V>): Collection<V> {
-        val results = mutableListOf<V>()
-        elements.forEach { element -> save(element).map { results.add(it) } }
-        return results
-    }
-
     override fun contains(id: K): Boolean {
         return cache.containsKey(id)
     }
@@ -92,37 +79,11 @@ class MemoryDataSource<K, V>
         cache.remove(id)
     }
 
-    override fun delete(elements: Collection<V>) {
-        delete(elements.iterator())
-    }
-
-    override fun delete(vararg elements: V) {
-        delete(elements.iterator())
-    }
-
-    override fun delete(elements: Iterator<V>) {
-        elements.forEach { element -> delete(element.id, element) }
-    }
-
     override fun get(id: K): Either<RepositoryError, V> {
         if (!cache.contains(id)) {
             return Left(RepositoryError.NotFound(id))
         }
         return Right(cache[id]!!)
-    }
-
-    override fun get(ids: Collection<K>): Collection<V> {
-        return get(ids.iterator())
-    }
-
-    override fun get(vararg ids: K): Collection<V> {
-        return get(ids.iterator())
-    }
-
-    override fun get(ids: Iterator<K>): Collection<V> {
-        val result = ArrayList<V>()
-        ids.forEach { id -> get(id).map { result.add(it) } }
-        return result
     }
 
     override fun clear() {

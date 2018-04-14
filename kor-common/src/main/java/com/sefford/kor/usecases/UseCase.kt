@@ -1,8 +1,8 @@
 package com.sefford.kor.usecases
 
 import arrow.core.Either
+import arrow.core.Try
 import arrow.core.identity
-import arrow.data.Try
 import com.sefford.kor.errors.Error
 import com.sefford.kor.repositories.utils.emptyErrorHandler
 import com.sefford.kor.responses.Response
