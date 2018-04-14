@@ -17,7 +17,7 @@ package com.sefford.kor.repositories
 
 import arrow.core.Right
 import com.nhaarman.mockito_kotlin.whenever
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
 import com.sefford.kor.repositories.utils.TestElement
 import org.hamcrest.core.Is.`is`
@@ -28,10 +28,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.initMocks
 import java.io.File
-import java.util.*
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class DiskJsonDataSourceTest {
 

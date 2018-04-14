@@ -2,11 +2,10 @@ package com.sefford.kor.repositories
 
 import arrow.core.Either
 import arrow.core.Left
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
-import java.util.*
 
 class ExpirationRepository<K, V : RepoElement<K>>(private val repository: Repository<K, V>, private val policy: ExpirationPolicy<K>) : Repository<K, V> by repository {
 

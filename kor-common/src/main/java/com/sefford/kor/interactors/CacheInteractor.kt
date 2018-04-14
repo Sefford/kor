@@ -35,7 +35,7 @@ import com.sefford.kor.responses.Response
  *
  * It delegates the work to a [CacheDelegate][com.sefford.kor.interactors.interfaces.CacheDelegate] object.
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class CacheInteractor<R : Response, E : Error>
 /**

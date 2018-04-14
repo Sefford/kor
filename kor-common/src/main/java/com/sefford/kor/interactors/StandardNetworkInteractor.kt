@@ -37,7 +37,7 @@ import com.sefford.kor.responses.Response
  *
  * In any moment the Strategy can notify of an error through [NotifyError][Notifiable.notify] interface.
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class StandardNetworkInteractor<R : Response, E : Error>
 /**

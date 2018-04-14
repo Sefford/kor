@@ -26,7 +26,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations.initMocks
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class TimeExpirationPolicyTest {
 

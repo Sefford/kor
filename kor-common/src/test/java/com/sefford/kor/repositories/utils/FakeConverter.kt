@@ -3,7 +3,6 @@ package com.sefford.kor.repositories.utils
 import arrow.core.Either
 import arrow.core.Right
 import com.google.gson.Gson
-import com.sefford.kor.interactors.RepositoryError
 import com.sefford.kor.repositories.interfaces.JsonConverter
 
 class FakeConverter : JsonConverter<TestElement> {

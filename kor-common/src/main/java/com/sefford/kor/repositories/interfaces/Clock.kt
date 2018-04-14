@@ -18,7 +18,7 @@ package com.sefford.kor.repositories.interfaces
 /**
  * Interface to abstract time fetching for the [TimeExpirationPolicy][com.sefford.kor.repositories.utils.TimeExpirationPolicy]
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 interface Clock {
 

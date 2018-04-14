@@ -18,10 +18,9 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
-import arrow.core.flatMap
-import com.chicisimo.data.StubDataSource
+import com.sefford.kor.repositories.interfaces.StubDataSource
 import com.sefford.common.interfaces.Loggable
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
 import com.sefford.kor.repositories.interfaces.JsonConverter
 import com.sefford.kor.repositories.interfaces.RepoElement
@@ -35,7 +34,7 @@ import java.util.*
 /**
  * Repository for saving JSon directly to disk
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class DiskJsonDataSource<K, V : RepoElement<K>>
 /**

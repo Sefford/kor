@@ -18,7 +18,7 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import com.nhaarman.mockito_kotlin.*
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.utils.TestElement
 import org.hamcrest.core.Is.`is`

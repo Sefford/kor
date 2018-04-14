@@ -30,7 +30,7 @@ import com.sefford.kor.responses.Response
  *
  * This hierarchy of classes will delegate the work to [NetworkDelegate][com.sefford.kor.interactors.interfaces.NetworkDelegate] implementations.
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 abstract class NetworkInteractor<R : Response, E : Error>
 /**

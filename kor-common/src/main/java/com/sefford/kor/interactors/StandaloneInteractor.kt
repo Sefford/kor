@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor
  *
  * For more fine-grained thread management, Executor implementations are advised.
  *
- * @author Saul Diaz Gonzalez<sefford></sefford>@gmail.com>
+ * @author Saul Diaz Gonzalez<sefford@gmail.com>
  */
 abstract class StandaloneInteractor<O : Any>
 /**

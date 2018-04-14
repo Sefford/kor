@@ -1,4 +1,4 @@
-package com.sefford.kor.interactors
+package com.sefford.kor.repositories.utils
 
 sealed class RepositoryError {
     data class NotFound<K>(val id: K) : RepositoryError()

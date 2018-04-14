@@ -18,8 +18,8 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
-import com.chicisimo.data.StubDataSource
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.interfaces.StubDataSource
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.interfaces.Updateable

@@ -22,7 +22,7 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class LruCacheTest {
 

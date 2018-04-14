@@ -16,7 +16,7 @@
 package com.sefford.kor.repositories.interfaces
 
 import arrow.core.Either
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.TwoTierRepository
 
 /**

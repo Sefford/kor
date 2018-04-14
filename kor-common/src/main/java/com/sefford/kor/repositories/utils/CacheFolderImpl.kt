@@ -11,7 +11,7 @@ import java.io.File
  * Provides a basic implementation on how a folder should provide files to the [DataSource][com.sefford.kor.repositories.DiskJsonDataSource]
  * or the [FileTimeExpirationPolicy]
  *
- * @author Saul Diaz Gonzalez <sefford></sefford>@gmail.com>
+ * @author Saul Diaz Gonzalez <sefford@gmail.com>
  */
 abstract class CacheFolderImpl<K>
 /**

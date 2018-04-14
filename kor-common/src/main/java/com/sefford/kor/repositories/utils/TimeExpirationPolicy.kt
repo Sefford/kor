@@ -26,7 +26,7 @@ import java.util.*
  * This policy evicts elements based on the time difference between the saved and the query of the element. Can be
  * configured to be allowed to refresh the time every time the element is saved or not.
  *
- * @author Saul Diaz Gonzalez <sefford></sefford>@gmail.com>
+ * @author Saul Diaz Gonzalez <sefford@gmail.com>
  */
 class TimeExpirationPolicy<K>
 /**

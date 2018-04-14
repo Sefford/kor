@@ -22,7 +22,7 @@ import com.sefford.kor.repositories.interfaces.Populator
  * Populator strategy for physical [CacheFolders][CacheFolder]
  *
  * @param <K> Type of the IDs that maps this populator
- * @author Saúl Díaz <sefford></sefford>@gmail.com>
+ * @author Saúl Díaz <sefford@gmail.com>
 </K> */
 abstract class FilePopulator<K>
 /**

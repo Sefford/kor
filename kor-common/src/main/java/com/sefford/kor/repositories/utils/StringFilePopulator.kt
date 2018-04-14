@@ -20,7 +20,7 @@ import com.sefford.kor.repositories.interfaces.CacheFolder
 /**
  * FilePopulator for String ID based elements
  *
- * @author Saúl Díaz <sefford></sefford>@gmail.com>
+ * @author Saúl Díaz <sefford@gmail.com>
  */
 class StringFilePopulator(folder: CacheFolder<String>) : FilePopulator<String>(folder) {
 

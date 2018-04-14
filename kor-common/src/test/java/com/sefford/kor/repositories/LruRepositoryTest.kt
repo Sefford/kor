@@ -15,8 +15,7 @@
  */
 package com.sefford.kor.repositories
 
-import com.nhaarman.mockito_kotlin.mock
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.Populator
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.utils.LruCache
@@ -28,7 +27,7 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class LruRepositoryTest {
 

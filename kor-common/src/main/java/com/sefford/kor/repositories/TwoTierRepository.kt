@@ -18,7 +18,7 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
 import java.util.*
@@ -35,7 +35,7 @@ import java.util.*
  * both requests and repositories does not enforce this requirement, and unrelated - standalone
  * repos can be created through [Repository Interface][com.sefford.kor.repositories.interfaces.Repository]
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class TwoTierRepository<K, V : RepoElement<K>>
 /**

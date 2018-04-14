@@ -24,7 +24,7 @@ import com.sefford.kor.repositories.interfaces.ExpirationPolicy
  * of the file.
  *
  * @param <K> Type of the ID
- * @author Saúl Díaz <sefford></sefford>@gmail.com>
+ * @author Saúl Díaz <sefford@gmail.com>
 </K> */
 class FileTimeExpirationPolicy<K>
 /**

@@ -26,7 +26,7 @@ import java.util.*
  * of the element because you might find your cache occupying too much
  * memory or disk space.
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class LruCache<K>
 /**

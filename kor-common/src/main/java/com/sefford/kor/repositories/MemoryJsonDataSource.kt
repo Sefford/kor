@@ -1,8 +1,8 @@
 package com.sefford.kor.repositories
 
 import arrow.core.*
-import com.chicisimo.data.StubDataSource
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.interfaces.StubDataSource
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.JsonConverter
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository

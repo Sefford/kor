@@ -34,7 +34,7 @@ import com.sefford.kor.responses.Response
  * for logging purposes, but more specialized versions of this class will require the delegate object
  * to implement further interfaces to properly follow each of the strategies.
  *
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 abstract class Interactor<R : Response, E : Error>
 /**

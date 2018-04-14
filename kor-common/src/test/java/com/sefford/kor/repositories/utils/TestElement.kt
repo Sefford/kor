@@ -19,7 +19,7 @@ import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Updateable
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 open class TestElement(override val id: Int) : RepoElement<Int>, Updateable<TestElement> {
 

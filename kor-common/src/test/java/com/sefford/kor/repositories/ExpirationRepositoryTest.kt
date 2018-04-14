@@ -16,7 +16,7 @@
 package com.sefford.kor.repositories
 
 import com.nhaarman.mockito_kotlin.whenever
-import com.sefford.kor.interactors.RepositoryError
+import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.utils.TestElement
@@ -32,7 +32,7 @@ import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.initMocks
 
 /**
- * @author Saul Diaz <sefford></sefford>@gmail.com>
+ * @author Saul Diaz <sefford@gmail.com>
  */
 class ExpirationRepositoryTest {
 
