@@ -12,14 +12,14 @@ Download
 <dependency>
     <groupId>com.sefford</groupId>
     <artifactId>kor-common</artifactId>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 #### Kor-Common
 ```groovy
-compile 'com.sefford:kor-common:3.0.0'
+compile 'com.sefford:kor-common:4.0.0'
 ```
 
 
@@ -51,93 +51,62 @@ A key feature of Kor is that any element of the model is fetched from an `Intera
 Model elements are single-instanced (the same object is returned always for the same unique ID) and updating the model
 is done automatically thanks to Java pointer to object features.
 
-### Executors
+### Use cases
 
-The communication is done via executing those Interactors which are Command patterns into a Executor element. This is an
-execution queue abstracted, whose responsibility is to take the business decision on when to actually execute the command.
+The `Use case` is the single element of logic of a functional requirement of an information system.
 
-The `Executor` interface provides ways to execute single or multiple requests. Again it is up to the concrete implementation
-of the `Executor` to encapsulate such decisions.
+Kor allows you to execute up to three phases which is typical of any implementation of such requirements.
 
-### Delegates
-
-The `Delegate` is characterized for definining two types of responses in the default implementation,
-a `Response` and an `Error`. Those are nothing more than messages that define the success or a failure of such `Delegate`.
-
-A failure can happen by many reasons, being unexpectedly from an Exception of the program or by a controlled situation
-during the flow of the `Delegate` itself. However, a response gives the chance to provide a successful, but not satisfiable
-termination by means of `isSucess()` method.
-
-An external element of the architecture will be listening somehow for those responses, it is part of the contract. However
-it is not strongly bound, and depending on the requirements a Request sent by a component can be listened by a completely
-unrelated one.
-
-A typical Request should (but it is not enforced to) implement all these stages. In the case of a `NetworkDelegate`:
-
-* **execute:** In this stage the code belonging to fetch the information from the server, API or webservice.
-A successful completion of this stage should already generate a Response-type result with the results converted into POJO
-via JSon deserialization or any other means necessary.
-* **postProcess:** This stage is meant to analyze the data and give the chance to set the success flag to false or other
-crossing from the data.
-* **saveToCache:** This stage is provided to encapsulate all the necessary logic to persist the information to memory or disk.
-* **composeErrorResponse:** This stage will only happen in exceptional situations which will lead to a failed execution. The
+* **Execution:** In this stage the code belonging to fetch the information from the cache, API or webservice.
+* **Post process:** _(Optional)_ This stage allows the user to manipulate the data, by filtering, sorting or transforming the data obtained in the execution step.
+* **Persistance:** _(Optional)_ This stage is provided to encapsulate all the necessary logic to persist the information, typically to memory or disk.
+* **Composing the error response:** This stage will only happen in exceptional situations which will lead to a failed execution. The
 idea is to analyze the exception and output an ErrorResponse which the UI layer can use to give the user detailed information.
 
-For heavy-duty operations, `FastDelegate` interface is available to provide a chance to make a preliminary persistence to
-memory and notifiy the user to give out the response while offloading to a slower lru in the background of the `Request`.
+Ideally your logic should be able to mix and match parts of your logic; so most of the elements are reusable.
 
-The case of the `CacheDelegate` the behavior is slightly different. A `CacheDelegate`is supposed to fetch the information
-from the persistence system. As such, it lacks `postProcess` and `saveToCache` stages. In the earlier step, because the
-information is supposed to have been saved on the system via an early `NetworkDelegate`, and as such, having passed through the
-necessary steps. In the latter, for obvious reasons.
-
-* **isCacheValid:** This stage is meant to be executed _before_ the actual retrieveFromCache, and it is meant to peek at
-the lru data to know in advance if the information is valid (e.g. has not expired or it is present) before trying to
-retrieve the data
-* **execute:** As stated this is the stage for actually getting the information from the lru.
-
-Finally, the `UpdateableDelegate` adds a **keepLooping()** method to check the execution of a `NetworkDelegate` flow.
-Remember that while a `UpdateableDelegate` can keep periodically running, this is battery and network-costly and
-many of these kind of delegates might end up starving the `Executor`.
-
-### Interactors
-
-An `Interactor` backbone responsibility is to notify when the `Delegate` has completed sucessfully or not. An implementation
-of an `Interactor` will delegate to a `Delegate` _(d'oh)_ to do all the work, and will simply execute the request steps in a certain order.
-
-Each of the `Interactors` work typically with a specified kind of `Delegate`.
-
-* **CacheInteractor:** Retrieves the information form the persistence system. If the content is no longer valid it
-does not notify of anything to reduce the noise during the execution.
-* **StandardNetworkInteractor:** Retrieves the information from network, postprocesses it, saves it into the persistence and
-notifies it.
-* **FastNetworkInteractor:** Retrieves the information from the network, postprocesses it, saves into a fast lru (typically
-memory), notifies to the result and then resumes the saving to the persistence.
-* **UpdateableInteractor:** Performs a loop over the `StandardNetworkInteractor` until the condition is fullfilled. On each
-of the loops notifies the result to the system.
-* **StandaloneInteractor:** Builds and executes any kind of the previous types of interactors ad-hoc.
+`StandaloneUseCase` allows you to encapsulate this logic on an unit which will reusable. It provides also several utilities
+to choose to execute your use case syncronously or asyncronously, choosing the correct thread via Kotlin Coroutines.
 
 ### Notification System
 
 Kor does not enforce any particular system of notification. It can be used via callbacks that implement the `Postable`
-interface. However, **we encourage to use an Event Bus system** (Otto or Greenrobot's) or **RxJava** in order to provide a real
-decoupled architecture.
+interface. We have widely tested it with a Event Bus system and RxJava backbone. Still you can use it directly with no
+penalty.
 
 ### Repositories
 
 Kor provides a persistence abstraction via a _Repository_ pattern. This is nothing more than a CRUD interface.
 
-The basic implementations available are nothing more than a Key, Value implementation on a memory Map for both normal and `FastSaving`
-requests.
+We provide several basic flavors of persisting as `MemoryDataSource`, to simply save elements in memory in a Map, `JsonDiskDataSource`
+and `MemoryJsonDataSource` to persist Json directly to disk or memory. You will require to provide your own easy implementation
+of a `JsonConverter`.
 
 The Repositories are also built on a _Chain of Responsibility_ command. Can work standalone or chained together to provide
-multitier persistence systems on both memory and disk implementations.
+multitier persistence systems on both memory and disk implementations by using `TwoTierRepository`. 
 
-Kor-Android module also provides a LRUMemory implementation.
+Kor-Android module also provides repository decorators like `LRURepository` to control the population of objects in the persistence. This is done
+by element counting, not a memory counting. `ExpirationRepository` on the other hand will allow you to implement keep-alive policies
+in the cache layer.  
 
 For a model element to be usable with repositories, it requires to implement both `RepoElement` interface to provide
-an unique ID to save and get from the Repository and a Updateable implementation to update information inside the Model
-element itself.
+an unique ID to save and get from the Repository.
+
+If you want to build new and amazing repos, you can help yourself by extending from `StubDataSource` where most of the
+helper methods are already implemented.
+
+Migrating to 4.0.0
+======================
+
+Many breaking changes were done in 4.0.0, mostly related to how the core works.
+
+- All old `Interactor` system got deprecated. All delegates must be chopped and separated on each phase.
+- Now `Use cases` can return `Either<Error,Response>`. If you use the `Postable`-compatible method, your Postable
+will keep receiving these separated response.
+- Save and Get `Repository` methods will receive an `Either<RepositoryError, V>` response instead of a `null`; so the
+receiving class can have a little information of what went wrong.
+- In order to ease the long signatures and known problems with the error log grouping, you will need to log manually each
+of the errors.
 
 Interesting literature
 ======================
