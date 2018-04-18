@@ -19,7 +19,7 @@ import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.Populator
 import com.sefford.kor.repositories.interfaces.Repository
 import com.sefford.kor.repositories.utils.LruCache
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import org.junit.Before
 import org.junit.Test
 

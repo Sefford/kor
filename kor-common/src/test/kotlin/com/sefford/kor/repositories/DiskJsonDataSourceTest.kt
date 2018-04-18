@@ -19,7 +19,7 @@ import arrow.core.Right
 import com.nhaarman.mockito_kotlin.whenever
 import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.CacheFolder
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
 import org.junit.Before

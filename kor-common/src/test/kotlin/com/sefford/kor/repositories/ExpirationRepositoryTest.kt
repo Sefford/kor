@@ -19,7 +19,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.interfaces.ExpirationPolicy
 import com.sefford.kor.repositories.interfaces.Repository
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

@@ -1,4 +1,4 @@
-package com.sefford.kor.repositories.utils
+package com.sefford.kor.utils
 
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.errors.Error

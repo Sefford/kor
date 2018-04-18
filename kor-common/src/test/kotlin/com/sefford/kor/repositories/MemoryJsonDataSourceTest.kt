@@ -1,6 +1,6 @@
 package com.sefford.kor.repositories
 
-import com.sefford.kor.repositories.utils.FakeConverter
+import com.sefford.kor.utils.FakeConverter
 import org.junit.Before
 
 class MemoryJsonDataSourceTest : RepositoryTestSuite() {

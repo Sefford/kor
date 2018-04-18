@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.repositories.utils
+package com.sefford.kor.utils
 
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Updateable

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.repositories.utils
+package com.sefford.kor.utils
 
 import com.sefford.kor.repositories.interfaces.Clock
+import com.sefford.kor.repositories.utils.TimeExpirationPolicy
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

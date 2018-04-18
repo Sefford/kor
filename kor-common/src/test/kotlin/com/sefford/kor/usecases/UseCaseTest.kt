@@ -4,7 +4,7 @@ import arrow.core.andThen
 import arrow.core.getOrHandle
 import com.sefford.kor.errors.Error
 import com.sefford.kor.repositories.MemoryDataSource
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import com.sefford.kor.responses.Response
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat

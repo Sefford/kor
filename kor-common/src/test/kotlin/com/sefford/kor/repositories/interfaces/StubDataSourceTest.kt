@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.Right
 import com.sefford.kor.repositories.utils.RepositoryError
 import com.sefford.kor.repositories.RepositoryTestSuite
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before

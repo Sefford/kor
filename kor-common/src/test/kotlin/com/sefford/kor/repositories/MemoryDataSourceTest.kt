@@ -15,10 +15,9 @@
  */
 package com.sefford.kor.repositories
 
-import com.sefford.kor.repositories.RepositoryTestSuite.Companion.EXPECTED_FIRST_ID
 import com.sefford.kor.repositories.interfaces.RepoElement
 import com.sefford.kor.repositories.interfaces.Repository
-import com.sefford.kor.repositories.utils.TestElement
+import com.sefford.kor.utils.TestElement
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
