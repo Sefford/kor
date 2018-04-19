@@ -23,11 +23,19 @@ import com.sefford.kor.repositories.components.JsonConverter
 import com.sefford.kor.repositories.components.RepositoryError
 
 /**
- * Implementation of JsonConverter to make use of Json
+ * Implementation of JsonConverter to make use of Gson
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-class GsonConverter<V> constructor(private val gson: Gson, val clazz: Class<V>) : JsonConverter<V> {
+class GsonConverter<V>
+/**
+ * Constructor
+ *
+ * @param gson instance
+ * @param clazz element type that this converter will return
+ */
+constructor(private val gson: Gson,
+            private val clazz: Class<V>) : JsonConverter<V> {
 
     /**
      * {@inheritDoc}
