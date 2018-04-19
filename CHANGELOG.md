@@ -6,7 +6,8 @@ _2018_04_14_
 * AKA _"The FPenning"_
 * Added FP principles to the core of kor common by Arrow.
 * Added several utilities methods to the `Repository` interface for fetching, deleting and saving elements.
-* All `interactors.*` elements are removed. 
+* All `interactors.*` elements are removed.
+* Sliced and re-structured all the packages in order to be able to have them 
 
 ## Kor common 3.0.0
 _2018-02-12_
