@@ -13,8 +13,10 @@ apply plugin: 'ch.tutteli.settings'
 //noinspection GroovyAssignabilityCheck
 include {
     modules {
-        _ 'repositories-extensions'
         _ 'repositories'
+        _ 'repositories-extensions'
+        _ 'repositories-gson-converter'
+        _ 'repositories-moshi-converter'
         _ 'usecases'
         _ 'test-utils'
     }

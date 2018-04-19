@@ -1,11 +1,9 @@
 dependencies {
+    compile project(":kor-repositories")
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compile 'com.sefford:commons:1.1.0'
-    compile "io.arrow-kt:arrow-core:$arrow_version"
-    compile "io.arrow-kt:arrow-data:$arrow_version"
+    compile "com.google.code.gson:gson:$gson_version"
 
     testCompile project(':kor-test-utils')
-    testCompile "com.google.code.gson:gson:$gson_version"
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.17.0'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
