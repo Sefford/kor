@@ -2,8 +2,8 @@ package com.sefford.kor.interactors;
 
 import com.sefford.common.interfaces.Loggable;
 import com.sefford.common.interfaces.Postable;
-import com.sefford.kor.usecases.components.Error;
 import com.sefford.kor.interactors.delegates.NetworkDelegate;
+import com.sefford.kor.usecases.components.Error;
 import com.sefford.kor.usecases.components.Response;
 import org.junit.Before;
 import org.junit.Test;

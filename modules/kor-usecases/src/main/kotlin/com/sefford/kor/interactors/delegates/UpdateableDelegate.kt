@@ -16,8 +16,8 @@
 
 package com.sefford.kor.interactors.delegates
 
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
 
 /**
  * Updateable Delegate is a delegate which adds a looping facility to a delegate

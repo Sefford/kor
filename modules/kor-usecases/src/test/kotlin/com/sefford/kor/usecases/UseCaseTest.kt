@@ -1,10 +1,7 @@
 package com.sefford.kor.usecases
 
-import arrow.core.andThen
 import arrow.core.getOrHandle
 import com.sefford.kor.usecases.components.Error
-import com.sefford.kor.repositories.MemoryDataSource
-import com.sefford.kor.test.TestElement
 import com.sefford.kor.usecases.components.Response
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
@@ -54,26 +51,6 @@ class UseCaseTest {
         assertThat(response.executed, `is`(true))
         assertThat(response.posprocessed, `is`(true))
         assertThat(response.persisted, `is`(true))
-    }
-
-    fun test() {
-        val test1: (TestResponse) -> TestResponse = { _ -> TestResponse() }
-        val test2: (TestResponse) -> TestResponse = { _ -> TestResponse() }
-        val composition = test1 andThen test2
-        val repository = MemoryDataSource<Int, TestElement>()
-
-        UseCase.Execute<TestError, TestResponse> { TestResponse() }
-                .persist {
-                    val left = test1
-                    val right = test2
-                    val value = left andThen right
-                    value(it)
-                }
-
-        val emptyList: List<Int> = emptyList()
-        val value = emptyList
-                .map { }
-                .sumBy { 2 }
     }
 
     class TestResponse : Response {

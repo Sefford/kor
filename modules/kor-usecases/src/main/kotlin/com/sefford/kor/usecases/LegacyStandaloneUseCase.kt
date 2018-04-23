@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.usecases
 
-import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.interactors.delegates.NetworkDelegate
+import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
 
 /**

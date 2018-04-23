@@ -1,7 +1,7 @@
 package com.sefford.kor.repositories
 
-import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.repositories.components.Repository
+import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.test.TestElement
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`

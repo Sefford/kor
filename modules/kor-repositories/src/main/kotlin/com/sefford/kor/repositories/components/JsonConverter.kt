@@ -16,7 +16,6 @@
 package com.sefford.kor.repositories.components
 
 import arrow.core.Either
-import com.sefford.kor.repositories.components.RepositoryError
 
 /**
  * Abstracts the Json conversion from a Json-based datasource

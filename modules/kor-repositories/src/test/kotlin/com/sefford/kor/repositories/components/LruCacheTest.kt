@@ -15,11 +15,10 @@
  */
 package com.sefford.kor.repositories.components
 
-import org.junit.Before
-import org.junit.Test
-
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Test
 
 /**
  * @author Saul Diaz <sefford@gmail.com>

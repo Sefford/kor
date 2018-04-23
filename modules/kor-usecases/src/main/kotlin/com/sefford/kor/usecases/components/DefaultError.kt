@@ -1,7 +1,5 @@
 package com.sefford.kor.usecases.components
 
-import com.sefford.kor.usecases.components.Error
-
 class DefaultError(val exception: Throwable) : Error {
 
     override val statusCode: Int

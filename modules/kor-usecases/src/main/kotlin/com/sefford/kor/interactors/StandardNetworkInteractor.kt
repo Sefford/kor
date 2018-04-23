@@ -20,8 +20,9 @@ import com.sefford.common.interfaces.Loggable
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.interactors.delegates.NetworkDelegate
 import com.sefford.kor.interactors.delegates.Notifiable
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
+
 /**
  * Standard Network Interactor that performs the Request Process in this order:
  * *

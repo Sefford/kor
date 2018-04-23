@@ -16,8 +16,9 @@
 package com.sefford.kor.interactors.delegates
 
 import com.sefford.common.interfaces.Loggable
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
+
 /**
  * Base Delegate form with the facilities to provide responses and errors
  *

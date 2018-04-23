@@ -1,11 +1,7 @@
 package com.sefford.kor.repositories
 
 import arrow.core.Either
-import com.sefford.kor.repositories.components.RepositoryError
-import com.sefford.kor.repositories.components.Populator
-import com.sefford.kor.repositories.components.RepoElement
-import com.sefford.kor.repositories.components.Repository
-import com.sefford.kor.repositories.components.LruCache
+import com.sefford.kor.repositories.components.*
 
 class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>, private val repository: Repository<K, V>) : Repository<K, V> by repository {
 

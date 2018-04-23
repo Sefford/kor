@@ -18,8 +18,8 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import com.nhaarman.mockito_kotlin.*
-import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.repositories.components.Repository
+import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.test.TestElement
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*

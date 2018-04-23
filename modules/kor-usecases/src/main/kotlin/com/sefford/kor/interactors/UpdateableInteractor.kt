@@ -20,8 +20,8 @@ import com.sefford.common.interfaces.Postable
 import com.sefford.kor.interactors.delegates.NetworkDelegate
 import com.sefford.kor.interactors.delegates.Notifiable
 import com.sefford.kor.interactors.delegates.UpdateableDelegate
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
 
 /**
  * Updateable Interactor, intended for networking. Keeps executing a phase of polling until it decides

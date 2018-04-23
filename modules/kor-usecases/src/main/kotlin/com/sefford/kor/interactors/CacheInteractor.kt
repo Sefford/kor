@@ -18,8 +18,9 @@ package com.sefford.kor.interactors
 import com.sefford.common.interfaces.Loggable
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.interactors.delegates.CacheDelegate
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
+
 /**
  * CacheInteractor is the default implementation of a strategy for Cache-related Interactors.
  *

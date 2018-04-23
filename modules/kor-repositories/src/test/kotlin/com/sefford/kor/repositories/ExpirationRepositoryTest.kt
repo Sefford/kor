@@ -16,20 +16,18 @@
 package com.sefford.kor.repositories
 
 import com.nhaarman.mockito_kotlin.whenever
-import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.repositories.components.ExpirationPolicy
 import com.sefford.kor.repositories.components.Repository
+import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.test.TestElement
+import org.hamcrest.core.Is.`is`
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-
-import java.util.HashMap
-
-import org.hamcrest.core.Is.`is`
-import org.junit.Assert.*
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.initMocks
+import java.util.*
 
 /**
  * @author Saul Diaz <sefford@gmail.com>

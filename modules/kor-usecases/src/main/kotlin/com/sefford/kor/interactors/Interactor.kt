@@ -19,8 +19,9 @@ import com.sefford.common.interfaces.Loggable
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.interactors.delegates.Delegate
 import com.sefford.kor.interactors.delegates.Notifiable
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
+
 /**
  * Abstract Interactor
  *

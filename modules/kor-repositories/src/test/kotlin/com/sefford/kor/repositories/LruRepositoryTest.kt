@@ -15,16 +15,15 @@
  */
 package com.sefford.kor.repositories
 
-import com.sefford.kor.repositories.components.RepositoryError
+import com.sefford.kor.repositories.components.LruCache
 import com.sefford.kor.repositories.components.Populator
 import com.sefford.kor.repositories.components.Repository
-import com.sefford.kor.repositories.components.LruCache
+import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.test.TestElement
-import org.junit.Before
-import org.junit.Test
-
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Test
 
 /**
  * @author Saul Diaz <sefford@gmail.com>

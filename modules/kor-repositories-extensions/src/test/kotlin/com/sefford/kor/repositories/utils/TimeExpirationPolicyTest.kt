@@ -16,12 +16,11 @@
 package com.sefford.kor.repositories.utils
 
 import com.sefford.kor.repositories.components.Clock
+import org.hamcrest.core.Is.`is`
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-
-import org.hamcrest.core.Is.`is`
-import org.junit.Assert.*
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations.initMocks
 

@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.interactors.delegates
 
-import com.sefford.kor.usecases.components.Response
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.Response
 
 /**
  * Interface for performing interactions to the network.

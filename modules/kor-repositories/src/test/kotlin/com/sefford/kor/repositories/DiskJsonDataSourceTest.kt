@@ -17,8 +17,8 @@ package com.sefford.kor.repositories
 
 import arrow.core.Right
 import com.nhaarman.mockito_kotlin.whenever
-import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.repositories.components.CacheFolder
+import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.test.TestElement
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.*

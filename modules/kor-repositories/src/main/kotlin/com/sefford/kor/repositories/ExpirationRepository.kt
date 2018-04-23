@@ -2,10 +2,10 @@ package com.sefford.kor.repositories
 
 import arrow.core.Either
 import arrow.core.Left
-import com.sefford.kor.repositories.components.RepositoryError
 import com.sefford.kor.repositories.components.ExpirationPolicy
 import com.sefford.kor.repositories.components.RepoElement
 import com.sefford.kor.repositories.components.Repository
+import com.sefford.kor.repositories.components.RepositoryError
 
 class ExpirationRepository<K, V : RepoElement<K>>(private val repository: Repository<K, V>, private val policy: ExpirationPolicy<K>) : Repository<K, V> by repository {
 
