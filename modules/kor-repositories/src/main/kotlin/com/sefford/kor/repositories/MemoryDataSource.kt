@@ -46,21 +46,17 @@ class MemoryDataSource<K, V>
     constructor() : this(mutableMapOf())
 
     override fun save(element: V): Either<RepositoryError, V> {
-        val result = get(element.id)
-        when (result) {
-            is Either.Right -> {
-                if (result.b is Updateable<*>) {
-                    (result.b as Updateable<V>).update(element)
-                } else {
-                    cache[element.id] = element
-                }
-                return Right(result.b)
-            }
-            is Either.Left -> {
+        return get(element.id).fold({
+            cache[element.id] = element
+            Right(element)
+        }, { element ->
+            if (element is Updateable<*>) {
+                (element as Updateable<V>).update(element)
+            } else {
                 cache[element.id] = element
-                return Right(element)
             }
-        }
+            Right(element)
+        })
     }
 
     override fun contains(id: K): Boolean {

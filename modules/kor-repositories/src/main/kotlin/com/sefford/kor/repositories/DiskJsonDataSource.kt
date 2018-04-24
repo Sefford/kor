@@ -18,6 +18,7 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
+import arrow.core.flatMap
 import com.sefford.common.interfaces.Loggable
 import com.sefford.kor.repositories.components.*
 import java.io.File
@@ -51,25 +52,18 @@ internal constructor(
     constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) : this(folder, DefaultDataHandler(folder, converter, log))
 
     override val all: Collection<V>
-        get() {
-            val elements = ArrayList<V>()
-            val files = folder.files()
-            for (i in files.indices) {
-                data.read(files[i]).fold({ files[i].delete() }, { elements.add(it) })
-            }
-            return elements
-        }
+        get() = folder.files().map { file -> data.read(file) }
+                .fold(mutableListOf(),
+                        { elements, element ->
+                            element.map { elements.add(it) }
+                            elements
+                        })
 
     override val isReady: Boolean
         get() = folder.exists()
 
     override fun clear() {
-        val files = folder.files()
-        if (true) {
-            for (i in files.indices) {
-                files[i].delete()
-            }
-        }
+        folder.files().forEach { file -> file.delete() }
     }
 
     override fun contains(id: K): Boolean {
@@ -104,13 +98,25 @@ internal constructor(
         return data.write(element)
     }
 
+    /**
+     * Interface for handling data internally to the DiskJsonDataSource
+     *
+     * @author Saul Diaz <sefford@gmail.com>
+     */
     internal interface DataHandler<K, V> {
         fun read(file: File): Either<RepositoryError, V>
 
         fun write(element: V): Either<RepositoryError, V>
     }
 
-    class DefaultDataHandler<K, V : RepoElement<K>>(val folder: CacheFolder<K>, val converter: JsonConverter<V>, val log: Loggable) : DataHandler<K, V> {
+    /**
+     * Default implementation of DataHandler interface.
+     *
+     * @author Saul Diaz <sefford@gmail.com>
+     */
+    class DefaultDataHandler<K, V : RepoElement<K>>(val folder: CacheFolder<K>,
+                                                    val converter: JsonConverter<V>,
+                                                    val log: Loggable) : DataHandler<K, V> {
         override fun read(file: File): Either<RepositoryError, V> {
             return try {
                 val length = file.length().toInt()

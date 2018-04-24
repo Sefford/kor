@@ -25,7 +25,7 @@ import com.sefford.kor.repositories.components.ExpirationPolicy
  *
  * @param <K> Type of the ID
  * @author Saúl Díaz <sefford@gmail.com>
-</K> */
+ */
 class FileTimeExpirationPolicy<K>
 /**
  * Default constructor which takes a folder and the keep alive time and uses the a custom Clock system to measure

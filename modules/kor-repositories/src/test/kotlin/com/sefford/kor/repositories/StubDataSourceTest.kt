@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2018 Saúl Díaz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sefford.kor.repositories
 
 import arrow.core.Either
@@ -10,6 +25,9 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 
+/**
+ * @author Saul Diaz <sefford@gmail.com>
+ */
 class StubDataSourceTest {
     private val elements = listOf(TestElement(RepositoryTestSuite.EXPECTED_FIRST_ID), TestElement(RepositoryTestSuite.EXPECTED_SECOND_ID), TestElement(RepositoryTestSuite.EXPECTED_THIRD_ID))
     private val ids = listOf(RepositoryTestSuite.EXPECTED_FIRST_ID, RepositoryTestSuite.EXPECTED_SECOND_ID, RepositoryTestSuite.EXPECTED_THIRD_ID)

@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2017 Saúl Díaz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sefford.kor.repositories
 
 import com.sefford.kor.repositories.components.Repository
@@ -9,6 +24,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Test
 
+/**
+ * @author Saul Diaz <sefford@gmail.com>
+ */
 @Ignore
 open class RepositoryTestSuite {
 
@@ -149,10 +167,10 @@ open class RepositoryTestSuite {
     }
 
     companion object {
-       const val EXPECTED_FIRST_ID = 1
-       const val EXPECTED_SECOND_ID = 2
-       const val EXPECTED_THIRD_ID = 3
-       const val EXPECTED_FULL_SAVE_SIZE = 3
-       const val EXPECTED_PARTIAL_SAVE_SIZE = 2
+        const val EXPECTED_FIRST_ID = 1
+        const val EXPECTED_SECOND_ID = 2
+        const val EXPECTED_THIRD_ID = 3
+        const val EXPECTED_FULL_SAVE_SIZE = 3
+        const val EXPECTED_PARTIAL_SAVE_SIZE = 2
     }
 }

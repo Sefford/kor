@@ -27,8 +27,8 @@ open class TestElement(override val id: Int) : RepoElement<Int>, Updateable<Test
         return this
     }
 
-    override fun equals(that: Any?): Boolean {
-        return id == (that as TestElement).id
+    override fun equals(other: Any?): Boolean {
+        return id == (other as TestElement).id
     }
 
     override fun hashCode(): Int {

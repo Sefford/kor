@@ -24,7 +24,7 @@ import com.sefford.kor.repositories.components.Populator
  *
  * @param <K> Type of the IDs that maps this populator
  * @author Saúl Díaz <sefford@gmail.com>
-</K> */
+ */
 abstract class FilePopulator<K>
 /**
  * Creates a new instance of FilePopulator pointing to folder

@@ -1,9 +1,32 @@
+/*
+ * Copyright (C) 2018 Saúl Díaz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sefford.kor.repositories
 
 import arrow.core.Either
 import com.sefford.kor.repositories.components.*
 
-class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>, private val repository: Repository<K, V>) : Repository<K, V> by repository {
+/**
+ * Repository that allows a certain number of elements to be persisted.
+ *
+ * The default implementation uses a number-based LRU, but a size-based implementation might be put in place.
+ *
+ * @author Saul Diaz <sefford@gmail.com>
+ */
+class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>,
+                                           private val repository: Repository<K, V>) : Repository<K, V> by repository {
 
     constructor(repository: Repository<K, V>, maxSize: Int) : this(LruCache<K>(maxSize), repository)
 
