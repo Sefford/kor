@@ -80,7 +80,7 @@ subprojects { project ->
             name = project.name
             userOrg = POM_DEVELOPER_ID
             licenses = ['Apache-2.0']
-            vcsUrl = 'https://github.com/arrow-kt/arrow.git'
+            vcsUrl = 'https://github.com/Sefford/kor.git'
         }
     }
 
