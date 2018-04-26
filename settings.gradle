@@ -1,2 +1,23 @@
-include ':kor-common'
-rootProject.name = 'kor'
+buildscript {
+    gradle.ext.tutteli_plugins_version = '0.4.0'
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "ch.tutteli:tutteli-gradle-settings:$gradle.ext.tutteli_plugins_version"
+    }
+}
+
+apply plugin: 'ch.tutteli.settings'
+
+//noinspection GroovyAssignabilityCheck
+include {
+    modules {
+        _ 'repositories'
+        _ 'repositories-extensions'
+        _ 'repositories-gson-converter'
+        _ 'repositories-moshi-converter'
+        _ 'usecases'
+        _ 'test-utils'
+    }
+}
