@@ -14,7 +14,6 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
@@ -72,8 +71,8 @@ subprojects { project ->
 
     bintray {
         publish = true
-        user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-        key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+        user = project.hasProperty('oss.user') ? project.property('oss.user') : System.getenv('BINTRAY_USER')
+        key = project.hasProperty('bintray.apikey') ? project.property('bintray.apikey') : System.getenv('BINTRAY_API_KEY')
         configurations = ['archives']
         pkg {
             repo = 'kor'
@@ -96,7 +95,7 @@ subprojects { project ->
         maxParallelForks = Runtime.runtime.availableProcessors()
     }
 
-    build.dependsOn ':detekt'
+//    build.dependsOn ':detekt'
 
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
