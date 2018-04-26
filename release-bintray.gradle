@@ -10,7 +10,7 @@ ext {
     artifact = POM_ARTIFACT_ID
     packagingType = POM_PACKAGING
 
-    libraryDescription = POM_DESCRIPTION
+    libraryDescription = POM_NAME
 
     siteUrl = POM_URL
     gitUrl = POM_SCM_CONNECTION
