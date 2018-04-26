@@ -5,7 +5,7 @@ jdk:
 
 script:
   - gradle wrapper
-  - ./gradlew clean build test
+  - ./gradlew clean test
   - ./gradlew codeCoverageReport
 
 after_success:
