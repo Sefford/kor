@@ -105,4 +105,3 @@ subprojects { project ->
 task wrapper(type: Wrapper) {
     distributionUrl = "https://services.gradle.org/distributions/gradle-${project.ext.gradle_version}-all.zip"
 }
-
