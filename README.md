@@ -41,11 +41,11 @@ How is Kor structured?
 ======================
 Read more particular documentation in any of the modules that Kor provides
 
-- [Use Cases](http://arrow-kt.io): Abstractions to apply use cases and interactors concepts to your architecture
-- [Repositories](http://arrow-kt.io/docs/patterns/glossary/): Repository pattern to abstract cache and persistence 
-- [Repositories Extensions](http://arrow-kt.io/docs/typeclasses/intro/): Basic implementations of policies for specialized repositories _(optional_)
-- [Repositories Gson Converter](http://arrow-kt.io/docs/datatypes/intro/): Simple Gson Json converter for json-based repositories _(optional)_ 
-- [Repositories Moshi Converter](http://arrow-kt.io/docs/effects/io/): Simple Gson Moshi converter for json-based repositories _(optional)_ 
+- [Use Cases](https://github.com/Sefford/kor/tree/master/modules/kor-usecases): Abstractions to apply use cases and interactors concepts to your architecture
+- [Repositories](https://github.com/Sefford/kor/tree/master/modules/kor-repositories): Repository pattern to abstract cache and persistence 
+- [Repositories Extensions](https://github.com/Sefford/kor/tree/master/modules/kor-repositories-extensions): Basic implementations of policies for specialized repositories _(optional_)
+- [Repositories Gson Converter](https://github.com/Sefford/kor/tree/master/modules/kor-repositories-gson-converter): Simple Gson Json converter for json-based repositories _(optional)_ 
+- [Repositories Moshi Converter](https://github.com/Sefford/kor/tree/master/modules/kor-repositories-moshi-converter): Simple Gson Moshi converter for json-based repositories _(optional)_ 
 
 Migrating to 4.0.0
 ======================
