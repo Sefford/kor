@@ -8,27 +8,6 @@ Kor
 
 A Clean Architecture Implementation core library.
 
-
-Download
---------
-
-### Maven
-#### Kor-Common
-```XML
-<dependency>
-    <groupId>com.sefford</groupId>
-    <artifactId>kor-common</artifactId>
-    <version>4.0.0</version>
-</dependency>
-```
-
-### Gradle
-#### Kor-Common
-```groovy
-compile 'com.sefford:kor-common:4.0.0'
-```
-
-
 What is Kor?
 ============
 
