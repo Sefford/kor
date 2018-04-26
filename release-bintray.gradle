@@ -1,0 +1,34 @@
+/**
+ * Bintray release configuration
+ * */
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = POM_ARTIFACT_ID
+
+    publishedGroupId = POM_GROUP
+    libraryName = POM_NAME
+    artifact = POM_ARTIFACT_ID
+    packagingType = POM_PACKAGING
+
+    libraryDescription = POM_DESCRIPTION
+
+    siteUrl = POM_URL
+    gitUrl = POM_SCM_CONNECTION
+    trackerUrl = POM_SCM_TRACKER_URL
+    githubRepoUrl = POM_SCM_REPO
+
+    libraryVersion = VERSION_NAME
+
+    developerId = POM_DEVELOPER_ID
+    developerName = POM_DEVELOPER_NAME
+    developerEmail = POM_DEVELOPER_MAIL
+
+    licenseName = 'Apache-2.0'
+    licenseUrl = 'https://github.com/Sefford/kor/master/LICENSE'
+    allLicenses = ['Apache-2.0']
+}
+
+// Set up the Android Maven publication.
+apply from: rootProject.file('jcenter/maven-install.gradle')
+// Publish on Bintray.
+apply from: rootProject.file('jcenter/bintray.gradle')

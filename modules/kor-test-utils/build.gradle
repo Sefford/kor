@@ -1,5 +1,3 @@
 dependencies {
     compile project(":kor-repositories")
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
