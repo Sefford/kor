@@ -37,69 +37,37 @@ and with the ability to use good practices as SOLID and TDD from day 0.
 
 Kor is not meant to be a canonical implementation of such architecture, but a personal interpretation of how it should be.
 
+
+
+# Basic Setup
+
+Make sure to have the latest version of JDK 1.8 installed.
+
+Add the dependencies into the project's `build.gradle`
+
+```groovy
+dependencies {
+    compile 'com.sefford:kor-usecases:4.0.0'
+    compile 'com.sefford:kor-repositories:4.0.0'
+    compile 'com.sefford:kor-repositories-extensions:4.0.0' // optional 
+    compile 'com.sefford:kor-repositories-gson-converter:4.0.0' 
+    compile 'com.sefford:kor-repositories-moshi-converter:4.0.0'
+}
+```
 How is Kor structured?
 ======================
-
-Basic concepts
---------------
-
-Kor relies on the classic concept of "Use Cases". Each "Use Case" comprises a full request to the model. This request
-can be to Cache, Network or other types of aynchronous running operations. By this, the UI layer is completely decoupled
-of the rest of the Model logic.
-
-A key feature of Kor is that any element of the model is fetched from an `Interactor` and by using the `Repositories`, the
-Model elements are single-instanced (the same object is returned always for the same unique ID) and updating the model
-is done automatically thanks to Java pointer to object features.
-
-### Use cases
-
-The `Use case` is the single element of logic of a functional requirement of an information system.
-
-Kor allows you to execute up to three phases which is typical of any implementation of such requirements.
-
-* **Execution:** In this stage the code belonging to fetch the information from the cache, API or webservice.
-* **Post process:** _(Optional)_ This stage allows the user to manipulate the data, by filtering, sorting or transforming the data obtained in the execution step.
-* **Persistance:** _(Optional)_ This stage is provided to encapsulate all the necessary logic to persist the information, typically to memory or disk.
-* **Composing the error response:** This stage will only happen in exceptional situations which will lead to a failed execution. The
-idea is to analyze the exception and output an ErrorResponse which the UI layer can use to give the user detailed information.
-
-Ideally your logic should be able to mix and match parts of your logic; so most of the elements are reusable.
-
-`StandaloneUseCase` allows you to encapsulate this logic on an unit which will reusable. It provides also several utilities
-to choose to execute your use case syncronously or asyncronously, choosing the correct thread via Kotlin Coroutines.
-
-### Notification System
-
-Kor does not enforce any particular system of notification. It can be used via callbacks that implement the `Postable`
-interface. We have widely tested it with a Event Bus system and RxJava backbone. Still you can use it directly with no
-penalty.
-
-### Repositories
-
-Kor provides a persistence abstraction via a _Repository_ pattern. This is nothing more than a CRUD interface.
-
-We provide several basic flavors of persisting as `MemoryDataSource`, to simply save elements in memory in a Map, `JsonDiskDataSource`
-and `MemoryJsonDataSource` to persist Json directly to disk or memory. You will require to provide your own easy implementation
-of a `JsonConverter`.
-
-The Repositories are also built on a _Chain of Responsibility_ command. Can work standalone or chained together to provide
-multitier persistence systems on both memory and disk implementations by using `TwoTierRepository`. 
-
-Kor-Android module also provides repository decorators like `LRURepository` to control the population of objects in the persistence. This is done
-by element counting, not a memory counting. `ExpirationRepository` on the other hand will allow you to implement keep-alive policies
-in the cache layer.  
-
-For a model element to be usable with repositories, it requires to implement both `RepoElement` interface to provide
-an unique ID to save and get from the Repository.
-
-If you want to build new and amazing repos, you can help yourself by extending from `StubDataSource` where most of the
-helper methods are already implemented.
+- [Use Cases](http://arrow-kt.io): Abstractions to apply use cases and interactors concepts to your architecture
+- [Repositories](http://arrow-kt.io/docs/patterns/glossary/): Repository pattern to abstract cache and persistence 
+- [Repositories Extensions](http://arrow-kt.io/docs/typeclasses/intro/): Basic implementations of policies for specialized repositories _(optional_)
+- [Repositories Gson Converter](http://arrow-kt.io/docs/datatypes/intro/): Simple Gson Json converter for json-based repositories _(optional)_ 
+- [Repositories Moshi Converter](http://arrow-kt.io/docs/effects/io/): Simple Gson Moshi converter for json-based repositories _(optional)_ 
 
 Migrating to 4.0.0
 ======================
 
 Many breaking changes were done in 4.0.0, mostly related to how the core works.
 
+- Now all Kor is separated in individual modules
 - All old `Interactor` system got deprecated. All delegates must be chopped and separated on each phase.
 - Now `Use cases` can return `Either<Error,Response>`. If you use the `Postable`-compatible method, your Postable
 will keep receiving these separated response.
