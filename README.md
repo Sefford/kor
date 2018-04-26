@@ -1,7 +1,13 @@
+[![Build Status](https://travis-ci.org/Sefford/kor.svg?branch=master)](https://travis-ci.org/Sefford/kor/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.40-blue.svg)](http://kotlinlang.org/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![codecov](https://codecov.io/gh/Sefford/kor/branch/master/graph/badge.svg)](https://codecov.io/gh/Sefford/kor)
+
 Kor
 ===
 
 A Clean Architecture Implementation core library.
+
 
 Download
 --------
@@ -37,8 +43,6 @@ and with the ability to use good practices as SOLID and TDD from day 0.
 
 Kor is not meant to be a canonical implementation of such architecture, but a personal interpretation of how it should be.
 
-
-
 # Basic Setup
 
 Make sure to have the latest version of JDK 1.8 installed.
@@ -56,6 +60,8 @@ dependencies {
 ```
 How is Kor structured?
 ======================
+Read more particular documentation in any of the modules that Kor provides
+
 - [Use Cases](http://arrow-kt.io): Abstractions to apply use cases and interactors concepts to your architecture
 - [Repositories](http://arrow-kt.io/docs/patterns/glossary/): Repository pattern to abstract cache and persistence 
 - [Repositories Extensions](http://arrow-kt.io/docs/typeclasses/intro/): Basic implementations of policies for specialized repositories _(optional_)
