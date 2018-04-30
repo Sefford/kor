@@ -17,9 +17,9 @@ package com.sefford.kor.usecases
 
 import arrow.core.Either
 import com.sefford.common.interfaces.Postable
+import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -55,7 +55,7 @@ interface StandaloneUseCase<P : Any, E : Error, R : Response> {
      * @postable Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun execute(thread: CoroutineContext = CommonPool, postable: Postable, params: P) = launch(thread) { execute(params).fold({ postable.post(it) }, { postable.post(it) }) }
+    fun execute(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = launch(thread) { execute(params).fold({ postable.post(it) }, { postable.post(it) }) }
 
     /**
      * Executes the use case depending on an asynchoronous context context and outputs the
@@ -64,7 +64,7 @@ interface StandaloneUseCase<P : Any, E : Error, R : Response> {
      * @postable Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun async(postable: Postable, params: P) = execute(CommonPool, postable, params)
+    fun async(postable: Postable, params: P) = execute(BackgroundPool, postable, params)
 
     /**
      * Executes the use case depending on a coroutine context and outputs the
@@ -73,6 +73,6 @@ interface StandaloneUseCase<P : Any, E : Error, R : Response> {
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(params: P): Either<E, R> = kotlinx.coroutines.experimental.async(CommonPool) { instantiate(params).execute() }.await()
+    suspend fun async(params: P): Either<E, R> = kotlinx.coroutines.experimental.async(BackgroundPool) { instantiate(params).execute() }.await()
 
 }
