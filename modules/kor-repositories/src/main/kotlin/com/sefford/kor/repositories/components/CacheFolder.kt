@@ -46,8 +46,8 @@ interface CacheFolder<K> {
      * This method works basically as a mapper between the underlying folder and the File itself.
      *
      * @param id ID of the element to get the file from
-     * @return A valid file to read the element from
-    </K> */
+     * @return A valid file to read the element from K
+     */
     fun getFile(id: K): File?
 
 }

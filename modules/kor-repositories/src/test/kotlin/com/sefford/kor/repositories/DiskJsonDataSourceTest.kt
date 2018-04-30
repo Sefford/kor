@@ -304,5 +304,4 @@ class DiskJsonDataSourceTest {
         return mockedFile
     }
 
-
 }

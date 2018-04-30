@@ -174,6 +174,6 @@ internal constructor(
 
     companion object {
 
-        private val TAG = "DiskJsonDataSource"
+        private const val TAG = "DiskJsonDataSource"
     }
 }
