@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Sefford/kor.svg?branch=master)](https://travis-ci.org/Sefford/kor/)
-[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.40-blue.svg)](http://kotlinlang.org/)
+[![Kotlin version badge](https://img.shields.io/badge/kotlin-1.2.41-blue.svg)](http://kotlinlang.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![codecov](https://codecov.io/gh/Sefford/kor/branch/master/graph/badge.svg)](https://codecov.io/gh/Sefford/kor)
 
