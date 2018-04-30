@@ -36,7 +36,7 @@ abstract class CacheFolderImpl<K>
      *
      * @param root Path of the folder, it will be wrapped
      */
-    constructor(root: String) : this(File(root)) {}
+    constructor(root: String) : this(File(root))
 
     init {
         if (!this.root.exists()) {

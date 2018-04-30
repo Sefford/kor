@@ -63,7 +63,7 @@ class TimeExpirationPolicy<K>
      * @param keepAliveTime Time to keep elements alive
      * @param absolute      flag to indicate if the elements last update time need to be refreshed or not
      */
-    constructor(keepAliveTime: Long, absolute: Boolean) : this(DEFAULT_TIME_IMPLEMENTATION, keepAliveTime, absolute) {}
+    constructor(keepAliveTime: Long, absolute: Boolean) : this(DEFAULT_TIME_IMPLEMENTATION, keepAliveTime, absolute)
 
     init {
         this.times = HashMap(0, .75f)

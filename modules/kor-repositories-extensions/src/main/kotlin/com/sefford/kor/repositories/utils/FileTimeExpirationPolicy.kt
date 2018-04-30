@@ -56,7 +56,7 @@ class FileTimeExpirationPolicy<K>
      * @param folder        Representation of the underlying file system
      * @param keepAliveTime Keep alive time of each file.
      */
-    constructor(folder: CacheFolder<K>, keepAliveTime: Long) : this(folder, DEFAULT_TIME, keepAliveTime) {}
+    constructor(folder: CacheFolder<K>, keepAliveTime: Long) : this(folder, DEFAULT_TIME, keepAliveTime)
 
     /**
      * {@inheritDoc}
