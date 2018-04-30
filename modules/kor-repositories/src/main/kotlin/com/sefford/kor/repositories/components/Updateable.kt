@@ -19,7 +19,8 @@ package com.sefford.kor.repositories.components
  * Interface for updating an element.
  *
  *
- * This could be extended to return a T' type so the interface would be more flexible and allow other types updating between them.
+ * This could be extended to return a T' type so the interface would be more flexible and allow other
+ * types updating between them.
  *
  * @author Saul Diaz <sefford@gmail.com>
  */

@@ -150,7 +150,8 @@ class TwoTierRepository<K, V : RepoElement<K>>
         return Left(RepositoryError.NotFound(id))
     }
 
-    internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>): Either<RepositoryError, V> {
+    internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>):
+            Either<RepositoryError, V> {
         element.map { propagationRepo.save(it) }
         return element
     }

@@ -47,7 +47,8 @@ internal constructor(
 
         private val data: DataHandler<K, V>) : Repository<K, V>, StubDataSource<K, V> {
 
-    constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) : this(folder, DefaultDataHandler(folder, converter, log))
+    constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) :
+            this(folder, DefaultDataHandler(folder, converter, log))
 
     override val all: Collection<V>
         get() = folder.files().map { file -> data.read(file) }

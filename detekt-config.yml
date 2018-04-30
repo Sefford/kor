@@ -89,7 +89,7 @@ complexity:
     active: false
   LargeClass:
     active: true
-    threshold: 150
+    threshold: 200
   LongMethod:
     active: true
     threshold: 20
@@ -110,7 +110,7 @@ complexity:
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
   TooManyFunctions:
-    active: true
+    active: false
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
@@ -176,7 +176,7 @@ exceptions:
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
-    active: true
+    active: false
     exceptionNames:
      - ArrayIndexOutOfBoundsException
      - Error
@@ -346,7 +346,7 @@ style:
     active: false
   ReturnCount:
     active: true
-    max: 2
+    max: 4
     excludedFunctions: "equals"
   SafeCast:
     active: true
@@ -378,4 +378,4 @@ style:
     active: false
   WildcardImport:
     active: true
-    excludeImports: 'java.util.*,kotlinx.android.synthetic.*,com.sefford.kor.repositories.components.*'
+    excludeImports: 'java.util.*,kotlinx.android.synthetic.*,com.sefford.kor.repositories.components.*,arrow.core.*'

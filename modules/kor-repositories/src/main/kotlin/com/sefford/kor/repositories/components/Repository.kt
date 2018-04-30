@@ -25,7 +25,9 @@ import com.sefford.kor.repositories.TwoTierRepository
  * They work on a simple CRUD API.
  *
  *
- * Aditionally each repository can flag in advance if the repository itself is "ready" through [isReady interface][Repository.isReady].
+ * Aditionally each repository can flag in advance if the repository itself is "ready" through
+ * [isReady interface][Repository.isReady].
+ *
  * Might be cases, as Network Repositories or Disk Repositories where the availability might not be guaranteed
  * because of hardware or connectivity problems.
  *

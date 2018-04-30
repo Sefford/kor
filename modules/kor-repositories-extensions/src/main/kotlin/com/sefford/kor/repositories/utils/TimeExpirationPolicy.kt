@@ -48,7 +48,8 @@ class TimeExpirationPolicy<K>
          * Flag that indicates the policy to refresh the time every time it is saved.
          *
          *
-         * If FALSE, the element will update the time every time it is saved, otherwise it will be saved on initialization.
+         * If FALSE, the element will update the time every time it is saved, otherwise it will be saved
+         * on initialization.
          */
         internal val absolute: Boolean) : ExpirationPolicy<K> {
     /**

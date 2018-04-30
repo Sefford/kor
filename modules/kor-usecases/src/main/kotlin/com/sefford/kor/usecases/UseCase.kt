@@ -41,8 +41,14 @@ class UseCase<E : Error, R : Response>
 /**
  * Creates a new use case.
  * @param logic Lambda that outputs a {@link Response Response}
- * @param postProcessor Lambda that processes the response from the logic phase and returns it. Note that it can be passed back or create a new one. By default it is an identity lambda.
- * @param cachePersistance Lambda that caches the response from the postprocessing phase and returns it. Note that it can be passed back or create a new one. This is the final result that will be returned by the use case. By default it is an identity lambda.
+ * @param postProcessor Lambda that processes the response from the logic phase and returns it.
+ *
+ * Note that it can be passed back or create a new one. By default it is an identity lambda.
+ * @param cachePersistance Lambda that caches the response from the postprocessing phase and returns it.
+ *
+ * Note that it can be passed back or create a new one. This is the final result that will be returned by the use case.
+ *
+ * By default it is an identity lambda.
  */
 private constructor(internal val logic: () -> R,
                     internal val postProcessor: (response: R) -> R = ::identity,
@@ -64,8 +70,8 @@ private constructor(internal val logic: () -> R,
     /**
      * Initializes a new use case with the required logic.
      *
-     * If no further piece is returned, postprocessor and persistance phases are an identity function and the error handling
-     * is a default one to produce a basic error.
+     * If no further piece is returned, postprocessor and persistance phases are an identity function and the
+     * error handling is a default one to produce a basic error.
      *
      * @param logic Logic of the use case.
      */
@@ -77,7 +83,8 @@ private constructor(internal val logic: () -> R,
         /**
          * Sets up the logic for the post processing phase.
          *
-         * The response returned by this piece of logic will be fed to the persistence phase, and does not matter if the input is returned or a new response is created.
+         * The response returned by this piece of logic will be fed to the persistence phase, and does not matter
+         * if the input is returned or a new response is created.
          *
          * @param postProcessor Logic that will be applied to the post processor phase
          */
@@ -89,7 +96,8 @@ private constructor(internal val logic: () -> R,
         /**
          * Sets up the logic for the persistence phase.
          *
-         * The response returned by this piece of logic will be returned, and does not matter if the input is returned or a new response is created.
+         * The response returned by this piece of logic will be returned, and does not matter if the input is returned
+         * or a new response is created.
          *
          * @param cachePersistance Logic that  will be applied to the persistance phase.
          */

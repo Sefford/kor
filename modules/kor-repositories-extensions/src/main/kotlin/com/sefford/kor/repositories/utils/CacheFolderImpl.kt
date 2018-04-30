@@ -8,8 +8,8 @@ import java.io.File
  * Default implementation of a cache folder.
  *
  *
- * Provides a basic implementation on how a folder should provide files to the [DataSource][com.sefford.kor.repositories.DiskJsonDataSource]
- * or the [FileTimeExpirationPolicy]
+ * Provides a basic implementation on how a folder should provide files to the
+ * [DataSource][com.sefford.kor.repositories.DiskJsonDataSource] or the [FileTimeExpirationPolicy]
  *
  * @author Saul Diaz Gonzalez <sefford@gmail.com>
  */
