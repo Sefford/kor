@@ -28,6 +28,7 @@ plugins {
 detekt {
     version = "1.0.0.RC6-4"
     defaultProfile {
+        config = file("detekt-config.yml")
         input = "$projectDir"
         filters = ".*/resources/.*,.*/build/.*"
         output = file("reports")
