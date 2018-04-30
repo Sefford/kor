@@ -21,6 +21,21 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC6-4"
+}
+
+detekt {
+    version = "1.0.0.RC6-4"
+    defaultProfile {
+        input = "$projectDir"
+        filters = ".*/resources/.*,.*/build/.*"
+        output = file("reports")
+        outputName = "detekt"
+        parallel = true
+    }
+}
+
 allprojects {
     repositories {
         jcenter()
