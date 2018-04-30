@@ -17,7 +17,6 @@ package com.sefford.kor.repositories.utils
 
 import com.sefford.kor.repositories.components.Clock
 import com.sefford.kor.repositories.components.ExpirationPolicy
-import java.util.*
 
 /**
  * Expiration policy based on save time.
@@ -66,7 +65,7 @@ class TimeExpirationPolicy<K>
     constructor(keepAliveTime: Long, absolute: Boolean) : this(DEFAULT_TIME_IMPLEMENTATION, keepAliveTime, absolute)
 
     init {
-        this.times = HashMap(0, .75f)
+        this.times = HashMap(0, DEFAULT_LOAD_FACTOR)
     }
 
     override fun isExpired(id: K): Boolean {
@@ -93,11 +92,15 @@ class TimeExpirationPolicy<K>
         /**
          * Convenience semantic constant to use the time expiration to set the time once
          */
-        val ON_CREATION_ONLY = true
+        const val ON_CREATION_ONLY = true
         /**
          * Convenience semantic constant to let the time expiration be refreshed on every save
          */
-        val REFRESH_EVERY_UPDATE = false
+        const val REFRESH_EVERY_UPDATE = false
+        /**
+         * Default load factor
+         */
+        const val DEFAULT_LOAD_FACTOR = .75f
 
         /**
          * Default time implementation based on the system time.
