@@ -122,11 +122,11 @@ internal constructor(
 
                 log.d(TAG, "File length:" + length)
 
-                val `in` = FileInputStream(file)
+                val inputStream = FileInputStream(file)
                 try {
-                    `in`.read(bytes)
+                    inputStream.read(bytes)
                 } finally {
-                    `in`.close()
+                    inputStream.close()
                 }
                 return converter.deserialize(String(bytes))
             } catch (e: IOException) {
