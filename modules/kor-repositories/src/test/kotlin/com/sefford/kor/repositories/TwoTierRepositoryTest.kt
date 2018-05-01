@@ -67,41 +67,43 @@ class TwoTierRepositoryTest {
     fun `should persist in current level when next level is not available`() {
         repository = TwoTierRepository(firstLevel, DeactivatedRepository(nextLevel))
 
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
-
-        assertThat(result.isRight(), `is`(true))
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(true))
-        assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(false))
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({ throw IllegalStateException("Expected a right projection") },
+                { element ->
+                    assertThat(element.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+                    assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(false))
+                })
     }
 
     @Test
     fun `should persist in next level if current level is not available`() {
         repository = TwoTierRepository(DeactivatedRepository(firstLevel), nextLevel)
 
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
-
-        assertThat(result.isRight(), `is`(true))
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(false))
-        assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({ throw IllegalStateException("Expected a right projection") },
+                { element ->
+                    assertThat(element.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(false))
+                    assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+                })
     }
 
     @Test
     fun `should persist on both levels`() {
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
-        assertThat(result.isRight(), `is`(true))
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(true))
-        assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({},
+                { element ->
+                    assertThat(element.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(firstLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+                    assertThat(nextLevel.contains(EXPECTED_FIRST_ID), `is`(true))
+                })
     }
 
     @Test
     fun `should return NotReady error when the repository is not ready`() {
         repository = TwoTierRepository(DeactivatedRepository(firstLevel), DeactivatedRepository(nextLevel))
 
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
-        assertTrue(result.left().get() is RepositoryError.NotReady)
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({ assertTrue(it is RepositoryError.NotReady) },
+                { throw IllegalStateException("Expected a left projection") })
+
     }
 
     @Test
@@ -221,22 +223,28 @@ class TwoTierRepositoryTest {
 
     @Test
     fun `should return not found if both levels do not have the element`() {
-        assertTrue(repository[EXPECTED_FIRST_ID].left().get() is RepositoryError.NotFound<*>)
+        repository[EXPECTED_FIRST_ID].fold({ assertTrue(it is RepositoryError.NotFound<*>) },
+                { throw IllegalStateException("Expected a left projection") })
+
     }
 
     @Test
     fun `should return not found if first level do not have the element and second is unavailable`() {
         repository = TwoTierRepository(firstLevel, mockedRepository)
 
-        assertTrue(repository[EXPECTED_FIRST_ID].left().get() is RepositoryError.NotFound<*>)
-        verify(mockedRepository, never()).get(EXPECTED_FIRST_ID)
+        repository[EXPECTED_FIRST_ID].fold({
+            assertTrue(it is RepositoryError.NotFound<*>)
+            verify(mockedRepository, never()).get(EXPECTED_FIRST_ID)
+        },
+                { throw IllegalStateException("Expected a left projection") })
     }
 
     @Test
     fun `should return NotReady error if the repository is not ready`() {
         repository = TwoTierRepository(mockedRepository, mockedRepository)
 
-        assertTrue(repository[EXPECTED_FIRST_ID].left().get() is RepositoryError.NotReady)
+        repository[EXPECTED_FIRST_ID].fold({ assertTrue(it is RepositoryError.NotReady) },
+                { throw IllegalStateException("Expected a left projection") })
     }
 
     @Test
@@ -244,21 +252,24 @@ class TwoTierRepositoryTest {
         firstLevel.save(TestElement(EXPECTED_FIRST_ID))
         repository = TwoTierRepository(firstLevel, mockedRepository)
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test
     fun `should return the element if the first level has the element`() {
         repository.save(TestElement(EXPECTED_FIRST_ID))
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test
     fun `should return the element if the second level has the element`() {
         nextLevel.save(TestElement(EXPECTED_FIRST_ID))
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test
@@ -268,7 +279,8 @@ class TwoTierRepositoryTest {
         whenever(mockedRepository.contains(EXPECTED_FIRST_ID)).thenReturn(true)
         whenever(mockedRepository[EXPECTED_FIRST_ID]).thenReturn(Left(RepositoryError.CannotRetrieve(Exception())))
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test
@@ -276,7 +288,8 @@ class TwoTierRepositoryTest {
         firstLevel.save(TestElement(EXPECTED_FIRST_ID))
         nextLevel.save(TestElement(EXPECTED_FIRST_ID))
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test
@@ -470,7 +483,8 @@ class TwoTierRepositoryTest {
         val localLevel = TwoTierRepository(firstLevel, DeactivatedRepository(nextLevel))
         val repository = TwoTierRepository(localLevel, thirdLevel)
 
-        assertThat(repository[EXPECTED_FIRST_ID].right().get().id, `is`(EXPECTED_FIRST_ID))
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it.id, `is`(EXPECTED_FIRST_ID)) })
     }
 
     @Test

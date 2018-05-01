@@ -167,7 +167,9 @@ class LruRepositoryTest {
         val originalElement = TestElement(0)
         repository.save(originalElement)
 
-        assertThat(repository[0].right().get(), `is`(originalElement))
+        repository[0].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertThat(it, `is`(originalElement)) })
+
     }
 
     @Test
@@ -176,7 +178,9 @@ class LruRepositoryTest {
         repository.save(originalElement)
         innerRepo.delete(0)
 
-        assertTrue(repository[0].left().get() is RepositoryError.NotFound<*>)
+        repository[0].fold({ assertTrue(it is RepositoryError.NotFound<*>) },
+                { throw IllegalStateException("Expected a left projection") })
+
     }
 
     @Test

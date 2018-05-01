@@ -139,10 +139,13 @@ class ExpirationRepositoryTest {
         repository.save(TestElement(0))
         whenever(policy.isExpired(0)).thenReturn(false)
 
-        val testElement = repository[0].right().get()
+        repository[0].fold({ throw IllegalStateException("Expecting a right projection") },
+                {
+                    assertNotNull(it)
+                    assertThat(it.id, `is`(0))
+                })
 
-        assertNotNull(testElement)
-        assertThat(testElement.id, `is`(0))
+
     }
 
     @Test
@@ -150,9 +153,9 @@ class ExpirationRepositoryTest {
         repository.save(TestElement(0))
         whenever(policy.isExpired(0)).thenReturn(true)
 
-        val error = repository[0].left().get()
+        repository[0].fold({ assertTrue(it is RepositoryError.NotFound<*>) },
+                { throw IllegalStateException("Expecting a left projection") })
 
-        assertTrue(error is RepositoryError.NotFound<*>)
     }
 
     @Test

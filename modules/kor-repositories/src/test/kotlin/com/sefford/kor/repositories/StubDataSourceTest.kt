@@ -123,7 +123,7 @@ class StubDataSourceTest {
 
     private fun assertPersistance(result: Collection<TestElement>) {
         assertThat(result.size, `is`(RepositoryTestSuite.EXPECTED_FULL_SAVE_SIZE))
-        result.forEachIndexed { index, element ->
+        result.forEachIndexed { _, element ->
             assertThat(dataSource.storages.contains(element.id), `is`(true))
         }
     }

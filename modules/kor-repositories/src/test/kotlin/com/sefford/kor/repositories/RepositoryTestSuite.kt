@@ -38,10 +38,11 @@ open class RepositoryTestSuite {
 
     @Test
     fun `should save a element when it doesnt exist`() {
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
-
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({ throw IllegalStateException("Expected a right projection") },
+                {
+                    assertThat(it.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
+                })
     }
 
     @Test
@@ -52,7 +53,7 @@ open class RepositoryTestSuite {
         result.forEachIndexed { index, element ->
             assertThat(element.id, `is`(ids[index]))
         }
-        result.forEachIndexed { index, element ->
+        result.forEachIndexed { index, _ ->
             assertThat(repository.contains(ids[index]), `is`(true))
         }
     }
@@ -65,7 +66,7 @@ open class RepositoryTestSuite {
         result.forEachIndexed { index, element ->
             assertThat(element.id, `is`(ids[index]))
         }
-        result.forEachIndexed { index, element ->
+        result.forEachIndexed { index, _ ->
             assertThat(repository.contains(ids[index]), `is`(true))
         }
     }
@@ -113,12 +114,16 @@ open class RepositoryTestSuite {
     fun `should retrieve an element if it exists`() {
         repository.save(TestElement(EXPECTED_FIRST_ID))
 
-        assertTrue(repository[EXPECTED_FIRST_ID].right().get().id == EXPECTED_FIRST_ID)
+
+        repository[EXPECTED_FIRST_ID].fold({ throw IllegalStateException("Expected a right projection") },
+                { assertTrue(it.id == EXPECTED_FIRST_ID) })
     }
 
     @Test
     fun `should return an error if it does not exist`() {
-        assertTrue(repository[EXPECTED_FIRST_ID].left().get() is RepositoryError.NotFound<*>)
+        repository[EXPECTED_FIRST_ID].fold({ assertTrue(it is RepositoryError.NotFound<*>) },
+                { throw IllegalStateException("Expected a left projection") })
+
     }
 
     @Test

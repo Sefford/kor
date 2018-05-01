@@ -49,13 +49,13 @@ class MemoryDataSource<K, V>
         return get(element.id).fold({
             cache[element.id] = element
             Right(element)
-        }, { element ->
-            if (element is Updateable<*>) {
-                (element as Updateable<V>).update(element)
+        }, { cachedElement ->
+            if (cachedElement is Updateable<*>) {
+                (cachedElement as Updateable<V>).update(element)
             } else {
-                cache[element.id] = element
+                cache[cachedElement.id] = cachedElement
             }
-            Right(element)
+            Right(cachedElement)
         })
     }
 

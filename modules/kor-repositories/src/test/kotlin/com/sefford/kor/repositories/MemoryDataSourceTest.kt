@@ -39,21 +39,26 @@ class MemoryDataSourceTest : RepositoryTestSuite() {
     fun `should update an element when it exists`() {
         val spy = SpyTestElement(EXPECTED_FIRST_ID)
         repository.save(spy)
-        val result = repository.save(TestElement(EXPECTED_FIRST_ID))
 
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
-        assertThat(spy.updated, `is`(true))
+        repository.save(TestElement(EXPECTED_FIRST_ID)).fold({ throw IllegalStateException("Expecting a right projection") },
+                {
+                    assertThat(it.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
+                    assertThat(spy.updated, `is`(true))
+                })
     }
 
     @Test
     fun `should not update an element when it exists and it is not updateable`() {
         val repository: Repository<Int, NonUpdateableTestElement> = MemoryDataSource()
         repository.save(NonUpdateableTestElement(EXPECTED_FIRST_ID))
-        val result = repository.save(NonUpdateableTestElement(EXPECTED_FIRST_ID))
 
-        assertThat(result.right().get().id, `is`(EXPECTED_FIRST_ID))
-        assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
+        repository.save(NonUpdateableTestElement(EXPECTED_FIRST_ID)).fold(
+                { throw IllegalStateException("Expecting a right projection") },
+                {
+                    assertThat(it.id, `is`(EXPECTED_FIRST_ID))
+                    assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
+                })
     }
 
     class NonUpdateableTestElement(override val id: Int) : RepoElement<Int>
