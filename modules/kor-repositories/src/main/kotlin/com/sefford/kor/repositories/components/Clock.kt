@@ -16,7 +16,8 @@
 package com.sefford.kor.repositories.components
 
 /**
- * Interface to abstract time fetching for the [TimeExpirationPolicy][com.sefford.kor.repositories.utils.TimeExpirationPolicy]
+ * Interface to abstract time fetching for the
+ * [TimeExpirationPolicy][com.sefford.kor.repositories.utils.TimeExpirationPolicy]
  *
  * @author Saul Diaz <sefford@gmail.com>
  */

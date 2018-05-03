@@ -75,7 +75,7 @@ class DiskJsonDataSourceTest {
 
     @Test
     fun `contains should return false when there is a problem with the underlying file`() {
-        doReturn(null).whenever<CacheFolder<Int>>(folder).getFile(0)
+        doReturn(null).whenever(folder).getFile(0)
 
         assertFalse(repository.contains(0))
     }
@@ -83,7 +83,7 @@ class DiskJsonDataSourceTest {
     @Test
     fun `contains should return false when file is reported to not existing`() {
         val mockedFile = mock(File::class.java)
-        doReturn(mockedFile).whenever<CacheFolder<Int>>(folder).getFile(0)
+        doReturn(mockedFile).whenever(folder).getFile(0)
 
         assertFalse(repository.contains(0))
     }
@@ -141,19 +141,25 @@ class DiskJsonDataSourceTest {
     fun `should be able to retrieve an existing element`() {
         createRetrievableTestElement(0)
 
-        assertThat(repository[0].right().get().id, `is`(0))
+        repository[0].fold({ },
+                {
+                    assertThat(it.id, `is`(0))
+                })
     }
 
     @Test
     fun `should return NotFound error if element does not exist`() {
-        assertTrue(repository[0].left().get() is RepositoryError.NotFound<*>)
+        repository[0].fold({ assertTrue(it is RepositoryError.NotFound<*>) },
+                { throw IllegalStateException("Test should receive a left value") })
     }
 
     @Test
     fun `should return NotReady error if repository is not available`() {
         whenever(folder.exists()).thenReturn(false)
 
-        assertTrue(repository[0].left().get() is RepositoryError.NotReady)
+
+        repository[0].fold({ assertTrue(it is RepositoryError.NotReady) },
+                { throw IllegalStateException("Test should receive a left value") })
     }
 
     @Test
@@ -223,7 +229,8 @@ class DiskJsonDataSourceTest {
     fun `should return NotReady error if the repository is not ready`() {
         whenever(folder.exists()).thenReturn(false)
 
-        assertTrue(repository.save(TestElement(0)).left().get() is RepositoryError.NotReady)
+        repository.save(TestElement(0)).fold({ assertTrue(it is RepositoryError.NotReady) },
+                { throw IllegalStateException("Test should receive a left value") })
     }
 
     @Test
@@ -303,6 +310,5 @@ class DiskJsonDataSourceTest {
         doReturn(Right(element)).whenever(dataHandler).read(mockedFile)
         return mockedFile
     }
-
 
 }

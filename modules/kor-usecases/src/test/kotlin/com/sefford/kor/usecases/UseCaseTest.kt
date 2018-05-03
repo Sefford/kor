@@ -47,13 +47,12 @@ class UseCaseTest {
         val useCase = UseCase.Execute<TestError, TestResponse> { throw IOException("Catastrophic fail") }
                 .onError { TestError() }.build()
 
-        useCase.execute().left().get()
         assertThat(useCase.execute().isLeft(), `is`(true))
     }
 
     @Test
     fun `should execute all phases`() {
-        val response: TestResponse = UseCase.Execute<TestError, TestResponse> {
+        UseCase.Execute<TestError, TestResponse> {
             val response = TestResponse()
             response.executed = true
             response
@@ -64,11 +63,12 @@ class UseCaseTest {
             response.persisted = true
             response
         }.onError { TestError() }.build()
-                .execute().getOrHandle { fail() as TestResponse }
-
-        assertThat(response.executed, `is`(true))
-        assertThat(response.posprocessed, `is`(true))
-        assertThat(response.persisted, `is`(true))
+                .execute().fold({ fail() },
+                        { response ->
+                            assertThat(response.executed, `is`(true))
+                            assertThat(response.posprocessed, `is`(true))
+                            assertThat(response.persisted, `is`(true))
+                        })
     }
 
     class TestResponse : Response {

@@ -16,7 +16,10 @@
 package com.sefford.kor.repositories.components
 
 /**
- * Expiration policy interface to apply to [ExpirationRepository][com.sefford.kor.repositories.ExpirationRepository] API.
+ * Expiration policy interface to apply to
+ * [ExpirationRepository][com.sefford.kor.repositories.ExpirationRepository] API.
+ *
+ * @author Saul Diaz <sefford@gmail.com>
  */
 interface ExpirationPolicy<K> {
 

@@ -74,13 +74,11 @@ class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>,
     }
 
     override fun delete(vararg elements: V) {
-        elements.forEach { element: V -> lru.remove(element.id) }
-        repository.delete(*elements)
+        repository.delete(elements.iterator())
     }
 
     override fun delete(elements: Collection<V>) {
-        elements.forEach { element: V -> lru.remove(element.id) }
-        repository.delete(elements)
+        repository.delete(elements.iterator())
     }
 
     override fun delete(elements: Iterator<V>) {
@@ -97,20 +95,16 @@ class LruRepository<K, V : RepoElement<K>>(private val lru: LruCache<K>,
         return element
     }
 
+    override fun get(vararg ids: K): Collection<V> {
+        return repository.get(ids.iterator())
+    }
+
     override fun get(ids: Collection<K>): Collection<V> {
-        val results = repository.get(ids)
-        results.forEach { element -> lru.refresh(element.id) }
-        return results
+        return repository.get(ids.iterator())
     }
 
     override fun get(ids: Iterator<K>): Collection<V> {
         val results = repository.get(ids)
-        results.forEach { element -> lru.refresh(element.id) }
-        return results
-    }
-
-    override fun get(vararg ids: K): Collection<V> {
-        val results = repository.get(*ids)
         results.forEach { element -> lru.refresh(element.id) }
         return results
     }

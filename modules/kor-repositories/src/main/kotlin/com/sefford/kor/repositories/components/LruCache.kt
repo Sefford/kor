@@ -15,7 +15,7 @@
  */
 package com.sefford.kor.repositories.components
 
-import java.util.*
+import kotlin.collections.LinkedHashSet
 
 /**
  * Basic implementation of a LRU by quantity rather than weight.
@@ -46,7 +46,7 @@ class LruCache<K>
     internal val values: LinkedHashSet<K>
 
     init {
-        this.values = LinkedHashSet(0, 0.75f)
+        this.values = LinkedHashSet(0, DEFAULT_LOAD_FACTOR)
     }
 
     fun put(value: K?): K? {
@@ -80,5 +80,9 @@ class LruCache<K>
 
     fun clear() {
         values.clear()
+    }
+
+    companion object {
+        const val DEFAULT_LOAD_FACTOR = .75f
     }
 }

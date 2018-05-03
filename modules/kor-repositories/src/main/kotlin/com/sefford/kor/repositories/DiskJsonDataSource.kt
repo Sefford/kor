@@ -18,14 +18,12 @@ package com.sefford.kor.repositories
 import arrow.core.Either
 import arrow.core.Left
 import arrow.core.Right
-import arrow.core.flatMap
 import com.sefford.common.interfaces.Loggable
 import com.sefford.kor.repositories.components.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 /**
  * Repository for saving JSon directly to disk
@@ -49,7 +47,8 @@ internal constructor(
 
         private val data: DataHandler<K, V>) : Repository<K, V>, StubDataSource<K, V> {
 
-    constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) : this(folder, DefaultDataHandler(folder, converter, log))
+    constructor(folder: CacheFolder<K>, converter: JsonConverter<V>, log: Loggable) :
+            this(folder, DefaultDataHandler(folder, converter, log))
 
     override val all: Collection<V>
         get() = folder.files().map { file -> data.read(file) }
@@ -124,11 +123,11 @@ internal constructor(
 
                 log.d(TAG, "File length:" + length)
 
-                val `in` = FileInputStream(file)
+                val inputStream = FileInputStream(file)
                 try {
-                    `in`.read(bytes)
+                    inputStream.read(bytes)
                 } finally {
-                    `in`.close()
+                    inputStream.close()
                 }
                 return converter.deserialize(String(bytes))
             } catch (e: IOException) {
@@ -174,6 +173,6 @@ internal constructor(
 
     companion object {
 
-        private val TAG = "DiskJsonDataSource"
+        private const val TAG = "DiskJsonDataSource"
     }
 }

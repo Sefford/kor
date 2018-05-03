@@ -21,7 +21,6 @@ import arrow.core.Right
 import com.sefford.kor.repositories.components.RepoElement
 import com.sefford.kor.repositories.components.Repository
 import com.sefford.kor.repositories.components.RepositoryError
-import java.util.*
 
 /**
  * TwoTierRepository implements a Chain of Responsibility pattern for the Repositories.
@@ -151,7 +150,8 @@ class TwoTierRepository<K, V : RepoElement<K>>
         return Left(RepositoryError.NotFound(id))
     }
 
-    internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>): Either<RepositoryError, V> {
+    internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>):
+            Either<RepositoryError, V> {
         element.map { propagationRepo.save(it) }
         return element
     }
