@@ -28,7 +28,7 @@ import kotlin.coroutines.experimental.CoroutineContext
  *
  * @author Saul Diaz <sefford@gmail.com>
  */
-interface StandaloneUseCase<P : Any, E : Error, R : Response> {
+interface StandaloneUseCase<P, E : Error, R : Response> {
 
     /**
      * Instantiates the internal use case for execution.
