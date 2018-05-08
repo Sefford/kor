@@ -46,17 +46,16 @@ class MemoryDataSource<K, V>
     constructor() : this(mutableMapOf())
 
     override fun save(element: V): Either<RepositoryError, V> {
-        return get(element.id).fold({
+        get(element.id).fold({
             cache[element.id] = element
-            Right(element)
         }, { cachedElement ->
             if (cachedElement is Updateable<*>) {
                 (cachedElement as Updateable<V>).update(element)
             } else {
-                cache[cachedElement.id] = cachedElement
+                cache[cachedElement.id] = element
             }
-            Right(cachedElement)
         })
+        return Right(element)
     }
 
     override fun contains(id: K): Boolean {
