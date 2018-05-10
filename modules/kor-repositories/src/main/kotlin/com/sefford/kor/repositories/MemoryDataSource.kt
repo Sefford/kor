@@ -52,10 +52,11 @@ class MemoryDataSource<K, V>
         }, { cachedElement ->
             if (cachedElement is Updateable<*>) {
                 (cachedElement as Updateable<V>).update(element)
+                Right(cachedElement)
             } else {
-                cache[cachedElement.id] = cachedElement
+                cache[cachedElement.id] = element
+                Right(element)
             }
-            Right(cachedElement)
         })
     }
 

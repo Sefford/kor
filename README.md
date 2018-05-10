@@ -30,11 +30,11 @@ Add the dependencies into the project's `build.gradle`
 
 ```groovy
 dependencies {
-    compile 'com.sefford:kor-usecases:4.0.1'
-    compile 'com.sefford:kor-repositories:4.0.1'
-    compile 'com.sefford:kor-repositories-extensions:4.0.1' // optional 
-    compile 'com.sefford:kor-repositories-gson-converter:4.0.1' 
-    compile 'com.sefford:kor-repositories-moshi-converter:4.0.1'
+    compile 'com.sefford:kor-usecases:4.1.0'
+    compile 'com.sefford:kor-repositories:4.1.0'
+    compile 'com.sefford:kor-repositories-extensions:4.1.0' // optional 
+    compile 'com.sefford:kor-repositories-gson-converter:4.1.0' 
+    compile 'com.sefford:kor-repositories-moshi-converter:4.1.0'
 }
 ```
 How is Kor structured?

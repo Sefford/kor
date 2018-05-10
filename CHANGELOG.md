@@ -1,5 +1,12 @@
 Changelog
 =========
+## Kor common 4.1.0
+_2018_05_10_
+
+* Added a `PerformanceModule` to the use case module to let users benchmark their use cases.
+* Fixed a bug that was returning the wrong element when updating an element in `MemoryDataSource`
+* Now a `StandaloneUseCase` does not require that the Param extends `Any`
+
 ## Kor common 4.0.0
 _2018_04_14_
 

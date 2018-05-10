@@ -18,9 +18,7 @@ package com.sefford.kor.usecases
 import arrow.core.Either
 import arrow.core.Try
 import arrow.core.identity
-import com.sefford.kor.usecases.components.Error
-import com.sefford.kor.usecases.components.Response
-import com.sefford.kor.usecases.components.emptyErrorHandler
+import com.sefford.kor.usecases.components.*
 
 /**
  * Use case implementation.
@@ -53,12 +51,20 @@ class UseCase<E : Error, R : Response>
 private constructor(internal val logic: () -> R,
                     internal val postProcessor: (response: R) -> R = ::identity,
                     internal val cachePersistance: (response: R) -> R = ::identity,
-                    internal val errorHandler: (ex: Throwable) -> E) {
+                    internal val errorHandler: (ex: Throwable) -> E,
+                    internal val performance: PerformanceModule = NoModule) {
 
     fun execute(): Either<E, R> {
+        performance.start()
         return Try { cachePersistance(postProcessor(logic())) }
-                .fold({ Either.left(errorHandler(it)) },
-                        { Either.right(it) })
+                .fold({
+                    performance.end()
+                    Either.left(errorHandler(it))
+                },
+                        {
+                            performance.end()
+                            Either.right(it)
+                        })
     }
 
     /**
@@ -79,6 +85,7 @@ private constructor(internal val logic: () -> R,
         internal var postProcessor: (R) -> R = ::identity
         internal var cachePersistance: (R) -> R = ::identity
         internal var errorHandler: (Throwable) -> E = emptyErrorHandler()
+        internal var performanceModule: PerformanceModule = NoModule
 
         /**
          * Sets up the logic for the post processing phase.
@@ -119,10 +126,20 @@ private constructor(internal val logic: () -> R,
         }
 
         /**
+         * Sets up a performance module
+         *
+         * @param module Performance module which will output the metric
+         */
+        fun withIntrospection(module: PerformanceModule): Execute<E, R> {
+            this.performanceModule = module
+            return this;
+        }
+
+        /**
          * Builds a new use case as specified
          */
         fun build(): UseCase<E, R> {
-            return UseCase(logic, postProcessor, cachePersistance, errorHandler)
+            return UseCase(logic, postProcessor, cachePersistance, errorHandler, performanceModule)
         }
     }
 }

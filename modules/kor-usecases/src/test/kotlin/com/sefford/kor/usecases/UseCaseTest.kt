@@ -15,8 +15,8 @@
  */
 package com.sefford.kor.usecases
 
-import arrow.core.getOrHandle
 import com.sefford.kor.usecases.components.Error
+import com.sefford.kor.usecases.components.PerformanceModule
 import com.sefford.kor.usecases.components.Response
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
@@ -71,6 +71,34 @@ class UseCaseTest {
                         })
     }
 
+    @Test
+    fun `should call the performance module during correct execution`() {
+        val performanceModule = TestPerformanceModule()
+
+        UseCase.Execute<TestError, TestResponse> { TestResponse() }
+                .onError { TestError() }
+                .withIntrospection(performanceModule)
+                .build()
+                .execute()
+
+        assertThat(performanceModule.metrics[START_METRIC], `is`(PERFORMANCE_METRIC))
+        assertThat(performanceModule.metrics[END_METRIC], `is`(PERFORMANCE_METRIC))
+    }
+
+    @Test
+    fun `should call the performance module during erroneous execution`() {
+        val performanceModule = TestPerformanceModule()
+
+        UseCase.Execute<TestError, TestResponse> { throw IOException("Catastrophic fail") }
+                .onError { TestError() }
+                .withIntrospection(performanceModule)
+                .build()
+                .execute()
+
+        assertThat(performanceModule.metrics[START_METRIC], `is`(PERFORMANCE_METRIC))
+        assertThat(performanceModule.metrics[END_METRIC], `is`(PERFORMANCE_METRIC))
+    }
+
     class TestResponse : Response {
         var executed = false
         var posprocessed = false
@@ -91,6 +119,27 @@ class UseCaseTest {
             get() = ""
         override val loggable: Boolean
             get() = false
+    }
 
+    class TestPerformanceModule : PerformanceModule {
+        val metrics = mutableMapOf<String, String>()
+
+        override val name: String
+            get() = PERFORMANCE_METRIC
+
+        override fun start(traceId: String) {
+            metrics.put(START_METRIC, traceId)
+        }
+
+        override fun end(traceId: String) {
+            metrics.put(END_METRIC, traceId)
+        }
+
+    }
+
+    companion object {
+        const val PERFORMANCE_METRIC = "Test"
+        const val START_METRIC = "start"
+        const val END_METRIC = "end"
     }
 }
