@@ -45,6 +45,7 @@ class MemoryDataSourceTest : RepositoryTestSuite() {
                     assertThat(it.id, `is`(EXPECTED_FIRST_ID))
                     assertThat(repository.contains(EXPECTED_FIRST_ID), `is`(true))
                     assertThat(spy.updated, `is`(true))
+                    assertThat(spy === it, `is`(true))
                 })
     }
 
