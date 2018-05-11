@@ -1,7 +1,12 @@
 Changelog
 =========
+## Kor common 4.2.1
+_2018_05_11_
+
+* Improved `UseCase.async(thread,postable,params)` with the correct method delegation
+
 ## Kor common 4.2.0
-_2018_05_10_
+_2018_05_11_
 
 * Organized a little `StandaloneUseCase` API. Now `execute` are pure synchronous functions, and `async` requires (or not) of a Coroutine Context to be executed
 
