@@ -1,5 +1,10 @@
 Changelog
 =========
+## Kor common 4.2.0
+_2018_05_10_
+
+* Organized a little `StandaloneUseCase` API. Now `execute` are pure synchronous functions, and `async` requires (or not) of a Coroutine Context to be executed
+
 ## Kor common 4.1.0
 _2018_05_10_
 
