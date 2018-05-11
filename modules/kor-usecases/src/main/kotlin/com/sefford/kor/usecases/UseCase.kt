@@ -126,7 +126,7 @@ private constructor(internal val logic: () -> R,
         }
 
         /**
-         * Sets up a performance module
+         * Sets up a performance module.
          *
          * @param module Performance module which will output the metric
          */

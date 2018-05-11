@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.usecases.components
+package com.sefford.kor.usecases.test.utils
+
+import com.sefford.kor.usecases.components.Error
 
 /**
- * Default performance module, does not log any performance metrics
- *
  * @author Saul Diaz <sefford@gmail.com>
  */
-object NoModule : PerformanceModule {
-
-    override val name: String
+class TestError : Error {
+    override val statusCode: Int
+        get() = 400
+    override val userError: String
         get() = ""
-
-    override fun start(traceId: String) {
-        // Empty
-    }
-
-    override fun end(traceId: String) {
-        // Empty
-    }
+    override val message: String
+        get() = ""
+    override val loggable: Boolean
+        get() = false
 }

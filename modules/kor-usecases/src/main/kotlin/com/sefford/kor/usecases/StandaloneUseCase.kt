@@ -20,7 +20,6 @@ import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
-import kotlinx.coroutines.experimental.launch
 import kotlin.coroutines.experimental.CoroutineContext
 
 /**
@@ -48,35 +47,57 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
     fun execute(params: P): Either<E, R> = instantiate(params).execute()
 
     /**
-     * Executes the use case depending on a coroutine context and outputs the
-     * results via a {@link Postable Postable} element.
-     *
-     * @param thread Execution context of the use case
-     * @postable Postable element where to output the results
-     * @param params Parameter configuration of the use case
-     */
-    fun execute(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = launch(thread) {
-        execute(params).fold({ postable.post(it) }, { postable.post(it) })
-    }
-
-    /**
-     * Executes the use case depending on an asynchoronous context context and outputs the
+     * Executes the use case synchronously and outputs the
      * results via a {@link Postable Postable} element.
      *
      * @postable Postable element where to output the results
      * @param params Parameter configuration of the use case
+     *
      */
-    fun async(postable: Postable, params: P) = execute(BackgroundPool, postable, params)
+    fun execute(postable: Postable, params: P) = execute(params).fold({ postable.post(it) }, { postable.post(it) })
 
     /**
-     * Executes the use case depending on a coroutine context and outputs the
+     * Executes the use case on the default asynchronous context {@see BackgroundPool} and outputs the
      * results.
      *
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(params: P): Either<E, R> = kotlinx.coroutines.experimental.async(BackgroundPool) {
-        instantiate(params).execute()
-    }.await()
+    suspend fun async(params: P): Either<E, R> = async(BackgroundPool, params)
+
+    /**
+     * Executes the use case on a custom coroutine context and outputs the
+     * results.
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    suspend fun async(thread: CoroutineContext, params: P): Either<E, R> =
+            kotlinx.coroutines.experimental.async(thread) {
+                instantiate(params).execute()
+            }.await()
+
+    /**
+     * Executes the use case the default asynchronous context {@see BackgroundPool} and outputs the
+     * results via a {@link Postable Postable} element.
+     *
+     * @postable Postable element where to output the results
+     * @param params Parameter configuration of the use case
+     */
+    fun async(postable: Postable, params: P) = async(BackgroundPool, postable, params)
+
+    /**
+     * Executes the use case depending on a custom coroutine context and outputs the
+     * results via a {@link Postable Postable} element.
+     *
+     * @param thread Execution context of the use case
+     * @postable Postable element where to output the results
+     * @param params Parameter configuration of the use case
+     */
+    fun async(thread: CoroutineContext, postable: Postable, params: P) =
+            kotlinx.coroutines.experimental.async(thread) {
+                execute(params).fold({ postable.post(it) }, { postable.post(it) })
+            }
+
 
 }
