@@ -30,7 +30,7 @@ class StandaloneUseCaseTest {
     fun `should execute synchronously and drop the results in the given postable when returns erroneously`() {
         val givenAPostable = TestPostable()
 
-        TestStandaloneUseCase({ throw Exception() }).execute(givenAPostable, "")
+        TestStandaloneUseCase({ throw IllegalStateException() }).execute(givenAPostable, "")
 
         assertThat(givenAPostable.messagesReceived(), `is`(1))
         assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
@@ -60,7 +60,7 @@ class StandaloneUseCaseTest {
         val givenAPostable = TestPostable()
 
         async {
-            TestStandaloneUseCase({ throw Exception() }).execute(givenAPostable, "")
+            TestStandaloneUseCase({ throw IllegalStateException() }).execute(givenAPostable, "")
 
             assertThat(givenAPostable.messagesReceived(), `is`(1))
             assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
