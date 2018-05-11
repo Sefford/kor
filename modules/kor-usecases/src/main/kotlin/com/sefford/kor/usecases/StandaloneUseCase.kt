@@ -96,7 +96,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      */
     fun async(thread: CoroutineContext, postable: Postable, params: P) =
             kotlinx.coroutines.experimental.async(thread) {
-                execute(params).fold({ postable.post(it) }, { postable.post(it) })
+                execute(postable, params)
             }
 
 
