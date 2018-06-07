@@ -16,6 +16,7 @@
 package com.sefford.kor.usecases
 
 import arrow.core.Either
+import arrow.effects.k
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
@@ -57,6 +58,41 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
     fun execute(postable: Postable, params: P) = execute(params).fold({ postable.post(it) }, { postable.post(it) })
 
     /**
+     * Obtains the instance of the execution and returns it, uses BackgroundPool by default, in order to lazily execute
+     * it.
+     *
+     * @param params Parameter configuration of the use case
+     */
+    fun defer(params: P) = defer(BackgroundPool, params)
+
+    /**
+     * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute it.
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    fun defer(thread: CoroutineContext, params: P) = kotlinx.coroutines.experimental.async(thread) {
+        instantiate(params).execute()
+    }
+
+    /**
+     * Obtains the instance of the execution on a functional style and returns it, uses BackgroundPool by default,
+     * in order to lazily execute it or combine it on a functional algebra.
+     *
+     * @param params Parameter configuration of the use case
+     */
+    fun deferK(params: P) = defer(params).k()
+
+    /**
+     * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
+     * it on a functional algebra
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    fun deferK(thread: CoroutineContext, params: P) = defer(thread, params).k()
+
+    /**
      * Executes the use case on the default asynchronous context {@see BackgroundPool} and outputs the
      * results.
      *
@@ -72,10 +108,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(thread: CoroutineContext, params: P): Either<E, R> =
-            kotlinx.coroutines.experimental.async(thread) {
-                instantiate(params).execute()
-            }.await()
+    suspend fun async(thread: CoroutineContext, params: P) = defer(thread, params).await()
 
     /**
      * Executes the use case the default asynchronous context {@see BackgroundPool} and outputs the
@@ -98,6 +131,4 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
             kotlinx.coroutines.experimental.async(thread) {
                 execute(postable, params)
             }
-
-
 }

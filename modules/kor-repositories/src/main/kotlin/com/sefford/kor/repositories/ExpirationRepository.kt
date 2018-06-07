@@ -15,7 +15,8 @@
  */
 package com.sefford.kor.repositories
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.left
 import com.sefford.kor.repositories.components.*
 
 /**
@@ -58,7 +59,7 @@ class ExpirationRepository<K, V : RepoElement<K>>(private val repository: Reposi
     override fun get(id: K): Either<RepositoryError, V> {
         if (elementIsAvailable(id)) {
             delete(id)
-            return Left(RepositoryError.NotFound(id))
+            return RepositoryError.NotFound(id).left()
         }
         return repository[id]
     }

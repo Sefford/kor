@@ -15,9 +15,7 @@
  */
 package com.sefford.kor.repositories
 
-import arrow.core.Either
-import arrow.core.Left
-import arrow.core.Right
+import arrow.core.*
 import com.sefford.common.interfaces.Loggable
 import com.sefford.kor.repositories.components.*
 import java.io.File
@@ -81,18 +79,18 @@ internal constructor(
 
     override fun get(id: K): Either<RepositoryError, V> {
         if (!isReady) {
-            return Left(RepositoryError.NotReady)
+            return RepositoryError.NotReady.left()
         }
         val file = folder.getFile(id)
         if (file == null || !file.exists()) {
-            return Left(RepositoryError.NotFound(id))
+            return RepositoryError.NotFound(id).left()
         }
         return data.read(file)
     }
 
     override fun save(element: V): Either<RepositoryError, V> {
         if (!isReady) {
-            return Left(RepositoryError.NotReady)
+            return RepositoryError.NotReady.left()
         }
         return data.write(element)
     }
@@ -132,19 +130,19 @@ internal constructor(
                 return converter.deserialize(String(bytes))
             } catch (e: IOException) {
                 log.e(TAG, "File read failed: " + e.toString(), e)
-                Left(RepositoryError.CannotRetrieve(e))
+                RepositoryError.CannotRetrieve(e).left()
             } catch (e: OutOfMemoryError) {
                 log.e(TAG, "File read failed: " + e.toString(), e)
-                Left(RepositoryError.CannotRetrieve(e))
+                RepositoryError.CannotRetrieve(e).left()
             } catch (e: UnsupportedOperationException) {
                 file.delete()
-                Left(RepositoryError.CannotRetrieve(e))
+                RepositoryError.CannotRetrieve(e).left()
             } catch (e: IncompatibleClassChangeError) {
                 file.delete()
-                Left(RepositoryError.CannotRetrieve(e))
+                RepositoryError.CannotRetrieve(e).left()
             } catch (e: IllegalArgumentException) {
                 file.delete()
-                Left(RepositoryError.CannotRetrieve(e))
+                RepositoryError.CannotRetrieve(e).left()
             }
         }
 
@@ -155,18 +153,18 @@ internal constructor(
                     file.createNewFile()
                 }
                 val outputStreamWriter = FileOutputStream(file)
-                return converter.serialize(element).fold({ Left(it) },
+                return converter.serialize(element).fold({ it.left() },
                         {
                             outputStreamWriter.write(it.toByteArray())
                             outputStreamWriter.close()
-                            Right(element)
+                            element.right()
                         })
             } catch (e: IOException) {
-                Left(RepositoryError.CannotPersist(e))
+                RepositoryError.CannotPersist(e).left()
             } catch (e: OutOfMemoryError) {
-                Left(RepositoryError.CannotPersist(e))
+                RepositoryError.CannotPersist(e).left()
             } catch (e: IncompatibleClassChangeError) {
-                Left(RepositoryError.CannotPersist(e))
+                RepositoryError.CannotPersist(e).left()
             }
         }
     }

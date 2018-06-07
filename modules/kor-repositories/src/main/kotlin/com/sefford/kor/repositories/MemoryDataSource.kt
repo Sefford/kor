@@ -16,8 +16,8 @@
 package com.sefford.kor.repositories
 
 import arrow.core.Either
-import arrow.core.Left
-import arrow.core.Right
+import arrow.core.left
+import arrow.core.right
 import com.sefford.kor.repositories.components.*
 
 /**
@@ -48,14 +48,14 @@ class MemoryDataSource<K, V>
     override fun save(element: V): Either<RepositoryError, V> {
         return get(element.id).fold({
             cache[element.id] = element
-            Right(element)
+            element.right()
         }, { cachedElement ->
             if (cachedElement is Updateable<*>) {
                 (cachedElement as Updateable<V>).update(element)
-                Right(cachedElement)
+                cachedElement.right()
             } else {
                 cache[cachedElement.id] = element
-                Right(element)
+                element.right()
             }
         })
     }
@@ -74,9 +74,9 @@ class MemoryDataSource<K, V>
 
     override fun get(id: K): Either<RepositoryError, V> {
         if (!cache.contains(id)) {
-            return Left(RepositoryError.NotFound(id))
+            return RepositoryError.NotFound(id).left()
         }
-        return Right(cache[id]!!)
+        return cache[id]!!.right()
     }
 
     override fun clear() {

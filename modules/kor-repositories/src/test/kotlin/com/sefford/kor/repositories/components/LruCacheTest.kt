@@ -52,9 +52,9 @@ class LruCacheTest {
 
         assertNull(previous)
         val itr = lruCache.values.iterator()
-        assertThat(itr.next(), `is`<Any>(1))
-        assertThat(itr.next(), `is`<Any>(2))
-        assertThat(itr.next(), `is`<Any>(0))
+        assertThat(itr.next(), `is`(1))
+        assertThat(itr.next(), `is`(2))
+        assertThat(itr.next(), `is`(0))
     }
 
     @Test
@@ -74,9 +74,9 @@ class LruCacheTest {
         lruCache.put(2)
 
         val itr = lruCache.values.iterator()
-        assertThat(itr.next(), `is`<Any>(0))
-        assertThat(itr.next(), `is`<Any>(1))
-        assertThat(itr.next(), `is`<Any>(2))
+        assertThat(itr.next(), `is`(0))
+        assertThat(itr.next(), `is`(1))
+        assertThat(itr.next(), `is`(2))
     }
 
     @Test
@@ -87,11 +87,11 @@ class LruCacheTest {
         lruCache.put(2)
         val previous = lruCache.put(3)
 
-        assertThat<Int>(previous, `is`(0))
+        assertThat(previous, `is`(0))
         val itr = lruCache.values.iterator()
-        assertThat(itr.next(), `is`<Any>(1))
-        assertThat(itr.next(), `is`<Any>(2))
-        assertThat(itr.next(), `is`<Any>(3))
+        assertThat(itr.next(), `is`(1))
+        assertThat(itr.next(), `is`(2))
+        assertThat(itr.next(), `is`(3))
     }
 
     @Test
