@@ -57,9 +57,8 @@ class LruCache<K>
         if (values.contains(value)) {
             refresh(value)
         } else if (values.size == maxSize) {
-            val iterator = values.iterator()
-            previous = iterator.next()
-            iterator.remove()
+            previous = values.first()
+            values.remove(previous)
         }
         values.add(value)
         return previous

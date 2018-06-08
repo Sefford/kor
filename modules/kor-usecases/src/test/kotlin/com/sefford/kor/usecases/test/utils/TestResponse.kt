@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sefford.kor.usecases.components
+package com.sefford.kor.usecases.test.utils
+
+import com.sefford.kor.usecases.components.Response
 
 /**
- * Default performance module, does not log any performance metrics
- *
  * @author Saul Diaz <sefford@gmail.com>
  */
-object NoModule : PerformanceModule {
+class TestResponse : Response {
+    var executed = false
+    var posprocessed = false
+    var persisted = false
 
-    override val name: String
-        get() = ""
-
-    override fun start(traceId: String) {
-        // Empty
-    }
-
-    override fun end(traceId: String) {
-        // Empty
-    }
+    override val success: Boolean
+        get() = true
+    override val fromNetwork: Boolean
+        get() = true
 }

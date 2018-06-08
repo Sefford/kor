@@ -1,5 +1,22 @@
 Changelog
 =========
+## Kor common 4.2.1
+_2018_06_8_
+
+* `StandaloneUseCase` now has utility methods `deferK` to directly output a functional deferred call with Arrow.
+* Improved `LruCache` to use Kotlin methods instead of relying in an iterator.
+* Minor syntax improvements.
+
+## Kor common 4.2.1
+_2018_05_11_
+
+* Improved `UseCase.async(thread,postable,params)` with the correct method delegation
+
+## Kor common 4.2.0
+_2018_05_11_
+
+* Organized a little `StandaloneUseCase` API. Now `execute` are pure synchronous functions, and `async` requires (or not) of a Coroutine Context to be executed
+
 ## Kor common 4.1.0
 _2018_05_10_
 

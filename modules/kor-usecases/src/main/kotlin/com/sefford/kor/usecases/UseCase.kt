@@ -15,9 +15,7 @@
  */
 package com.sefford.kor.usecases
 
-import arrow.core.Either
-import arrow.core.Try
-import arrow.core.identity
+import arrow.core.*
 import com.sefford.kor.usecases.components.*
 
 /**
@@ -59,11 +57,11 @@ private constructor(internal val logic: () -> R,
         return Try { cachePersistance(postProcessor(logic())) }
                 .fold({
                     performance.end()
-                    Either.left(errorHandler(it))
+                    errorHandler(it).left()
                 },
                         {
                             performance.end()
-                            Either.right(it)
+                            it.right()
                         })
     }
 
@@ -126,7 +124,7 @@ private constructor(internal val logic: () -> R,
         }
 
         /**
-         * Sets up a performance module
+         * Sets up a performance module.
          *
          * @param module Performance module which will output the metric
          */

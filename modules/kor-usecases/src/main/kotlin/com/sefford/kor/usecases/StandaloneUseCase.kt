@@ -16,11 +16,11 @@
 package com.sefford.kor.usecases
 
 import arrow.core.Either
+import arrow.effects.k
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
-import kotlinx.coroutines.experimental.launch
 import kotlin.coroutines.experimental.CoroutineContext
 
 /**
@@ -48,35 +48,87 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
     fun execute(params: P): Either<E, R> = instantiate(params).execute()
 
     /**
-     * Executes the use case depending on a coroutine context and outputs the
+     * Executes the use case synchronously and outputs the
      * results via a {@link Postable Postable} element.
      *
-     * @param thread Execution context of the use case
      * @postable Postable element where to output the results
      * @param params Parameter configuration of the use case
+     *
      */
-    fun execute(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = launch(thread) {
-        execute(params).fold({ postable.post(it) }, { postable.post(it) })
+    fun execute(postable: Postable, params: P) = execute(params).fold({ postable.post(it) }, { postable.post(it) })
+
+    /**
+     * Obtains the instance of the execution and returns it, uses BackgroundPool by default, in order to lazily execute
+     * it.
+     *
+     * @param params Parameter configuration of the use case
+     */
+    fun defer(params: P) = defer(BackgroundPool, params)
+
+    /**
+     * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute it.
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    fun defer(thread: CoroutineContext, params: P) = kotlinx.coroutines.experimental.async(thread) {
+        instantiate(params).execute()
     }
 
     /**
-     * Executes the use case depending on an asynchoronous context context and outputs the
-     * results via a {@link Postable Postable} element.
+     * Obtains the instance of the execution on a functional style and returns it, uses BackgroundPool by default,
+     * in order to lazily execute it or combine it on a functional algebra.
      *
-     * @postable Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun async(postable: Postable, params: P) = execute(BackgroundPool, postable, params)
+    fun deferK(params: P) = defer(params).k()
 
     /**
-     * Executes the use case depending on a coroutine context and outputs the
+     * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
+     * it on a functional algebra
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    fun deferK(thread: CoroutineContext, params: P) = defer(thread, params).k()
+
+    /**
+     * Executes the use case on the default asynchronous context {@see BackgroundPool} and outputs the
      * results.
      *
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(params: P): Either<E, R> = kotlinx.coroutines.experimental.async(BackgroundPool) {
-        instantiate(params).execute()
-    }.await()
+    suspend fun async(params: P): Either<E, R> = async(BackgroundPool, params)
 
+    /**
+     * Executes the use case on a custom coroutine context and outputs the
+     * results.
+     *
+     * @param thread Execution context of the use case
+     * @param params Parameter configuration of the use case
+     */
+    suspend fun async(thread: CoroutineContext, params: P) = defer(thread, params).await()
+
+    /**
+     * Executes the use case the default asynchronous context {@see BackgroundPool} and outputs the
+     * results via a {@link Postable Postable} element.
+     *
+     * @postable Postable element where to output the results
+     * @param params Parameter configuration of the use case
+     */
+    fun async(postable: Postable, params: P) = async(BackgroundPool, postable, params)
+
+    /**
+     * Executes the use case depending on a custom coroutine context and outputs the
+     * results via a {@link Postable Postable} element.
+     *
+     * @param thread Execution context of the use case
+     * @postable Postable element where to output the results
+     * @param params Parameter configuration of the use case
+     */
+    fun async(thread: CoroutineContext, postable: Postable, params: P) =
+            kotlinx.coroutines.experimental.async(thread) {
+                execute(postable, params)
+            }
 }

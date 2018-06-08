@@ -15,9 +15,9 @@
  */
 package com.sefford.kor.usecases
 
-import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.PerformanceModule
-import com.sefford.kor.usecases.components.Response
+import com.sefford.kor.usecases.test.utils.TestError
+import com.sefford.kor.usecases.test.utils.TestResponse
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Assert.fail
@@ -97,28 +97,6 @@ class UseCaseTest {
 
         assertThat(performanceModule.metrics[START_METRIC], `is`(PERFORMANCE_METRIC))
         assertThat(performanceModule.metrics[END_METRIC], `is`(PERFORMANCE_METRIC))
-    }
-
-    class TestResponse : Response {
-        var executed = false
-        var posprocessed = false
-        var persisted = false
-
-        override val success: Boolean
-            get() = true
-        override val fromNetwork: Boolean
-            get() = true
-    }
-
-    class TestError : Error {
-        override val statusCode: Int
-            get() = 400
-        override val userError: String
-            get() = ""
-        override val message: String
-            get() = ""
-        override val loggable: Boolean
-            get() = false
     }
 
     class TestPerformanceModule : PerformanceModule {

@@ -3,6 +3,7 @@ dependencies {
     compile 'com.sefford:commons:1.1.0'
     compile "io.arrow-kt:arrow-core:$arrow_version"
     compile "io.arrow-kt:arrow-data:$arrow_version"
+    compile "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrow_version"
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
 
     testCompile project(':kor-test-utils')

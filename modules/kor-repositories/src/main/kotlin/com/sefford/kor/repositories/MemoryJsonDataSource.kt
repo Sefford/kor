@@ -16,9 +16,12 @@
 package com.sefford.kor.repositories
 
 import arrow.core.Either
-import arrow.core.Left
-import arrow.core.Right
-import com.sefford.kor.repositories.components.*
+import arrow.core.left
+import arrow.core.right
+import com.sefford.kor.repositories.components.JsonConverter
+import com.sefford.kor.repositories.components.RepoElement
+import com.sefford.kor.repositories.components.RepositoryError
+import com.sefford.kor.repositories.components.StubDataSource
 
 /**
  * Data Source to persist Json directly to memory
@@ -64,15 +67,15 @@ constructor(internal val converter: JsonConverter<V>) : StubDataSource<K, V> {
 
     override fun get(id: K): Either<RepositoryError, V> {
         if (!cache.containsKey(id)) {
-            return Either.left(RepositoryError.NotFound(id))
+            return RepositoryError.NotFound(id).left()
         }
         return converter.deserialize(cache[id])
     }
 
     override fun save(element: V): Either<RepositoryError, V> {
-        return converter.serialize(element).fold({ Left(it) }, { json ->
+        return converter.serialize(element).fold({ it.left() }, { json ->
             cache[element.id] = json
-            Right(element)
+            element.right()
         })
     }
 }

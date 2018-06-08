@@ -15,9 +15,7 @@
  */
 package com.sefford.kor.repositories
 
-import arrow.core.Either
-import arrow.core.Left
-import arrow.core.Right
+import arrow.core.*
 import com.sefford.kor.repositories.components.RepoElement
 import com.sefford.kor.repositories.components.Repository
 import com.sefford.kor.repositories.components.RepositoryError
@@ -79,11 +77,11 @@ class TwoTierRepository<K, V : RepoElement<K>>
 
     override fun save(element: V): Either<RepositoryError, V> {
         if (!isReady) {
-            return Left(RepositoryError.NotReady)
+            return RepositoryError.NotReady.left()
         }
         val currentLevelResult = currentLevel.save(element)
         if (hasNextLevel()) {
-            return nextLevel.save(element).fold({ currentLevelResult }, { Right(it) })
+            return nextLevel.save(element).fold({ currentLevelResult }, { it.right() })
         }
         return currentLevelResult
     }
@@ -134,20 +132,20 @@ class TwoTierRepository<K, V : RepoElement<K>>
 
     override fun get(id: K): Either<RepositoryError, V> {
         if (!isReady) {
-            return Left(RepositoryError.NotReady)
+            return RepositoryError.NotReady.left()
         }
         when {
             currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) ->
                 return currentLevel[id].fold({
                     currentLevel.delete(id)
                     propagate(nextLevel[id], currentLevel)
-                }, { Right(it) })
+                }, { it.right() })
             currentLevel.contains(id) -> return currentLevel[id]
             !currentLevel.contains(id) && hasNextLevel() && nextLevel.contains(id) -> {
                 return propagate(nextLevel[id], currentLevel)
             }
         }
-        return Left(RepositoryError.NotFound(id))
+        return RepositoryError.NotFound(id).left()
     }
 
     internal fun propagate(element: Either<RepositoryError, V>, propagationRepo: Repository<K, V>):
