@@ -3,6 +3,7 @@ package com.sefford.kor.usecases
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.test.utils.TestError
 import com.sefford.kor.usecases.test.utils.TestResponse
+import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.async
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
@@ -13,24 +14,23 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should execute synchronously`() {
-        assertThat(TestStandaloneUseCase({ TestResponse() }).execute("").isRight(), `is`(true))
+        assertThat(TestStandaloneUseCase { TestResponse() }.execute("").isRight(), `is`(true))
     }
 
     @Test
     fun `should execute synchronously and drop the results in the given postable when returns correctly`() {
         val givenAPostable = TestPostable()
 
-        TestStandaloneUseCase({ TestResponse() }).execute(givenAPostable, "")
+        TestStandaloneUseCase { TestResponse() }.execute(givenAPostable, "")
 
-        assertThat(givenAPostable.messagesReceived(), `is`(1))
-        assertThat(givenAPostable.message(0), instanceOf(TestResponse::class.java))
+        assertPostableReceivedASuccessfulResponse(givenAPostable)
     }
 
     @Test
     fun `should execute synchronously and drop the results in the given postable when returns erroneously`() {
         val givenAPostable = TestPostable()
 
-        TestStandaloneUseCase({ throw IllegalStateException() }).execute(givenAPostable, "")
+        TestStandaloneUseCase { throw IllegalStateException() }.execute(givenAPostable, "")
 
         assertThat(givenAPostable.messagesReceived(), `is`(1))
         assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
@@ -39,7 +39,7 @@ class StandaloneUseCaseTest {
     @Test
     fun `should execute asynchronously`() {
         async {
-            assertThat(TestStandaloneUseCase({ TestResponse() }).async("").isRight(), `is`(true))
+            assertThat(TestStandaloneUseCase { TestResponse() }.async("").isRight(), `is`(true))
         }
     }
 
@@ -48,10 +48,9 @@ class StandaloneUseCaseTest {
         val givenAPostable = TestPostable()
 
         async {
-            TestStandaloneUseCase({ TestResponse() }).async(givenAPostable, "")
+            TestStandaloneUseCase { TestResponse() }.async(givenAPostable, "")
 
-            assertThat(givenAPostable.messagesReceived(), `is`(1))
-            assertThat(givenAPostable.message(0), instanceOf(TestResponse::class.java))
+            assertPostableReceivedASuccessfulResponse(givenAPostable)
         }
     }
 
@@ -60,11 +59,58 @@ class StandaloneUseCaseTest {
         val givenAPostable = TestPostable()
 
         async {
-            TestStandaloneUseCase({ throw IllegalStateException() }).execute(givenAPostable, "")
+            TestStandaloneUseCase { throw IllegalStateException() }.execute(givenAPostable, "")
 
             assertThat(givenAPostable.messagesReceived(), `is`(1))
             assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
         }
+    }
+
+    @Test
+    fun `should return the proper defer object when asking for a synchronous one`() {
+        async {
+            assertThat(TestStandaloneUseCase { TestResponse() }.defer(DefaultDispatcher, "").await().isRight(),
+                    `is`(true))
+        }
+    }
+
+    @Test
+    fun `should return the proper defer object when asking for a postable one`() {
+        val givenAPostable = TestPostable()
+
+        async {
+            TestStandaloneUseCase { TestResponse() }
+                    .defer(DefaultDispatcher, givenAPostable, "")
+                    .await()
+
+            assertPostableReceivedASuccessfulResponse(givenAPostable)
+        }
+    }
+
+    @Test
+    fun `should return the proper asynk object when asking for a synchronous one`() {
+        async {
+            assertThat(TestStandaloneUseCase { TestResponse() }.asynk(DefaultDispatcher, "").await().isRight(),
+                    `is`(true))
+        }
+    }
+
+    @Test
+    fun `should return the proper asynk object when asking for a postable one`() {
+        val givenAPostable = TestPostable()
+
+        async {
+            TestStandaloneUseCase { TestResponse() }
+                    .defer(DefaultDispatcher, givenAPostable, "")
+                    .await()
+
+            assertPostableReceivedASuccessfulResponse(givenAPostable)
+        }
+    }
+
+    private fun assertPostableReceivedASuccessfulResponse(givenAPostable: TestPostable) {
+        assertThat(givenAPostable.messagesReceived(), `is`(1))
+        assertThat(givenAPostable.message(0), instanceOf(TestResponse::class.java))
     }
 
     class TestStandaloneUseCase(val logic: () -> TestResponse) : StandaloneUseCase<Any, TestError, TestResponse> {
