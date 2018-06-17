@@ -1,30 +1,42 @@
 Changelog
 =========
-## Kor common 4.2.1
+## Kor 4.3.0
+_2018_06_17_
+* Improved a little `UseCase.execute` readability
+* Cleanup of `StandaloneUseCase` methods.
+* `StandaloneUseCase` now provides a ser of methods:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`execute`: Sycnrhonous inmediate execution (as calling `UseCase.execute(params : Any)`)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`defer`: Asynchronous lazy execution
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`async`: Asynchronous inmediate execution
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`asynk`: Asynchronous lazy execution vía Arrow's `DeferredK`
+
+
+## Kor 4.2.1
 _2018_06_8_
 
 * `StandaloneUseCase` now has utility methods `deferK` to directly output a functional deferred call with Arrow.
 * Improved `LruCache` to use Kotlin methods instead of relying in an iterator.
 * Minor syntax improvements.
 
-## Kor common 4.2.1
+## Kor 4.2.1
 _2018_05_11_
 
 * Improved `UseCase.async(thread,postable,params)` with the correct method delegation
 
-## Kor common 4.2.0
+## Kor 4.2.0
 _2018_05_11_
 
 * Organized a little `StandaloneUseCase` API. Now `execute` are pure synchronous functions, and `async` requires (or not) of a Coroutine Context to be executed
 
-## Kor common 4.1.0
+## Kor 4.1.0
 _2018_05_10_
 
 * Added a `PerformanceModule` to the use case module to let users benchmark their use cases.
 * Fixed a bug that was returning the wrong element when updating an element in `MemoryDataSource`
 * Now a `StandaloneUseCase` does not require that the Param extends `Any`
 
-## Kor common 4.0.0
+## Kor 4.0.0
 _2018_04_14_
 
 * AKA _"The FPenning"_
@@ -33,35 +45,35 @@ _2018_04_14_
 * All `interactors.*` elements are removed.
 * Sliced and re-structured all the packages in order to be able to have smaller, more focused dependencies
 
-## Kor common 3.0.0
+## Kor 3.0.0
 _2018-02-12_
 
 * Ported to Kotlin
 * Removed `FastInteractor` capabilities
 
-## Kor common 2.8.0
+## Kor 2.8.0
 * **Breaking: 2.8.0 onwards:** `DiskJsonDataSource` now uses a `CacheFolder` interface to work instead of a simple File.
 * Default implementation `CacheFolderImpl` for both DataSources and `FileExpirationPolicy`.
 
-## Kor common 2.7.0
+## Kor 2.7.0
 _2017-11-29_
 
 * **Breaking from 2.7.0 onwards:** `MemoryRepository` has been renamed to `MemoryDataSource` and `DiskJsonRepository` has been renamed to `DiskJsonDataSource`.
 * Introduced `MemoryJsonDataSource`
 * Improved `LruRepository` by honoring the state of the underlying repository in gets and contains.
 
-## Kor common 2.5.5
+## Kor 2.5.5
 _2017-07-13_
 
 * Added `Populator` plugin for `LruRepositories`, so `LruCaches` can be populated in certain circumstances like when using `DiskJsonRepositories`
 * Added `FileTimeExpirationPolicy` for `ExpirationRepository` when backing `DiskJsonRepostory`
  
-## Kor common 2.5.5
+## Kor 2.5.5
 _2017-06-21_
 
 * Improved interactors to support performance logging facilities
 
-## Kor common 2.5.3
+## Kor 2.5.3
 _2017-06-05_
 
 * Now you do not need to extend `TwoTierRepository` and `MemoryRepository` to use it directly
@@ -70,12 +82,12 @@ _2017-06-05_
 
 
 * Added DiskJsonRepository to allow to-disk JSon peristence 
-## Kor common 2.5.1
+## Kor 2.5.1
 _2017-06-05_
 
 * Added DiskJsonRepository to allow to-disk JSon peristence 
 
-## Kor common 2.5.0
+## Kor 2.5.0
 _2017-06-05_
 
 * Refactored Repository structures to apply better OOP methodologies
@@ -83,7 +95,7 @@ _2017-06-05_
 * Added `ExpirationRepository` to allow Repositories to have an Expiration Policy
 * Added `TimeExpirationPolicy` as a PoC expiration policy
 
-## Kor common 2.5.0
+## Kor 2.5.0
 _2017-06-05_
 
 * Refactored Repository structures to apply better OOP methodologies
