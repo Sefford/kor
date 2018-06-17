@@ -52,17 +52,15 @@ private constructor(internal val logic: () -> R,
                     internal val errorHandler: (ex: Throwable) -> E,
                     internal val performance: PerformanceModule = NoModule) {
 
+    /**
+     * Execute the use case inmediately in the current thread.
+     */
     fun execute(): Either<E, R> {
         performance.start()
         return Try { cachePersistance(postProcessor(logic())) }
-                .fold({
-                    performance.end()
-                    errorHandler(it).left()
-                },
-                        {
-                            performance.end()
-                            it.right()
-                        })
+                .also { performance.end() }
+                .map { response -> response.right() }
+                .getOrElse { errorHandler(it).left() }
     }
 
     /**
