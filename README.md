@@ -68,7 +68,7 @@ Martin, Robert Cecil: [The Clean Architecture](http://blog.8thlight.com/uncle-bo
 
 Cockburn, Alistair: [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture)
 
-[VIPER Architecture](http://mutualmobile.github.io/blog/2013/12/04/viper-introduction/)
+[VIPER Architecture](https://www.objc.io/issues/13-architecture/viper/)
 
 License
 -------
