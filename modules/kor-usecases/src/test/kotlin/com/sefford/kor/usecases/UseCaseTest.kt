@@ -18,6 +18,7 @@ package com.sefford.kor.usecases
 import com.sefford.kor.usecases.components.PerformanceModule
 import com.sefford.kor.usecases.test.utils.TestError
 import com.sefford.kor.usecases.test.utils.TestResponse
+import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Assert.fail
@@ -48,6 +49,24 @@ class UseCaseTest {
                 .onError { TestError() }.build()
 
         assertThat(useCase.execute().isLeft(), `is`(true))
+    }
+
+    @Test
+    fun `should properly fail in the postprocssor`() {
+        UseCase.Execute<TestError, TestResponse> {
+            val response = TestResponse()
+            response.executed = true
+            response
+        }.process { response ->
+            throw IOException("Catastrophic fail")
+        }.persist { response ->
+            response.persisted = true
+            response
+        }.onError { TestError(it) }.build()
+                .execute().fold({
+                    assertThat(it.exception, instanceOf(IOException::class.java))
+                },
+                        { fail() })
     }
 
     @Test

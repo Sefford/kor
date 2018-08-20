@@ -49,6 +49,7 @@ class LruCache<K>
         this.values = LinkedHashSet(0, DEFAULT_LOAD_FACTOR)
     }
 
+    @Synchronized
     fun put(value: K?): K? {
         if (value == null) {
             return null
@@ -64,11 +65,13 @@ class LruCache<K>
         return previous
     }
 
+    @Synchronized
     fun refresh(value: K) {
         values.remove(value)
         values.add(value)
     }
 
+    @Synchronized
     fun remove(value: K) {
         values.remove(value)
     }
