@@ -1,6 +1,11 @@
 Changelog
 =========
+## Kor 4.3.1
+_2018_07_10_
+* Fixed concurrency bug with `LRUCache`
+
 ## Kor 4.3.0
+
 _2018_06_17_
 * Improved a little `UseCase.execute` readability
 * Cleanup of `StandaloneUseCase` methods.

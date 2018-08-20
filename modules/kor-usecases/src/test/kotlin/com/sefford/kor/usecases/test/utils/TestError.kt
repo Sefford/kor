@@ -20,7 +20,8 @@ import com.sefford.kor.usecases.components.Error
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-class TestError : Error {
+class TestError(val exception : Throwable? = null) : Error {
+
     override val statusCode: Int
         get() = 400
     override val userError: String
