@@ -30,11 +30,11 @@ Add the dependencies into the project's `build.gradle`
 
 ```groovy
 dependencies {
-    compile 'com.sefford:kor-usecases:4.3.1'
-    compile 'com.sefford:kor-repositories:4.3.1'
-    compile 'com.sefford:kor-repositories-extensions:4.3.1' // optional 
-    compile 'com.sefford:kor-repositories-gson-converter:4.3.1' 
-    compile 'com.sefford:kor-repositories-moshi-converter:4.3.1'
+    compile 'com.sefford:kor-usecases:4.3.2'
+    compile 'com.sefford:kor-repositories:4.3.2'
+    compile 'com.sefford:kor-repositories-extensions:4.3.2' // optional 
+    compile 'com.sefford:kor-repositories-gson-converter:4.3.2' 
+    compile 'com.sefford:kor-repositories-moshi-converter:4.3.2'
 }
 ```
 How is Kor structured?
@@ -68,7 +68,7 @@ Martin, Robert Cecil: [The Clean Architecture](http://blog.8thlight.com/uncle-bo
 
 Cockburn, Alistair: [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture)
 
-[VIPER Architecture](http://mutualmobile.github.io/blog/2013/12/04/viper-introduction/)
+[VIPER Architecture](https://www.objc.io/issues/13-architecture/viper/)
 
 License
 -------
