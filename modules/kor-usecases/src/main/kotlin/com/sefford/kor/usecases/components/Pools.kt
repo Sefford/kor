@@ -1,8 +1,8 @@
 package com.sefford.kor.usecases.components
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newFixedThreadPoolContext
 
 /**
  * Alternative Coroutine fix for processors with little cores
@@ -15,6 +15,6 @@ val BackgroundPool: CoroutineDispatcher by lazy {
     val numProcessors = Runtime.getRuntime().availableProcessors()
     when {
         numProcessors <= 2 -> newFixedThreadPoolContext(2, "background")
-        else -> CommonPool
+        else -> Dispatchers.Default
     }
 }

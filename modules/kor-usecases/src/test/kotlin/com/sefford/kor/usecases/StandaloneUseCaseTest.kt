@@ -3,8 +3,9 @@ package com.sefford.kor.usecases
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.test.utils.TestError
 import com.sefford.kor.usecases.test.utils.TestResponse
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
@@ -38,7 +39,7 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should execute asynchronously`() {
-        async {
+        GlobalScope.async {
             assertThat(TestStandaloneUseCase { TestResponse() }.async("").isRight(), `is`(true))
         }
     }
@@ -47,7 +48,7 @@ class StandaloneUseCaseTest {
     fun `should execute asynchronously and drop the results in the given postable when returns correctly`() {
         val givenAPostable = TestPostable()
 
-        async {
+        GlobalScope.async {
             TestStandaloneUseCase { TestResponse() }.async(givenAPostable, "")
 
             assertPostableReceivedASuccessfulResponse(givenAPostable)
@@ -58,7 +59,7 @@ class StandaloneUseCaseTest {
     fun `should execute asynchronously and drop the results in the given postable when returns erroneously`() {
         val givenAPostable = TestPostable()
 
-        async {
+        GlobalScope.async {
             TestStandaloneUseCase { throw IllegalStateException() }.execute(givenAPostable, "")
 
             assertThat(givenAPostable.messagesReceived(), `is`(1))
@@ -68,8 +69,8 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should return the proper defer object when asking for a synchronous one`() {
-        async {
-            assertThat(TestStandaloneUseCase { TestResponse() }.defer(DefaultDispatcher, "").await().isRight(),
+        GlobalScope.async {
+            assertThat(TestStandaloneUseCase { TestResponse() }.defer(Dispatchers.Main, "").await().isRight(),
                     `is`(true))
         }
     }
@@ -78,9 +79,9 @@ class StandaloneUseCaseTest {
     fun `should return the proper defer object when asking for a postable one`() {
         val givenAPostable = TestPostable()
 
-        async {
+        GlobalScope.async {
             TestStandaloneUseCase { TestResponse() }
-                    .defer(DefaultDispatcher, givenAPostable, "")
+                    .defer(Dispatchers.Main, givenAPostable, "")
                     .await()
 
             assertPostableReceivedASuccessfulResponse(givenAPostable)
@@ -89,8 +90,8 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should return the proper asynk object when asking for a synchronous one`() {
-        async {
-            assertThat(TestStandaloneUseCase { TestResponse() }.asynk(DefaultDispatcher, "").await().isRight(),
+        GlobalScope.async {
+            assertThat(TestStandaloneUseCase { TestResponse() }.asynk(Dispatchers.Main, "").await().isRight(),
                     `is`(true))
         }
     }
@@ -99,9 +100,9 @@ class StandaloneUseCaseTest {
     fun `should return the proper asynk object when asking for a postable one`() {
         val givenAPostable = TestPostable()
 
-        async {
+        GlobalScope.async {
             TestStandaloneUseCase { TestResponse() }
-                    .defer(DefaultDispatcher, givenAPostable, "")
+                    .defer(Dispatchers.Main, givenAPostable, "")
                     .await()
 
             assertPostableReceivedASuccessfulResponse(givenAPostable)

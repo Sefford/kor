@@ -16,12 +16,16 @@
 package com.sefford.kor.usecases
 
 import arrow.core.Either
-import arrow.effects.*
+import arrow.effects.DeferredK
+import arrow.effects.k
+import arrow.effects.runAsync
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Standalone use case that allows individual execution of a Single use case
@@ -70,7 +74,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case. Defaults to {@link BackgroundPool BackgroundPool}
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = BackgroundPool, params: P) = kotlinx.coroutines.experimental.async(thread) {
+    fun defer(thread: CoroutineContext = BackgroundPool, params: P) = GlobalScope.async(thread) {
         execute(params)
     }
 
@@ -81,7 +85,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param postable postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = kotlinx.coroutines.experimental.async(thread) {
+    fun defer(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = GlobalScope.async(thread) {
         execute(postable, params)
     }
 
