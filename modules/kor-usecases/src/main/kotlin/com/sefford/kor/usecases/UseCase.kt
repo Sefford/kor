@@ -15,8 +15,15 @@
  */
 package com.sefford.kor.usecases
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.identity
+import arrow.core.left
+import arrow.core.right
+import arrow.fx.IO
+import arrow.fx.handleError
 import com.sefford.kor.usecases.components.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 /**
  * Use case implementation.
@@ -52,16 +59,29 @@ private constructor(internal val logic: () -> R,
                     internal val errorHandler: (ex: Throwable) -> E,
                     internal val performance: PerformanceModule = NoModule) {
 
+    fun defer(): IO<Either<E, R>> {
+        return IO {
+            performance.start()
+            cachePersistance(postProcessor(logic())).right()
+        }.handleError { errorHandler(it).left() }
+                .flatMap {
+                    performance.end()
+                    IO { it }
+                }
+
+    }
+
     /**
      * Execute the use case inmediately in the current thread.
      */
     fun execute(): Either<E, R> {
-        performance.start()
-        return Try { cachePersistance(postProcessor(logic())) }
-                .also { performance.end() }
-                .map { response -> response.right() }
-                .getOrElse { errorHandler(it).left() }
+        return defer().unsafeRunSync()
     }
+
+    fun async(dispatcher: CoroutineDispatcher = Dispatchers.IO, callback: (Either<Throwable, Either<E, R>>) -> Unit) {
+        IO(dispatcher) { execute() }.unsafeRunAsync(callback)
+    }
+
 
     /**
      * Use case builder
@@ -118,7 +138,7 @@ private constructor(internal val logic: () -> R,
          */
         fun onError(errorHandler: (Throwable) -> E): Execute<E, R> {
             this.errorHandler = errorHandler
-            return this;
+            return this
         }
 
         /**
@@ -128,7 +148,7 @@ private constructor(internal val logic: () -> R,
          */
         fun withIntrospection(module: PerformanceModule): Execute<E, R> {
             this.performanceModule = module
-            return this;
+            return this
         }
 
         /**

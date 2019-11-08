@@ -1,5 +1,7 @@
 package com.sefford.kor.usecases
 
+import arrow.core.right
+import arrow.fx.IO
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.test.utils.TestError
 import com.sefford.kor.usecases.test.utils.TestResponse
@@ -10,6 +12,7 @@ import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.Test
+import java.util.logging.Logger
 
 class StandaloneUseCaseTest {
 
@@ -39,9 +42,6 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should execute asynchronously`() {
-        GlobalScope.async {
-            assertThat(TestStandaloneUseCase { TestResponse() }.async("").isRight(), `is`(true))
-        }
     }
 
     @Test
@@ -69,10 +69,6 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should return the proper defer object when asking for a synchronous one`() {
-        GlobalScope.async {
-            assertThat(TestStandaloneUseCase { TestResponse() }.defer(Dispatchers.Main, "").await().isRight(),
-                    `is`(true))
-        }
     }
 
     @Test
@@ -82,7 +78,6 @@ class StandaloneUseCaseTest {
         GlobalScope.async {
             TestStandaloneUseCase { TestResponse() }
                     .defer(Dispatchers.Main, givenAPostable, "")
-                    .await()
 
             assertPostableReceivedASuccessfulResponse(givenAPostable)
         }
@@ -90,10 +85,6 @@ class StandaloneUseCaseTest {
 
     @Test
     fun `should return the proper asynk object when asking for a synchronous one`() {
-        GlobalScope.async {
-            assertThat(TestStandaloneUseCase { TestResponse() }.asynk(Dispatchers.Main, "").await().isRight(),
-                    `is`(true))
-        }
     }
 
     @Test
@@ -103,11 +94,16 @@ class StandaloneUseCaseTest {
         GlobalScope.async {
             TestStandaloneUseCase { TestResponse() }
                     .defer(Dispatchers.Main, givenAPostable, "")
-                    .await()
 
             assertPostableReceivedASuccessfulResponse(givenAPostable)
         }
     }
+
+    private fun resolveException(throwable: Throwable) {
+        throw throwable
+    }
+
+    private fun getThreadName() = Thread.currentThread().name.right()
 
     private fun assertPostableReceivedASuccessfulResponse(givenAPostable: TestPostable) {
         assertThat(givenAPostable.messagesReceived(), `is`(1))

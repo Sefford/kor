@@ -16,15 +16,11 @@
 package com.sefford.kor.usecases
 
 import arrow.core.Either
-import arrow.effects.DeferredK
-import arrow.effects.k
-import arrow.effects.runAsync
+import arrow.fx.IO
 import com.sefford.common.interfaces.Postable
-import com.sefford.kor.usecases.components.BackgroundPool
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -66,7 +62,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      *
      * @param params Parameter configuration of the use case
      */
-    fun defer(params: P) = defer(BackgroundPool, params)
+    fun defer(params: P) = defer(Dispatchers.IO, params)
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute it.
@@ -74,9 +70,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case. Defaults to {@link BackgroundPool BackgroundPool}
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = BackgroundPool, params: P) = GlobalScope.async(thread) {
-        execute(params)
-    }
+    fun defer(thread: CoroutineContext = Dispatchers.IO, params: P) =
+            IO(thread) { execute(params) }
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute it.
@@ -85,9 +80,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param postable postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) = GlobalScope.async(thread) {
-        execute(postable, params)
-    }
+    fun defer(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
+            IO(thread) { execute(postable, params) }
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -95,7 +89,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      *
      * @param params Parameter configuration of the use case
      */
-    fun asynk(params: P) = asynk(BackgroundPool, params)
+    @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(params)"))
+    fun asynk(params: P) = defer(params)
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -104,7 +99,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case. Defaults to {@link BackgroundPool BackgroundPool}
      * @param params Parameter configuration of the use case
      */
-    fun asynk(thread: CoroutineContext = BackgroundPool, params: P) = defer(thread, params).k()
+    @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(thread, params)"))
+    fun asynk(thread: CoroutineContext = Dispatchers.IO, params: P) = defer(thread, params)
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -113,7 +109,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param postable postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun asynk(postable: Postable, params: P) = asynk(BackgroundPool, postable, params)
+    @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(thread, postable, params)"))
+    fun asynk(postable: Postable, params: P) = defer(Dispatchers.IO, postable, params)
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -123,10 +120,9 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param postable postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun asynk(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) =
-            defer(thread, postable, params)
-                    .k()
-                    .runAsync { DeferredK { Unit } }
+    @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(thread, postable, params)"))
+    fun asynk(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
+            defer(Dispatchers.IO, postable, params)
 
     /**
      * Executes the use case on a custom coroutine context and outputs the
@@ -134,7 +130,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      *
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(params: P) = async(BackgroundPool, params)
+    fun async(params: P) = async(Dispatchers.IO, params) { }
 
     /**
      * Executes the use case on a custom coroutine context and outputs the
@@ -143,7 +139,9 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    suspend fun async(thread: CoroutineContext = BackgroundPool, params: P) = defer(thread, params).await()
+    fun async(thread: CoroutineContext = Dispatchers.IO,
+              params: P,
+              callback: (Either<Throwable, Either<E, R>>) -> Unit) = defer(thread, params).unsafeRunAsync(callback)
 
     /**
      * Executes the use case the default asynchronous context {@see BackgroundPool} and outputs the
@@ -152,7 +150,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun async(postable: Postable, params: P) = async(BackgroundPool, postable, params)
+    fun async(postable: Postable, params: P) = async(Dispatchers.IO, postable, params)
 
 
     /**
@@ -163,7 +161,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun async(thread: CoroutineContext = BackgroundPool, postable: Postable, params: P) =
-            asynk(BackgroundPool, postable, params)
+    fun async(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
+            defer(thread, postable, params).unsafeRunAsync { }
 
 }
