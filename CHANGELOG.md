@@ -1,5 +1,10 @@
 Changelog
 =========
+## Kor 4.5.0
+_2019_12_24_
+
+* Bumped Arrow 0.10.3
+
 ## Kor 4.3.1
 _2018_07_10_
 * Fixed concurrency bug with `LRUCache`
