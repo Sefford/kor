@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        gradle_version = '5.6.3'
-        kotlin_version = '1.3.50'
+        gradle_version = '6.0.1'
+        kotlin_version = '1.3.61'
         gson_version = '2.8.2'
         arrow_version = '0.10.2'
         javaVersion = JavaVersion.VERSION_1_7
@@ -56,21 +56,5 @@ allprojects {
 
     jacoco {
         toolVersion '0.8.2'
-    }
-
-    task codeCoverageReport(type: JacocoReport) {
-        reports {
-            xml.enabled true
-            xml.destination file("${buildDir}/reports/jacoco/report.xml")
-            html.enabled true
-            csv.enabled false
-        }
-
-        classDirectories = fileTree(
-                dir: 'build/classes/kotlin/main',
-        )
-
-        sourceDirectories = files('src/main/kotlin')
-        executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
     }
 }
