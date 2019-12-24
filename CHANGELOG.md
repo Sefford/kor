@@ -1,6 +1,6 @@
 Changelog
 =========
-## Kor 4.5.0
+## Kor 4.4.0
 _2019_12_24_
 
 * Bumped Arrow 0.10.3
