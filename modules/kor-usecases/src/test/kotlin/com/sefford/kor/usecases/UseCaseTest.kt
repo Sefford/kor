@@ -15,44 +15,36 @@
  */
 package com.sefford.kor.usecases
 
+import arrow.core.Either
+import arrow.fx.IO
 import com.sefford.kor.usecases.components.PerformanceModule
 import com.sefford.kor.usecases.test.utils.TestError
 import com.sefford.kor.usecases.test.utils.TestResponse
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.core.Is.`is`
-import org.junit.Assert.assertThat
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.shouldBe
+import io.kotlintest.specs.StringSpec
 import org.junit.Assert.fail
-import org.junit.Before
-import org.junit.Test
 import java.io.IOException
 
 /**
  * @author Saul Diaz <sefford@gmail.com>
  */
-class UseCaseTest {
-
-    @Before
-    fun setUp() {
-    }
-
-    @Test
-    fun `should execute correctly`() {
+class UseCaseTest : StringSpec({
+    "should execute correctly" {
         val useCase = UseCase.Execute<TestError, TestResponse> { TestResponse() }
                 .onError { TestError() }.build()
 
-        assertThat(useCase.execute().isRight(), `is`(true))
+        useCase.execute().isRight().shouldBeTrue()
     }
-
-    @Test
-    fun `should fail miserably`() {
+    "should fail miserably" {
         val useCase = UseCase.Execute<TestError, TestResponse> { throw IOException("Catastrophic fail") }
                 .onError { TestError() }.build()
 
-        assertThat(useCase.execute().isLeft(), `is`(true))
+        useCase.execute().isLeft().shouldBeTrue()
     }
 
-    @Test
-    fun `should properly fail in the postprocssor`() {
+    "should properly fail in the postprocssor" {
         UseCase.Execute<TestError, TestResponse> {
             val response = TestResponse()
             response.executed = true
@@ -63,14 +55,12 @@ class UseCaseTest {
             response.persisted = true
             response
         }.onError { TestError(it) }.build()
-                .execute().fold({
-                    assertThat(it.exception, instanceOf(IOException::class.java))
-                },
-                        { fail() })
+                .execute().fold({ error ->
+                    error.exception.shouldBeInstanceOf<IOException>()
+                }, { fail() })
     }
 
-    @Test
-    fun `should execute all phases`() {
+    "should execute all phases" {
         UseCase.Execute<TestError, TestResponse> {
             val response = TestResponse()
             response.executed = true
@@ -81,17 +71,17 @@ class UseCaseTest {
         }.persist { response ->
             response.persisted = true
             response
-        }.onError { TestError() }.build()
-                .execute().fold({ fail() },
-                        { response ->
-                            assertThat(response.executed, `is`(true))
-                            assertThat(response.posprocessed, `is`(true))
-                            assertThat(response.persisted, `is`(true))
-                        })
+        }.onError {
+            TestError()
+        }.build().execute().fold({ fail() },
+                { response ->
+                    response.executed.shouldBeTrue()
+                    response.posprocessed.shouldBeTrue()
+                    response.persisted.shouldBeTrue()
+                })
     }
 
-    @Test
-    fun `should call the performance module during correct execution`() {
+    "should call the performance module during correct execution" {
         val performanceModule = TestPerformanceModule()
 
         UseCase.Execute<TestError, TestResponse> { TestResponse() }
@@ -100,12 +90,11 @@ class UseCaseTest {
                 .build()
                 .execute()
 
-        assertThat(performanceModule.metrics[START_METRIC], `is`(PERFORMANCE_METRIC))
-        assertThat(performanceModule.metrics[END_METRIC], `is`(PERFORMANCE_METRIC))
+        performanceModule.metrics[START_METRIC] shouldBe PERFORMANCE_METRIC
+        performanceModule.metrics[END_METRIC] shouldBe PERFORMANCE_METRIC
     }
 
-    @Test
-    fun `should call the performance module during erroneous execution`() {
+    "should call the performance module during erroneous execution" {
         val performanceModule = TestPerformanceModule()
 
         UseCase.Execute<TestError, TestResponse> { throw IOException("Catastrophic fail") }
@@ -114,9 +103,17 @@ class UseCaseTest {
                 .build()
                 .execute()
 
-        assertThat(performanceModule.metrics[START_METRIC], `is`(PERFORMANCE_METRIC))
-        assertThat(performanceModule.metrics[END_METRIC], `is`(PERFORMANCE_METRIC))
+        performanceModule.metrics[START_METRIC] shouldBe PERFORMANCE_METRIC
+        performanceModule.metrics[END_METRIC] shouldBe PERFORMANCE_METRIC
     }
+
+    "should return a deferred execution when deferring" {
+        val useCase = UseCase.Execute<TestError, TestResponse> { TestResponse() }
+                .onError { TestError() }.build()
+
+        useCase.defer().shouldBeInstanceOf<IO<Either<TestError, TestResponse>>>()
+    }
+}) {
 
     class TestPerformanceModule : PerformanceModule {
         val metrics = mutableMapOf<String, String>()
@@ -131,7 +128,6 @@ class UseCaseTest {
         override fun end(traceId: String) {
             metrics.put(END_METRIC, traceId)
         }
-
     }
 
     companion object {

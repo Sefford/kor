@@ -17,10 +17,8 @@ package com.sefford.kor.usecases
 
 import arrow.core.Either
 import arrow.core.identity
-import arrow.core.left
-import arrow.core.right
 import arrow.fx.IO
-import arrow.fx.handleError
+import arrow.fx.extensions.fx
 import com.sefford.kor.usecases.components.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -53,34 +51,48 @@ class UseCase<E : Error, R : Response>
  *
  * By default it is an identity lambda.
  */
-private constructor(internal val logic: () -> R,
-                    internal val postProcessor: (response: R) -> R = ::identity,
-                    internal val cachePersistance: (response: R) -> R = ::identity,
-                    internal val errorHandler: (ex: Throwable) -> E,
-                    internal val performance: PerformanceModule = NoModule) {
+private constructor(private val logic: () -> R,
+                    private val postProcessor: (response: R) -> R = ::identity,
+                    private val cachePersistance: (response: R) -> R = ::identity,
+                    private val errorHandler: (ex: Throwable) -> E,
+                    private val performance: PerformanceModule = NoModule) {
 
-    fun defer(): IO<Either<E, R>> {
-        return IO {
+    /**
+     * Runs the use case.
+     */
+    private suspend fun run(): Either<E, R> {
+        return Either.catch {
             performance.start()
-            cachePersistance(postProcessor(logic())).right()
-        }.handleError { errorHandler(it).left() }
-                .flatMap {
-                    performance.end()
-                    IO { it }
-                }
-
+            cachePersistance(postProcessor(logic()))
+        }.mapLeft {
+            errorHandler(it)
+        }.also {
+            performance.end()
+        }
     }
 
     /**
      * Execute the use case inmediately in the current thread.
      */
     fun execute(): Either<E, R> {
-        return defer().unsafeRunSync()
+        return IO.fx { effect { run() }.bind() }.unsafeRunSync()
     }
 
-    fun async(dispatcher: CoroutineDispatcher = Dispatchers.IO, callback: (Either<Throwable, Either<E, R>>) -> Unit) {
-        IO(dispatcher) { execute() }.unsafeRunAsync(callback)
+    /**
+     * Executes the Use Case on an async way in selected threads
+     *
+     * @param Dispatcher where to execute the use case, IO by default
+     * @param callback returning result logic
+     */
+    fun async(dispatcher: CoroutineDispatcher = Dispatchers.IO,
+              callback: (Either<Throwable, Either<E, R>>) -> Unit) {
+        IO(dispatcher) { run() }.unsafeRunAsync(callback)
     }
+
+    /**
+     * Returns a lazy execution instance over the use case logic
+     */
+    fun defer() = IO.fx { effect { run() }.bind() }
 
 
     /**
@@ -97,11 +109,11 @@ private constructor(internal val logic: () -> R,
      *
      * @param logic Logic of the use case.
      */
-    (internal val logic: () -> R) {
-        internal var postProcessor: (R) -> R = ::identity
-        internal var cachePersistance: (R) -> R = ::identity
-        internal var errorHandler: (Throwable) -> E = emptyErrorHandler()
-        internal var performanceModule: PerformanceModule = NoModule
+    (private val logic: () -> R) {
+        private var postProcessor: (R) -> R = ::identity
+        private var cachePersistance: (R) -> R = ::identity
+        private var errorHandler: (Throwable) -> E = emptyErrorHandler()
+        private var performanceModule: PerformanceModule = NoModule
 
         /**
          * Sets up the logic for the post processing phase.
