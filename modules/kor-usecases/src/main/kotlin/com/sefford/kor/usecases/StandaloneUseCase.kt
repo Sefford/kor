@@ -20,8 +20,8 @@ import arrow.fx.IO
 import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.components.Error
 import com.sefford.kor.usecases.components.Response
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Standalone use case that allows individual execution of a Single use case
@@ -62,7 +62,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      *
      * @param params Parameter configuration of the use case
      */
-    fun defer(params: P) = defer(Dispatchers.IO, params)
+    fun defer(params: P) = instantiate(params).defer()
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute it.
@@ -70,7 +70,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case. Defaults to {@link BackgroundPool BackgroundPool}
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = Dispatchers.IO, params: P) =
+    fun defer(thread: CoroutineDispatcher = Dispatchers.IO, params: P) =
             IO(thread) { execute(params) }
 
     /**
@@ -80,8 +80,8 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param postable postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun defer(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
-            IO(thread) { execute(postable, params) }
+    fun defer(thread: CoroutineDispatcher = Dispatchers.IO,
+              postable: Postable, params: P) = IO(thread) { execute(postable, params) }
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -100,7 +100,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param params Parameter configuration of the use case
      */
     @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(thread, params)"))
-    fun asynk(thread: CoroutineContext = Dispatchers.IO, params: P) = defer(thread, params)
+    fun asynk(thread: CoroutineDispatcher = Dispatchers.IO, params: P) = defer(thread, params)
 
     /**
      * Obtains the instance of the execution and returns it in the given thread, in order to lazily execute or combine
@@ -121,7 +121,7 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param params Parameter configuration of the use case
      */
     @Deprecated("Use defer instead", replaceWith = ReplaceWith("defer(thread, postable, params)"))
-    fun asynk(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
+    fun asynk(thread: CoroutineDispatcher = Dispatchers.IO, postable: Postable, params: P) =
             defer(Dispatchers.IO, postable, params)
 
     /**
@@ -139,9 +139,9 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param thread Execution context of the use case
      * @param params Parameter configuration of the use case
      */
-    fun async(thread: CoroutineContext = Dispatchers.IO,
+    fun async(thread: CoroutineDispatcher = Dispatchers.IO,
               params: P,
-              callback: (Either<Throwable, Either<E, R>>) -> Unit) = defer(thread, params).unsafeRunAsync(callback)
+              callback: (Either<Throwable, Either<E, R>>) -> Unit) = instantiate(params).async(thread, callback)
 
     /**
      * Executes the use case the default asynchronous context {@see BackgroundPool} and outputs the
@@ -161,7 +161,13 @@ interface StandaloneUseCase<P, E : Error, R : Response> {
      * @param Postable element where to output the results
      * @param params Parameter configuration of the use case
      */
-    fun async(thread: CoroutineContext = Dispatchers.IO, postable: Postable, params: P) =
-            defer(thread, postable, params).unsafeRunAsync { }
+    fun async(thread: CoroutineDispatcher = Dispatchers.IO, postable: Postable, params: P) =
+            async(thread, params) { either ->
+                either.map { result ->
+                    result.fold(
+                            { postable.post(it) },
+                            { postable.post(it) })
+                }
+            }
 
 }

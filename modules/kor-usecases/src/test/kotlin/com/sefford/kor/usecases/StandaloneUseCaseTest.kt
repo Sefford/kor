@@ -1,114 +1,82 @@
 package com.sefford.kor.usecases
 
-import arrow.core.right
+import arrow.core.Either
 import arrow.fx.IO
-import com.sefford.common.interfaces.Postable
 import com.sefford.kor.usecases.test.utils.TestError
+import com.sefford.kor.usecases.test.utils.TestPostable
 import com.sefford.kor.usecases.test.utils.TestResponse
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.matchers.numerics.shouldBeExactly
+import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.specs.StringSpec
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.Is.`is`
-import org.junit.Test
-import java.util.logging.Logger
+import kotlinx.coroutines.asContextElement
 
-class StandaloneUseCaseTest {
-
-    @Test
-    fun `should execute synchronously`() {
-        assertThat(TestStandaloneUseCase { TestResponse() }.execute("").isRight(), `is`(true))
+class StandaloneUseCaseTest : StringSpec({
+    "should execute synchronously" {
+        TestStandaloneUseCase { TestResponse() }.execute("").isRight().shouldBeTrue()
     }
 
-    @Test
-    fun `should execute synchronously and drop the results in the given postable when returns correctly`() {
+    "should execute asynchornously" {
+        TestStandaloneUseCase { TestResponse() }.async(Dispatchers.Unconfined, "") {
+            it.map { result ->
+                result.isRight().shouldBeTrue()
+            }
+        }
+    }
+
+    "should execute synchronously and drop the results in the given postable when returns correctly" {
         val givenAPostable = TestPostable()
 
         TestStandaloneUseCase { TestResponse() }.execute(givenAPostable, "")
 
-        assertPostableReceivedASuccessfulResponse(givenAPostable)
+        givenAPostable.shouldHaveReceivedOnlyAResponse()
     }
 
-    @Test
-    fun `should execute synchronously and drop the results in the given postable when returns erroneously`() {
+    "should execute synchronously and drop the results in the given postable when returns incorrectly" {
         val givenAPostable = TestPostable()
 
         TestStandaloneUseCase { throw IllegalStateException() }.execute(givenAPostable, "")
 
-        assertThat(givenAPostable.messagesReceived(), `is`(1))
-        assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
+        givenAPostable.shouldHaveReceivedOnlyAnError()
     }
 
-    @Test
-    fun `should execute asynchronously`() {
-    }
-
-    @Test
-    fun `should execute asynchronously and drop the results in the given postable when returns correctly`() {
+    "should execute asynchronously and drop the results in the given postable when returns correctly" {
         val givenAPostable = TestPostable()
 
-        GlobalScope.async {
-            TestStandaloneUseCase { TestResponse() }.async(givenAPostable, "")
+        TestStandaloneUseCase { TestResponse() }.async(Dispatchers.Unconfined , givenAPostable, "")
 
-            assertPostableReceivedASuccessfulResponse(givenAPostable)
-        }
+        givenAPostable.shouldHaveReceivedOnlyAResponse()
     }
 
-    @Test
-    fun `should execute asynchronously and drop the results in the given postable when returns erroneously`() {
+    "should execute asynchronously and drop the results in the given postable when returns erroneously" {
         val givenAPostable = TestPostable()
 
-        GlobalScope.async {
-            TestStandaloneUseCase { throw IllegalStateException() }.execute(givenAPostable, "")
+        TestStandaloneUseCase { throw IllegalStateException() }.async(Dispatchers.Unconfined, givenAPostable, "")
 
-            assertThat(givenAPostable.messagesReceived(), `is`(1))
-            assertThat(givenAPostable.message(0), instanceOf(TestError::class.java))
-        }
+        givenAPostable.shouldHaveReceivedOnlyAnError()
     }
 
-    @Test
-    fun `should return the proper defer object when asking for a synchronous one`() {
+    "should return the proper defer object" {
+        val computation = TestStandaloneUseCase { TestResponse() }.defer("")
+
+        computation.shouldBeInstanceOf<IO<Either<TestError, TestResponse>>>()
+        computation.unsafeRunSync().isRight().shouldBeTrue()
     }
 
-    @Test
-    fun `should return the proper defer object when asking for a postable one`() {
+    "should return the proper defer object when asking for a postable one" {
         val givenAPostable = TestPostable()
 
-        GlobalScope.async {
-            TestStandaloneUseCase { TestResponse() }
-                    .defer(Dispatchers.Main, givenAPostable, "")
+        val computation = TestStandaloneUseCase { TestResponse() }
+                .defer(Dispatchers.Default, givenAPostable, "")
 
-            assertPostableReceivedASuccessfulResponse(givenAPostable)
-        }
+        computation.shouldBeInstanceOf<IO<Unit>>()
+
+        computation.unsafeRunSync()
+        givenAPostable.shouldHaveReceivedOnlyAResponse()
     }
 
-    @Test
-    fun `should return the proper asynk object when asking for a synchronous one`() {
-    }
-
-    @Test
-    fun `should return the proper asynk object when asking for a postable one`() {
-        val givenAPostable = TestPostable()
-
-        GlobalScope.async {
-            TestStandaloneUseCase { TestResponse() }
-                    .defer(Dispatchers.Main, givenAPostable, "")
-
-            assertPostableReceivedASuccessfulResponse(givenAPostable)
-        }
-    }
-
-    private fun resolveException(throwable: Throwable) {
-        throw throwable
-    }
-
-    private fun getThreadName() = Thread.currentThread().name.right()
-
-    private fun assertPostableReceivedASuccessfulResponse(givenAPostable: TestPostable) {
-        assertThat(givenAPostable.messagesReceived(), `is`(1))
-        assertThat(givenAPostable.message(0), instanceOf(TestResponse::class.java))
-    }
+}) {
 
     class TestStandaloneUseCase(val logic: () -> TestResponse) : StandaloneUseCase<Any, TestError, TestResponse> {
         override fun instantiate(params: Any): UseCase<TestError, TestResponse> {
@@ -117,28 +85,15 @@ class StandaloneUseCaseTest {
                         TestError()
                     }.build()
         }
-
     }
+}
 
-    class TestPostable : Postable {
+private fun TestPostable.shouldHaveReceivedOnlyAResponse() {
+    messagesReceived() shouldBeExactly 1
+    message(0).shouldBeInstanceOf<TestResponse>()
+}
 
-        internal val events: MutableList<Any> = mutableListOf()
-
-        override fun post(event: Any) {
-            events.add(event)
-        }
-
-        fun messagesReceived(): Int {
-            return events.size
-        }
-
-        fun message(i: Int): Any {
-            return events[i]
-        }
-
-        fun noMessagesReceived(): Boolean {
-            return events.isEmpty()
-        }
-
-    }
+private fun TestPostable.shouldHaveReceivedOnlyAnError() {
+    messagesReceived() shouldBeExactly 1
+    message(0).shouldBeInstanceOf<TestError>()
 }
